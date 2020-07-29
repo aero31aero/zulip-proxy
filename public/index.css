@@ -1,3 +1,95 @@
 h1 {
-    color: orange;
+    color: #fff;
+    margin: 0;
+    line-height: 25px;
+    font-size: 25px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 5px;
+    width: 100vw;
+    background: #444;
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#info {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100px;
+    flex-wrap: wrap;
+}
+
+a {
+    color: #ccc;
+}
+
+#realm,
+#user {
+    flex-grow: 1;
+    color: #ccc;
+    display: flex;
+    flex-direction: row;
+    background: #222;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+    margin: 5px;
+}
+
+img {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+}
+
+p {
+    margin: 0px;
+}
+
+.rest {
+    display: flex;
+    flex-direction: column;
+    padding-left: 5px;
+}
+
+pre {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    background: #222;
+}
+
+code {
+    width: 100%;
+    display: inline-block;
+    word-wrap: break-word;
+    padding: 5px;
+    flex-grow: 1;
+}
+
+.line {
+    padding: 5px;
+}
+
+.line label {
+    display: inline-block;
+    width: 100px;
+}
+
+.line input {
+    width: 200px;
+}
+
+button {
+    margin-left: 105px;
 }
