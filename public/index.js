@@ -15,6 +15,11 @@ const main = async () => {
     const my_info = await client.callEndpoint('/users/me');
     console.log(server_info, my_info);
     window.z = client;
+
+    const handleEvent = async (event) => {
+        console.log('Got Event:', event);
+    };
+    client.callOnEachEvent(handleEvent, ['message']);
 };
 
 main();

@@ -10,8 +10,11 @@ zulip().then((client) => {
 
     app.all('/proxy/api/v1/*', async (req, res) => {
         const endpoint = req.path.replace('/proxy/api/v1', '');
-        const data = req.fields;
+        let data = req.fields;
         const method = req.method;
+        if (method === 'GET' && req.query) {
+            data = req.query;
+        }
         const result = await client.callEndpoint(endpoint, method, data);
         console.log(`zulip: Calling ${method} ${endpoint} => ${result.result}`);
         res.json(result);
