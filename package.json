@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/aero31aero/zulip-proxy#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "zulip-js": "^2.0.8"
   }
 }
