@@ -4,6 +4,7 @@
   "description": "[WIP] A proxy server for zulip api",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "lint": "prettier . --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
