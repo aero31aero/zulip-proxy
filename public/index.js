@@ -1,10 +1,10 @@
 console.log('Hello World');
 
 const sendParams = {
-    to: 'test here',
+    to: 'zulip-proxy',
     type: 'stream',
-    subject: 'Testing zulip-js',
-    content: 'Something is wrong....',
+    subject: 'test',
+    content: 'Something is wrong....(automated)',
 };
 
 const main = async () => {
@@ -15,6 +15,7 @@ const main = async () => {
     });
     const reply = await client.messages.send(sendParams);
     console.log('Reply', reply);
+    window.z = client;
 };
 
 main();
