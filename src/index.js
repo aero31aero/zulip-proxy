@@ -1,6 +1,11 @@
 const express = require('express');
+const zulip = require('./zulip');
 const app = express();
 const port = 3000;
+
+zulip().then((cleint) => {
+    console.log(cleint);
+});
 
 app.set('view engine', 'pug');
 app.set('views', './views');
