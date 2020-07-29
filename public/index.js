@@ -26,6 +26,11 @@ $(document).ready(async () => {
     $('#user .email').text(info.user.email);
 
     const handleEvent = async (event) => {
+        if (event.type === 'presence') {
+            console.info('ignore presence event', event);
+            return;
+        }
+
         $('#event-log').append(
             `======================================\n${JSON.stringify(
                 event,
