@@ -1,5 +1,3 @@
-console.log('Hello World');
-
 const sendParams = {
     to: 'zulip-proxy',
     type: 'stream',
@@ -13,8 +11,9 @@ const main = async () => {
         apiKey: 'random',
         realm: '/proxy', // This should make zulipjs send requests to our express app.
     });
-    const reply = await client.messages.send(sendParams);
-    console.log('Reply', reply);
+    const server_info = await client.callEndpoint('/server_settings');
+    const my_info = await client.callEndpoint('/users/me');
+    console.log(server_info, my_info);
     window.z = client;
 };
 

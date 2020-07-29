@@ -8,17 +8,19 @@ const port = 3000;
 zulip().then((client) => {
     app.get('/', (req, res) => res.render('index.pug'));
 
-    app.post('/proxy/api/v1/*', async (req, res) => {
+    app.all('/proxy/api/v1/*', async (req, res) => {
         const endpoint = req.path.replace('/proxy/api/v1', '');
         const data = req.fields;
-        const result = await client.callEndpoint(endpoint, 'POST', data);
-        console.log(`zulip: Calling ${endpoint}. Result: ${JSON.stringify(result)}`);
+        const method = req.method;
+        const result = await client.callEndpoint(endpoint, method, data);
+        console.log(`zulip: Calling ${method} ${endpoint} => ${result.result}`);
         res.json(result);
     });
 
-    app.listen(port, () =>
-        console.log(`Example app listening at http://localhost:${port}`)
-    );
+    app.listen(port, () => {
+        console.log(`zulip: Logged in as ${client.config.username}`);
+        console.log(`express: listening at http://localhost:${port}`);
+    });
 });
 
 app.set('view engine', 'pug');
