@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/aero31aero/zulip-proxy/issues"
   },
-  "homepage": "https://github.com/aero31aero/zulip-proxy#readme"
+  "homepage": "https://github.com/aero31aero/zulip-proxy#readme",
+  "dependencies": {
+    "zulip-js": "^2.0.8"
+  }
 }
