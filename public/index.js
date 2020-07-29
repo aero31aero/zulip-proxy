@@ -1,10 +1,3 @@
-const sendParams = {
-    to: 'zulip-proxy',
-    type: 'stream',
-    subject: 'test',
-    content: 'Something is wrong....(automated)',
-};
-
 const main = async () => {
     const z = await zulip({
         username: 'random',
