@@ -28,6 +28,13 @@ const client_id = oauth_config.client_id;
 const client_secret = oauth_config.client_secret;
 const redirect_uri = oauth_config.redirect_uri;
 
+async function single_page_app(res, get) {
+    const me = await get('users/me');
+
+    res.set('Content-Type', 'text/plain');
+    res.send(`HELLO ${me.data.full_name}\n---\n\n` + pretty(me.data));
+}
+
 function oauth() {
     app.get('/', (req, res) => res.send('Use o/code for now'));
 
@@ -50,7 +57,19 @@ function oauth() {
             const token_req = await axios.post(`${app_url}/o/token/`, form, {
                 headers: form.getHeaders(),
             });
-            res.send(token_req.data);
+
+            const access_token = token_req.data.access_token;
+
+            const get = async (short_url) => {
+                const data = await axios.get(
+                    `${app_url}/api/v1/${short_url}`,
+                    {headers: {Bearer: access_token},
+                });
+                return data;
+            };
+
+            single_page_app(res, get);
+
         } catch (e) {
             console.error('ERROR', e);
             return res.send({
