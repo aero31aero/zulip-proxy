@@ -1,3 +1,4 @@
+const process = require('process');
 const express = require('express');
 const bodyParser = require('body-parser');
 const formidable = require('express-formidable');
@@ -5,13 +6,30 @@ const zulip = require('./zulip');
 const axios = require('axios');
 const FormData = require('form-data');
 const app = express();
-const port = 3000;
 
-const app_url = 'http://zulip.showell.zulipdev.org:9991';
-const client_id = 'ZyWpMYjhNX0bG2IT480T1qWzGFuT1istg5brUcPz';
-const client_secret =
-    'hoP2lNAQPzAh39CjQd20mnWk9GBwFdNMD4zDuzkJZP0xZzllTenZBdWnVW7CDSpfnWcrQHDeAaCyL0Q91rCnGamns4bjOmmbT7h8xwyy8ommfYA6R9GkjBUADFqrhr5v';
-const redirect_uri = 'http://localhost:3000/o/callback';
+let oauth_config;
+
+try {
+    oauth_config = require('../oauth_config');
+} catch {
+    console.info("\n\nERROR IN CONFIG\n");
+    console.info("cp oauth_config.example.js oauth_config");
+    console.info("vim oauth_config\n");
+    process.exit();
+}
+
+function pretty(obj) {
+    return JSON.stringify(obj, null, 4);
+}
+
+console.info(`oauth_config:\n ${pretty(oauth_config)}\n`);
+
+const host = oauth_config.host;
+const port = oauth_config.port;
+const app_url = oauth_config.app_url;
+const client_id = oauth_config.client_id;
+const client_secret = oauth_config.client_secret;
+const redirect_uri = oauth_config.redirect_uri;
 
 zulip().then((client) => {
     app.get('/', (req, res) => res.render('index.pug'));
@@ -59,7 +77,7 @@ zulip().then((client) => {
 
     app.listen(port, () => {
         console.log(`zulip: Logged in as ${client.config.username}`);
-        console.log(`express: listening at http://localhost:${port}`);
+        console.log(`oauth: visit ${host}:${port}/o/code in your browser`);
     });
 });
 
