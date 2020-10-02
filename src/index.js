@@ -32,7 +32,7 @@ function oauth() {
     app.get('/', (req, res) => res.send('Use o/code for now'));
 
     app.get('/o/code', (req, res) => {
-        const code_url = `${app_url}/o/authorize?response_type=code&client_id=${client_id}&scope=read&redirect_uri=${redirect_uri}`;
+        const code_url = `${app_url}/o/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=read&redirect_uri=${redirect_uri}`;
         res.redirect(code_url);
     });
 
