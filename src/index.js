@@ -28,17 +28,71 @@ const client_id = oauth_config.client_id;
 const client_secret = oauth_config.client_secret;
 const redirect_uri = oauth_config.redirect_uri;
 
-async function single_page_app(res, get) {
-    const me = await get('users/me');
+/* Note that we only support a single session now--we eventually
+   need to actually give session keys (or similar) to our clients,
+   so we can tell them apart, without having to give them actual
+   access tokens.
+*/
+let singleton_session = undefined;
+
+function get_session() {
+    // eventually we will expressjs/session or similar
+    return singleton_session;
+}
+
+function start_session(access_token) {
+    const session = {};
+    session.access_token = access_token;
+    // use age for debugging purposes
+    session.age = 0;
+    singleton_session = session;
+}
+
+
+function get_helper(session) {
+    const helper = {};
+    const headers = {Bearer: session.access_token}
+
+    helper.get = async (short_url) => {
+        const resp = await axios.get(
+            `${app_url}/api/v1/${short_url}`,
+            {headers: headers},
+        );
+        return resp.data;
+    };
+
+    return helper;
+}
+
+async function single_page_app(res, session) {
+    const page_params = {};
+
+    session.age += 1;
+    const helper = get_helper(session);
+    const get = helper.get;
+
+    page_params.session_age = session.age; // this just lets us know reloads are doing real work
+    page_params.messages = await get('messages?num_before=5&anchor=newest&num_after=0');
+    page_params.users = await get('users');
+    page_params.me = await get('users/me');
 
     res.set('Content-Type', 'text/plain');
-    res.send(`HELLO ${me.data.full_name}\n---\n\n` + pretty(me.data));
+    res.send(`HELLO ${page_params.me.full_name}\n---\n\n` + pretty(page_params));
 }
 
 function oauth() {
-    app.get('/', (req, res) => res.send('Use o/code for now'));
+    app.get('/', (req, res) => {
+        const session = get_session();
 
-    app.get('/o/code', (req, res) => {
+        if (!session) {
+            console.info("NEED TO AUTH FIRST!!!!!");
+            return res.redirect('o/authorize');
+        }
+
+        single_page_app(res, session);
+    });
+
+    app.get('/o/authorize', (req, res) => {
         const code_url = `${app_url}/o/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=read&redirect_uri=${redirect_uri}`;
         res.redirect(code_url);
     });
@@ -60,15 +114,10 @@ function oauth() {
 
             const access_token = token_req.data.access_token;
 
-            const get = async (short_url) => {
-                const data = await axios.get(
-                    `${app_url}/api/v1/${short_url}`,
-                    {headers: {Bearer: access_token},
-                });
-                return data;
-            };
+            start_session(access_token);
 
-            single_page_app(res, get);
+            // redirect to the home page
+            res.redirect("/");
 
         } catch (e) {
             console.error('ERROR', e);
@@ -80,7 +129,7 @@ function oauth() {
     });
 
     app.listen(port, () => {
-        console.log(`oauth: visit ${host}:${port}/o/code in your browser`);
+        console.log(`TO START: visit ${host}:${port} in your browser`);
     });
 }
 
