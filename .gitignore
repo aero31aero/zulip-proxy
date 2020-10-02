@@ -103,6 +103,10 @@ dist
 # TernJS port file
 .tern-port
 
+# editor stuff
+*.swp
+
 # Zulip specific
-config.js
+config
+oauth_config
 zuliprc
