@@ -56,11 +56,13 @@ function get_helper(session) {
     const helper = {};
     const headers = {Bearer: session.access_token}
 
-    helper.get = async (short_url) => {
-        const resp = await axios.get(
-            url(short_url),
-            {headers: headers},
-        );
+    helper.get = async (short_url, data) => {
+        const resp = await axios({
+            method: 'get',
+            url: url(short_url),
+            params: data,
+            headers: headers,
+        });
         return resp.data;
     };
 
@@ -85,13 +87,14 @@ async function single_page_app(res, session) {
     const get = helper.get;
 
     page_params.session_age = session.age; // this just lets us know reloads are doing real work
-    page_params.messages = await get('messages?num_before=5&anchor=newest&num_after=0');
-    page_params.users = await get('users');
     page_params.me = await get('users/me');
 
-    res.set('Content-Type', 'text/plain');
-    res.send(`HELLO ${page_params.me.full_name}\n---\n\n` + pretty(page_params));
-
+    res.render(
+        "oauth.pug",
+        {
+            page_params: JSON.stringify(page_params)
+        },
+    );
     await helper.post("messages", {
         type: "stream",
         to: "all",
@@ -148,12 +151,24 @@ function oauth() {
         }
     });
 
+    app.get("/z/*", async (req, res) => {
+        const url = req.path.slice(3)
+
+        const helper = get_helper(req.session);
+        const get = helper.get;
+
+        const result = await get(url, req.query);
+        res.json(result);
+    });
+
     app.listen(port, () => {
         console.log(`TO START: visit ${host}:${port} in your browser`);
     });
 }
 
 
+app.set('view engine', 'pug');
+app.set('views', './views');
 app.use(express.static('public'));
 app.use(session({
     secret: session_secret,

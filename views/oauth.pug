@@ -1,0 +1,14 @@
+html
+    head
+        title Zulip Oauth Client
+        link(rel="icon", href="data:,")
+        script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js')
+        script(src='/split_pane.js')
+        script(src='/messages.js')
+        script(src='/users.js')
+        script(src='/streams.js')
+        script(src='/oauth.js')
+        script
+            | page_params = !{page_params}
+    body
+        #main
