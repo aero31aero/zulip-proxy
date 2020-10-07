@@ -6,4 +6,5 @@ module.exports = {
     client_id: 'CLIENT_ID', // get from oauth provider
     client_secret: 'CLIENT_SECRET', // get from oauth provider
     redirect_uri: 'http://localhost:3000/o/callback',
+    session_secret: "SECRET", // make your own secret
 };

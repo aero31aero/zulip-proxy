@@ -4,6 +4,7 @@ const qs = require('qs');
 const axios = require('axios');
 const FormData = require('form-data');
 const app = express();
+const session = require('express-session')
 
 let oauth_config;
 
@@ -28,21 +29,9 @@ const app_url = oauth_config.app_url;
 const client_id = oauth_config.client_id;
 const client_secret = oauth_config.client_secret;
 const redirect_uri = oauth_config.redirect_uri;
+const session_secret = oauth_config.session_secret;
 
-/* Note that we only support a single session now--we eventually
-   need to actually give session keys (or similar) to our clients,
-   so we can tell them apart, without having to give them actual
-   access tokens.
-*/
-let singleton_session = undefined;
-
-function get_session() {
-    // eventually we will expressjs/session or similar
-    return singleton_session;
-}
-
-async function start_session(access_token) {
-    const session = {};
+async function start_session(session, access_token) {
     session.access_token = access_token;
     // use age for debugging purposes
     session.age = 0;
@@ -56,6 +45,7 @@ async function start_session(access_token) {
         topic: "hello",
         content: "/me just joined using the oauth client",
     });
+    session.save();
 }
 
 function url(short_url) {
@@ -112,9 +102,9 @@ async function single_page_app(res, session) {
 
 function oauth() {
     app.get('/', (req, res) => {
-        const session = get_session();
+        const session = req.session;
 
-        if (!session) {
+        if (!session || !session.access_token) {
             console.info("NEED TO AUTH FIRST!!!!!");
             return res.redirect('o/authorize');
         }
@@ -144,7 +134,7 @@ function oauth() {
 
             const access_token = token_req.data.access_token;
 
-            start_session(access_token);
+            start_session(req.session, access_token);
 
             // redirect to the home page
             res.redirect("/");
@@ -165,4 +155,10 @@ function oauth() {
 
 
 app.use(express.static('public'));
+app.use(session({
+    secret: session_secret,
+    cookie: {maxAge: 604800, sameSite: "strict"},
+    resave: false,
+    saveUninitialized: false,
+}));
 oauth();
