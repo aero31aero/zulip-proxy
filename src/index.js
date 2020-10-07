@@ -1,5 +1,6 @@
 const process = require('process');
 const express = require('express');
+const qs = require('qs');
 const axios = require('axios');
 const FormData = require('form-data');
 const app = express();
@@ -40,14 +41,26 @@ function get_session() {
     return singleton_session;
 }
 
-function start_session(access_token) {
+async function start_session(access_token) {
     const session = {};
     session.access_token = access_token;
     // use age for debugging purposes
     session.age = 0;
     singleton_session = session;
+
+    const helper = get_helper(session);
+
+    await helper.post("messages", {
+        type: "stream",
+        to: "all",
+        topic: "hello",
+        content: "/me just joined using the oauth client",
+    });
 }
 
+function url(short_url) {
+    return `${app_url}/api/v1/${short_url}`;
+}
 
 function get_helper(session) {
     const helper = {};
@@ -55,9 +68,19 @@ function get_helper(session) {
 
     helper.get = async (short_url) => {
         const resp = await axios.get(
-            `${app_url}/api/v1/${short_url}`,
+            url(short_url),
             {headers: headers},
         );
+        return resp.data;
+    };
+
+    helper.post = async (short_url, data) => {
+        const resp = await axios({
+            method: 'post',
+            url: url(short_url),
+            data: qs.stringify(data),
+            headers: headers,
+        });
         return resp.data;
     };
 
@@ -78,6 +101,13 @@ async function single_page_app(res, session) {
 
     res.set('Content-Type', 'text/plain');
     res.send(`HELLO ${page_params.me.full_name}\n---\n\n` + pretty(page_params));
+
+    await helper.post("messages", {
+        type: "stream",
+        to: "all",
+        topic: "hello",
+        content: `/me has a session with age ${session.age}`,
+    });
 }
 
 function oauth() {
@@ -93,7 +123,7 @@ function oauth() {
     });
 
     app.get('/o/authorize', (req, res) => {
-        const code_url = `${app_url}/o/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=read&redirect_uri=${redirect_uri}`;
+        const code_url = `${app_url}/o/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
         res.redirect(code_url);
     });
 
