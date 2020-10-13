@@ -2,7 +2,7 @@ let stream_data;
 
 async function get_stream_data() {
     if (stream_data === undefined) {
-        const response = await fetch("/z/users/me/subscriptions");
+        const response = await fetch('/z/users/me/subscriptions');
         stream_data = await response.json();
     }
     return stream_data;
@@ -10,7 +10,7 @@ async function get_stream_data() {
 
 function build_view(stream) {
     return () => {
-        return $("<pre>").text(stream.description);
+        return $('<pre>').text(stream.description);
     };
 }
 

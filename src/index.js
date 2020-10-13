@@ -4,16 +4,16 @@ const qs = require('qs');
 const axios = require('axios');
 const FormData = require('form-data');
 const app = express();
-const session = require('express-session')
+const session = require('express-session');
 
 let oauth_config;
 
 try {
     oauth_config = require('../oauth_config');
 } catch {
-    console.info("\n\nERROR IN CONFIG\n");
-    console.info("cp oauth_config.example.js oauth_config");
-    console.info("vim oauth_config\n");
+    console.info('\n\nERROR IN CONFIG\n');
+    console.info('cp oauth_config.example.js oauth_config');
+    console.info('vim oauth_config\n');
     process.exit();
 }
 
@@ -45,7 +45,7 @@ function url(short_url) {
 
 function get_helper(session) {
     const helper = {};
-    const headers = {Bearer: session.access_token}
+    const headers = { Bearer: session.access_token };
 
     helper.get = async (short_url, data) => {
         const resp = await axios({
@@ -80,16 +80,13 @@ async function single_page_app(res, session) {
     page_params.session_age = session.age; // this just lets us know reloads are doing real work
     page_params.me = await get('users/me');
 
-    res.render(
-        "oauth.pug",
-        {
-            page_params: JSON.stringify(page_params)
-        },
-    );
-    await helper.post("messages", {
-        type: "stream",
-        to: "all",
-        topic: "hello",
+    res.render('oauth.pug', {
+        page_params: JSON.stringify(page_params),
+    });
+    await helper.post('messages', {
+        type: 'stream',
+        to: 'all',
+        topic: 'hello',
         content: `/me has a session with age ${session.age}`,
     });
 }
@@ -99,7 +96,7 @@ function oauth() {
         const session = req.session;
 
         if (!session || !session.access_token) {
-            console.info("NEED TO AUTH FIRST!!!!!");
+            console.info('NEED TO AUTH FIRST!!!!!');
             return res.redirect('o/authorize');
         }
 
@@ -131,8 +128,7 @@ function oauth() {
             start_session(req.session, access_token);
 
             // redirect to the home page
-            res.redirect("/");
-
+            res.redirect('/');
         } catch (e) {
             console.error('ERROR', e);
             return res.send({
@@ -142,8 +138,8 @@ function oauth() {
         }
     });
 
-    app.get("/z/*", async (req, res) => {
-        const url = req.path.slice(3)
+    app.get('/z/*', async (req, res) => {
+        const url = req.path.slice(3);
 
         const helper = get_helper(req.session);
         const get = helper.get;
@@ -157,14 +153,15 @@ function oauth() {
     });
 }
 
-
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
-app.use(session({
-    secret: session_secret,
-    cookie: {maxAge: 604800, sameSite: "strict"},
-    resave: false,
-    saveUninitialized: false,
-}));
+app.use(
+    session({
+        secret: session_secret,
+        cookie: { maxAge: 604800, sameSite: 'strict' },
+        resave: false,
+        saveUninitialized: false,
+    })
+);
 oauth();

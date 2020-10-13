@@ -2,7 +2,7 @@ let data;
 
 async function get_user_data() {
     if (data === undefined) {
-        const response = await fetch("/z/users");
+        const response = await fetch('/z/users');
         data = await response.json();
     }
 
@@ -15,11 +15,11 @@ async function render() {
 
     members.sort((a, b) => a.full_name.localeCompare(b.full_name));
 
-    const users_table = $("<table>");
+    const users_table = $('<table>');
     for (const user of members) {
-        const tr = $("<tr>");
-        tr.append($("<td>").text(user.user_id));
-        tr.append($("<td>").text(user.full_name));
+        const tr = $('<tr>');
+        tr.append($('<td>').text(user.user_id));
+        tr.append($('<td>').text(user.full_name));
         users_table.append(tr);
     }
 
