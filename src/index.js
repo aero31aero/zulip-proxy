@@ -36,15 +36,6 @@ async function start_session(session, access_token) {
     // use age for debugging purposes
     session.age = 0;
     singleton_session = session;
-
-    const helper = get_helper(session);
-
-    await helper.post("messages", {
-        type: "stream",
-        to: "all",
-        topic: "hello",
-        content: "/me just joined using the oauth client",
-    });
     session.save();
 }
 
