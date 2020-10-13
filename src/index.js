@@ -112,6 +112,7 @@ function oauth() {
                 headers: form.getHeaders(),
             });
 
+            console.log(token_req.data);
             const access_token = token_req.data.access_token;
 
             start_session(req.session, access_token);
