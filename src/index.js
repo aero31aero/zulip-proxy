@@ -33,9 +33,6 @@ const session_secret = oauth_config.session_secret;
 
 async function start_session(session, access_token) {
     session.access_token = access_token;
-    // use age for debugging purposes
-    session.age = 0;
-    singleton_session = session;
     session.save();
 }
 
@@ -73,21 +70,13 @@ function get_helper(session) {
 async function single_page_app(res, session) {
     const page_params = {};
 
-    session.age += 1;
     const helper = get_helper(session);
     const get = helper.get;
 
-    page_params.session_age = session.age; // this just lets us know reloads are doing real work
     page_params.me = await get('users/me');
 
     res.render('oauth.pug', {
         page_params: JSON.stringify(page_params),
-    });
-    await helper.post('messages', {
-        type: 'stream',
-        to: 'all',
-        topic: 'hello',
-        content: `/me has a session with age ${session.age}`,
     });
 }
 

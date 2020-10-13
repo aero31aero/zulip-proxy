@@ -1,7 +1,4 @@
 $(document).ready(async () => {
-    const age_div = $('<div>');
-    age_div.text(`session age: ${page_params.session_age}`);
-
     const me_div = $('<div>');
     me_div.text(page_params.me.full_name);
 
@@ -22,7 +19,6 @@ $(document).ready(async () => {
 
     const main_pane = await window.split_pane.render(pane_config);
 
-    $('#main').append(age_div);
     $('#main').append(me_div);
     $('#main').append('<hr>');
 
