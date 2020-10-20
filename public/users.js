@@ -25,10 +25,49 @@ window.users = (() => {
         return message_data;
     }
 
+    function build_compose_box(user) {
+        const div = $('<div>');
+
+        const box = $('<textarea>').val('canned message');
+        const button = $('<button>').text('Send PM');
+
+        button.on('click', async () => {
+            const loader = $('<div>').text('sending...');
+
+            div.append(loader);
+
+            const data = {
+                type: 'private',
+                to: JSON.stringify([user.user_id]),
+                content: box.val(),
+            };
+
+            const response = await fetch('/z/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            loader.text('sent!');
+        });
+
+        div.append(box);
+        div.append(button);
+        return div;
+    }
+
     function build_user_view(user) {
         return async () => {
             const data = await get_message_data(user.user_id);
-            return messages.build_message_table(data.messages);
+            const message_table = messages.build_message_table(data.messages);
+
+            const div = $('<div>');
+            div.append(message_table);
+            div.append(build_compose_box(user));
+
+            return div;
         };
     }
 
