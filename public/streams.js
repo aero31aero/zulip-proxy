@@ -8,7 +8,7 @@ async function get_stream_data() {
     return stream_data;
 }
 
-function build_view(stream) {
+function build_stream_view(stream) {
     return () => {
         return $('<pre>').text(stream.description);
     };
@@ -22,7 +22,7 @@ async function render() {
 
     const conf = streams.map((stream) => ({
         label: stream.name,
-        view: build_view(stream),
+        view: build_stream_view(stream),
     }));
 
     const pane = await split_pane.render(conf);

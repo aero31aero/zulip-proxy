@@ -9,21 +9,26 @@ async function get_user_data() {
     return data;
 }
 
+function build_user_view(user) {
+    return () => {
+        return $('<pre>').text(`user id: ${user.user_id}`);
+    };
+}
+
 async function render() {
     const data = await get_user_data();
     const members = data.members;
 
     members.sort((a, b) => a.full_name.localeCompare(b.full_name));
 
-    const users_table = $('<table>');
-    for (const user of members) {
-        const tr = $('<tr>');
-        tr.append($('<td>').text(user.user_id));
-        tr.append($('<td>').text(user.full_name));
-        users_table.append(tr);
-    }
+    const conf = members.map((user) => ({
+        label: user.full_name,
+        view: build_user_view(user),
+    }));
 
-    return users_table;
+    const pane = await split_pane.render(conf);
+
+    return pane;
 }
 
 window.users = {
