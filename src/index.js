@@ -54,6 +54,17 @@ function get_helper(session) {
         return resp.data;
     };
 
+    helper.pipe = async (short_url, data, res) => {
+        const resp = await axios({
+            method: 'get',
+            url: `${app_url}/${short_url}`,
+            params: data,
+            headers: headers,
+            responseType: 'stream',
+        });
+        resp.data.pipe(res);
+    };
+
     helper.post = async (short_url, data) => {
         const resp = await axios({
             method: 'post',
@@ -137,6 +148,13 @@ function oauth() {
 
         const result = await get(url, req.query);
         res.json(result);
+    });
+
+    app.get('/user_uploads/*', async (req, res) => {
+        const helper = get_helper(req.session);
+        const pipe = helper.pipe;
+        const url = req.path;
+        await pipe(url, req.query, res);
     });
 
     app.listen(port, () => {

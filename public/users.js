@@ -14,9 +14,9 @@ window.users = (() => {
         // TODO: cache data for user
         const narrow = JSON.stringify([
             {
-                operator: "pm-with",
+                operator: 'pm-with',
                 operand: [user_id],
-            }
+            },
         ]);
         const response = await fetch(
             `/z/messages?num_before=5&anchor=newest&num_after=0&narrow=${narrow}`
