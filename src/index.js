@@ -74,6 +74,7 @@ async function single_page_app(res, session) {
     const get = helper.get;
 
     page_params.me = await get('users/me');
+    page_params.app_url = app_url;
 
     res.render('index.pug', {
         page_params: JSON.stringify(page_params),
