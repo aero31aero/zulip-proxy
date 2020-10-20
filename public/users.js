@@ -10,9 +10,25 @@ window.users = (() => {
         return data;
     }
 
+    async function get_message_data(user_id) {
+        // TODO: cache data for user
+        const narrow = JSON.stringify([
+            {
+                operator: "pm-with",
+                operand: [user_id],
+            }
+        ]);
+        const response = await fetch(
+            `/z/messages?num_before=5&anchor=newest&num_after=0&narrow=${narrow}`
+        );
+        const message_data = await response.json();
+        return message_data;
+    }
+
     function build_user_view(user) {
-        return () => {
-            return $('<pre>').text(`user id: ${user.user_id}`);
+        return async () => {
+            const data = await get_message_data(user.user_id);
+            return messages.build_message_table(data.messages);
         };
     }
 

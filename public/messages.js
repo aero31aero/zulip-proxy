@@ -12,12 +12,10 @@ window.messages = (() => {
         return message_data;
     }
 
-    async function render() {
-        const data = await get_message_data();
-
+    function build_message_table(messages) {
         const message_ul = $('<ul>');
 
-        for (const msg of data.messages) {
+        for (const msg of messages) {
             const li = $('<li>');
             li.append($('<b>').text(msg.sender_full_name));
             li.append($('<br>'));
@@ -28,7 +26,14 @@ window.messages = (() => {
         return message_ul;
     }
 
+    async function render() {
+        const data = await get_message_data();
+        return build_message_table(data.messages);
+
+    }
+
     return {
         render: render,
+        build_message_table: build_message_table,
     };
 })();
