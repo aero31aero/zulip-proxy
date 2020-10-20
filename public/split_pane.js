@@ -1,8 +1,8 @@
 async function render(config) {
     const pane = $('<div>');
 
-    const right = $('<div>');
     const left = $('<div>');
+    const right = $('<div>');
 
     pane.css('display', 'flex');
 
@@ -10,23 +10,23 @@ async function render(config) {
         const button = $('<button>').text(conf.label);
         const div = $('<div>').html(button);
 
-        right.append(div);
+        left.append(div);
 
         button.on('click', async () => {
-            left.html('loading...');
-            const left_contents = await conf.view();
-            left.empty();
-            left.append(left_contents);
+            right.html('loading...');
+            const contents = await conf.view();
+            right.empty();
+            right.append(contents);
         });
 
         button.css('width', '90%');
     }
 
     const left_contents = await config[0].view();
-    left.html(left_contents);
+    right.html(left_contents);
 
-    pane.append(right);
     pane.append(left);
+    pane.append(right);
 
     return pane;
 }
