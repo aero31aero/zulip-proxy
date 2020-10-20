@@ -1,36 +1,14 @@
 html
     head
-        title Zulip Proxy
-        link(rel='stylesheet' href='/index.css')
-    body
-        #info
-            #realm
-                img.avatar(src="https://cdn.iconscout.com/icon/premium/png-512-thumb/square-load-loading-progress-47931.png")
-                .rest
-                    h1.name
-                    p
-                        a.url
-                    p.version
-            #user
-                img.avatar(src="https://cdn.iconscout.com/icon/premium/png-512-thumb/square-load-loading-progress-47931.png")
-                .rest
-                    h1.name
-                    p.email
-        #form
-            .line
-                label Stream
-                input#stream(value="testing")
-            .line
-                label Topic
-                input#topic
-            .line
-                label Content
-                textarea#content
-            button#send-message Send
-        #docs
-            p Open the console and use the z object to call API methods. Incoming messages will be logged below.
-        code
-            pre#event-log
+        title Zulip Oauth Client
+        link(rel="icon", href="data:,")
         script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js')
-        script(src='/zulip.js')
+        script(src='/split_pane.js')
+        script(src='/messages.js')
+        script(src='/users.js')
+        script(src='/streams.js')
         script(src='/index.js')
+        script
+            | page_params = !{page_params}
+    body
+        #main

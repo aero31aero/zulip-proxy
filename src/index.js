@@ -75,7 +75,7 @@ async function single_page_app(res, session) {
 
     page_params.me = await get('users/me');
 
-    res.render('oauth.pug', {
+    res.render('index.pug', {
         page_params: JSON.stringify(page_params),
     });
 }
