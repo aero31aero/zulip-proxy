@@ -29,7 +29,6 @@ window.messages = (() => {
     async function render() {
         const data = await get_message_data();
         return build_message_table(data.messages);
-
     }
 
     return {
