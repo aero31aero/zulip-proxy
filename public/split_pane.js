@@ -7,6 +7,24 @@ window.split_pane = (() => {
 
         pane.css('display', 'flex');
 
+        const search = $('<input>').attr({ type: 'text' });
+        const search_div = $('<div>');
+        search_div.append(search);
+        left.append(search_div);
+
+        search.on('keyup', (evt) => {
+            const val = search.val().toLowerCase();
+            const buttons = left.find('button');
+            buttons.show();
+            buttons.each(function () {
+                const button = $(this);
+                const text = button.text().toLowerCase();
+                if (!text.includes(val)) {
+                    button.hide();
+                }
+            });
+        });
+
         for (const conf of config) {
             const button = $('<button>').text(conf.label);
             const div = $('<div>').html(button);
