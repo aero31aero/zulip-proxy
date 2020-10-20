@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const process = require('process');
 const express = require('express');
 const qs = require('qs');
@@ -157,11 +158,22 @@ function oauth() {
         await pipe(url, req.query, res);
     });
 
+    app.post('/z/*', async (req, res) => {
+        const url = req.path.slice(3);
+
+        const helper = get_helper(req.session);
+        const post = helper.post;
+
+        const result = await post(url, req.body);
+        res.json(result);
+    });
+
     app.listen(port, () => {
         console.log(`TO START: visit ${host}:${port} in your browser`);
     });
 }
 
+app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
