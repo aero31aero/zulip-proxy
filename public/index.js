@@ -2,6 +2,7 @@ const init_data = async () => {
     model({
         state: {
             user_id: page_params.me.user_id,
+            server: page_params.app_url,
         },
     });
     await _.fetch_users();

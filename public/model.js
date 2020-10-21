@@ -5,6 +5,7 @@ window.model = (() => {
         messages: [{}],
         state: {
             user_id: 1,
+            server: 'string',
         },
     };
 

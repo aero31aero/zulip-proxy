@@ -24,8 +24,8 @@ window.main = (() => {
         const top_div = $('<div>');
         top_div.text(`${_.me().full_name} - `);
         const link = $('<a>', {
-            text: `Server: ${page_params.app_url}`,
-            href: page_params.app_url,
+            text: `Server: ${model().state.server}`,
+            href: model().state.server,
         });
         top_div.append(link);
 
