@@ -1,16 +1,4 @@
 window.users = (() => {
-    async function get_user_data() {
-        let users = model().users;
-        if (users.length === 0) {
-            const response = await fetch('/z/users');
-            const data = await response.json();
-            const members = data.members;
-            members.sort((a, b) => a.full_name.localeCompare(b.full_name));
-            users = model({ users: members }).users;
-        }
-        return users;
-    }
-
     async function get_message_data(user_id) {
         // TODO: cache data for user
         const narrow = JSON.stringify([
@@ -73,7 +61,7 @@ window.users = (() => {
     }
 
     async function render() {
-        const members = await get_user_data();
+        const members = model().users;
 
         const conf = members.map((user) => ({
             label: user.full_name,

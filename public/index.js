@@ -1,3 +1,12 @@
+const init_data = async () => {
+    model({
+        state: {
+            user_id: page_params.me.user_id,
+        },
+    });
+    await _.fetch_users();
+};
+
 $(document).ready(async () => {
     const ws_url =
         'ws://' + window.location.hostname + ':' + page_params.game_port;
@@ -8,12 +17,7 @@ $(document).ready(async () => {
         console.log('now connected');
     };
 
-    model({
-        state: {
-            user_id: page_params.me.user_id,
-        },
-    });
-
+    await init_data();
     window.tictactoe.initialize({
         params: page_params.game,
         ws: ws,
