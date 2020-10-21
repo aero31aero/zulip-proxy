@@ -61,7 +61,7 @@ window.model = (() => {
             if (overwrite) {
                 model = new_model;
             } else {
-                model = merge(model, new_model);
+                model = deepmerge(model, new_model);
             }
         }
         return model;

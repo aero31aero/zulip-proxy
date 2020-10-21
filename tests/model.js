@@ -1,6 +1,6 @@
 const assert = require('assert');
 global.window = {};
-global.merge = require('deepmerge');
+global.deepmerge = require('deepmerge');
 const model = require('../public/model');
 
 // Get the model.
