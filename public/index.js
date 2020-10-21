@@ -8,6 +8,12 @@ $(document).ready(async () => {
         console.log('now connected');
     };
 
+    model({
+        state: {
+            user_id: page_params.me.user_id,
+        },
+    });
+
     window.tictactoe.initialize({
         params: page_params.game,
         ws: ws,
