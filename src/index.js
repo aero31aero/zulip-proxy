@@ -8,6 +8,10 @@ const app = express();
 const session = require('express-session');
 const game = require('./game');
 
+// TODO: configure 3030
+const game_port = 3030;
+game.start_ws(game_port);
+
 let oauth_config;
 
 try {
@@ -94,6 +98,7 @@ async function single_page_app(res, session) {
     page_params.me = await get('users/me');
     page_params.app_url = app_url;
     page_params.game = session.game;
+    page_params.game_port = game_port;
 
     res.render('index.pug', {
         page_params: JSON.stringify(page_params),

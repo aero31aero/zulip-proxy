@@ -1,5 +1,18 @@
 $(document).ready(async () => {
-    window.tictactoe.initialize(page_params.game);
+    const ws_url =
+        'ws://' + window.location.hostname + ':' + page_params.game_port;
+    console.info(ws_url);
+    const ws = new WebSocket(ws_url);
+
+    ws.onopen = () => {
+        console.log('now connected');
+    };
+
+    window.tictactoe.initialize({
+        params: page_params.game,
+        ws: ws,
+    });
+
     const top_div = $('<div>');
     top_div.text(`${page_params.me.full_name} - `);
     const link = $('<a>', {
