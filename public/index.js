@@ -1,4 +1,5 @@
 $(document).ready(async () => {
+    window.tictactoe.initialize(page_params.game);
     const top_div = $('<div>');
     top_div.text(`${page_params.me.full_name} - `);
     const link = $('<a>', {

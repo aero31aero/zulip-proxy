@@ -6,6 +6,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const app = express();
 const session = require('express-session');
+const game = require('./game');
 
 let oauth_config;
 
@@ -32,8 +33,13 @@ const client_secret = oauth_config.client_secret;
 const redirect_uri = oauth_config.redirect_uri;
 const session_secret = oauth_config.session_secret;
 
-async function start_session(session, access_token) {
-    session.access_token = access_token;
+async function start_session(session, token_resp) {
+    session.access_token = token_resp.access_token;
+    const user = {
+        name: token_resp.full_name,
+        user_id: token_resp.user_id,
+    };
+    session.game = game.init_session(user);
     session.save();
 }
 
@@ -87,6 +93,7 @@ async function single_page_app(res, session) {
 
     page_params.me = await get('users/me');
     page_params.app_url = app_url;
+    page_params.game = session.game;
 
     res.render('index.pug', {
         page_params: JSON.stringify(page_params),
@@ -121,14 +128,13 @@ function oauth() {
             form.append('redirect_uri', redirect_uri);
             form.append('grant_type', 'authorization_code');
             form.append('code', req.query.code);
-            const token_req = await axios.post(`${app_url}/o/token/`, form, {
+            const token_resp = await axios.post(`${app_url}/o/token/`, form, {
                 headers: form.getHeaders(),
             });
 
-            console.log(token_req.data);
-            const access_token = token_req.data.access_token;
+            console.log(token_resp.data);
 
-            start_session(req.session, access_token);
+            start_session(req.session, token_resp.data);
 
             // redirect to the home page
             res.redirect('/');

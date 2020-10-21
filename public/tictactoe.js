@@ -2,6 +2,12 @@ window.tictactoe = (() => {
     // This is roughly based on:
     // https://github.com/zulip/zulip/blob/master/static/js/tictactoe_widget.js
 
+    let game_info;
+
+    function initialize(params) {
+        game_info = params;
+    }
+
     class TicTacToeData {
         // TODO: Have multiple players.
         square_values = new Map();
@@ -199,9 +205,14 @@ window.tictactoe = (() => {
             const board = render_board(widget_data, {
                 handle_click: handle_click,
             });
+
+            const player_greeting = `hello ${game_info.user.name} (player ${game_info.player_id})`;
+            const player = $('<div>').text(player_greeting);
+
             elem.empty();
             elem.append(status);
             elem.append(board);
+            elem.append(player);
         }
 
         elem.handle_events = function (events) {
@@ -229,6 +240,7 @@ window.tictactoe = (() => {
     }
 
     return {
+        initialize: initialize,
         render: render,
     };
 })();
