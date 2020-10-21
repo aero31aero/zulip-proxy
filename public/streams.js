@@ -26,7 +26,9 @@ window.streams = (() => {
             view: build_stream_view(stream),
         }));
 
-        const pane = await split_pane.render(conf);
+        // TODO: persist the widget
+        const pane_widget = split_pane.make(conf);
+        const pane = await pane_widget.render();
 
         return pane;
     }
