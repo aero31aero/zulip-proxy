@@ -22,7 +22,7 @@ window.main = (() => {
 
     async function render(page_params) {
         const top_div = $('<div>');
-        top_div.text(`${page_params.me.full_name} - `);
+        top_div.text(`${_.me().full_name} - `);
         const link = $('<a>', {
             text: `Server: ${page_params.app_url}`,
             href: page_params.app_url,
