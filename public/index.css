@@ -1,3 +1,55 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
 img {
     max-width: 300px;
+}
+
+.split-pane .left button {
+    background-color: #008cba;
+    border: none;
+    color: white;
+    padding: 5px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.navbar {
+    display: inline-flex;
+}
+
+.main > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.main > div > .split-pane {
+    flex-grow: 1;
+}
+
+.split-pane {
+    height: 90vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.split-pane .left {
+    display: flex;
+    flex-direction: column;
+}
+
+.split-pane .items {
+    margin: 5px;
+    overflow-y: scroll;
+}
+
+.split-pane .items > div {
+    padding: 1px;
 }

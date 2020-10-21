@@ -14,7 +14,7 @@ window.streams = (() => {
         }));
 
         // TODO: persist the widget
-        const pane_widget = split_pane.make(conf);
+        const pane_widget = split_pane.make(conf, 'streams');
         const pane = await pane_widget.render();
 
         return pane;
