@@ -3,10 +3,7 @@ window.tictactoe = (() => {
     // https://github.com/zulip/zulip/blob/master/static/js/tictactoe_widget.js
 
     let game_info;
-
-    function initialize(params) {
-        game_info = params;
-    }
+    let ws;
 
     class TicTacToeData {
         // TODO: Have multiple players.
@@ -232,11 +229,30 @@ window.tictactoe = (() => {
         activate({
             elem: div,
             callback: (event) => {
+                // try to send event to socket
+                console.info('sending', event);
+                ws.send(JSON.stringify(event));
+
+                // handle event internally -- we
+                // are not actually using the server
+                // for game play yet; we are just
+                // having the server broadcast the
+                // events
                 div.handle_events([event]);
             },
         });
 
         return div;
+    }
+
+    function initialize(opts) {
+        game_info = opts.params;
+        ws = opts.ws;
+
+        ws.onmessage = (message) => {
+            const event = JSON.parse(message.data);
+            console.log('got ack', event);
+        };
     }
 
     return {

@@ -25,6 +25,7 @@
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.1",
     "pug": "^3.0.0",
+    "ws": "^7.3.1",
     "zulip-js": "^2.0.8"
   },
   "devDependencies": {
