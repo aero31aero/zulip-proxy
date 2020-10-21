@@ -39,4 +39,27 @@ assert.throws(
     }
 );
 
+assert.throws(
+    () => {
+        // A user's user_id should be a number.
+        model({
+            users: [
+                {
+                    user_id: 1,
+                    full_name: 'Jane Doe',
+                },
+                {
+                    user_id: 'gibberish',
+                    full_name: 'John Smith',
+                },
+            ],
+        });
+    },
+    {
+        name: 'Error',
+        message:
+            'Invalid data: "user_id: gibberish" should be number but is string',
+    }
+);
+
 console.log('model: Passed tests');
