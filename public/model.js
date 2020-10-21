@@ -1,6 +1,10 @@
 window.model = (() => {
     const base_model = {
-        users: [{}],
+        users: [
+            {
+                user_id: 1,
+            },
+        ],
         streams: [{}],
         messages: [{}],
         state: {
@@ -45,6 +49,11 @@ window.model = (() => {
                 }
                 if (is_object(value)) {
                     has_same_structure(value, base[key]);
+                }
+                if (Array.isArray(value) && base[key][0] !== undefined) {
+                    value.forEach((e) => {
+                        has_same_structure(e, base[key][0]);
+                    });
                 }
             }
         }
