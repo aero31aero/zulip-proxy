@@ -39,11 +39,6 @@ const session_secret = oauth_config.session_secret;
 
 async function start_session(session, token_resp) {
     session.access_token = token_resp.access_token;
-    const user = {
-        name: token_resp.full_name,
-        user_id: token_resp.user_id,
-    };
-    session.game = game.init_session(user);
     session.save();
 }
 
@@ -95,7 +90,15 @@ async function single_page_app(res, session) {
     const helper = get_helper(session);
     const get = helper.get;
 
-    page_params.me = await get('users/me');
+    const me = await get('users/me');
+
+    const game_user = {
+        name: me.full_name,
+        user_id: me.user_id,
+    };
+
+    session.game = game.get_info(session.game, game_user);
+    page_params.me = me;
     page_params.app_url = app_url;
     page_params.game = session.game;
     page_params.game_port = game_port;
