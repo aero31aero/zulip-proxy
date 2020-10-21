@@ -2,23 +2,27 @@ window.main = (() => {
     const pane_config = [
         {
             label: 'Tic Tac Toe',
+            name: 'tic-tac-toe',
             view: () => window.tictactoe.render(),
         },
         {
             label: 'Users',
+            name: 'users',
             view: () => window.users.render(),
         },
         {
             label: 'Messages',
+            name: 'messages',
             view: () => window.messages.render(),
         },
         {
             label: 'Streams',
+            name: 'streams',
             view: () => window.streams.render(),
         },
     ];
 
-    const main_pane_widget = window.split_pane.make(pane_config);
+    const main_pane_widget = window.split_pane.make(pane_config, 'main');
 
     function make(redraw_callback) {
         async function render() {
@@ -36,9 +40,12 @@ window.main = (() => {
 
             const main_pane = await main_pane_widget.render();
 
+            const navbar = $('<div>').addClass('navbar');
+            navbar.append(redraw_button);
+            navbar.append(top_div);
+
             const page = $('<div>');
-            page.append($('<div>').html(redraw_button));
-            page.append(top_div);
+            page.append(navbar);
             page.append('<hr>');
 
             page.append(main_pane);
