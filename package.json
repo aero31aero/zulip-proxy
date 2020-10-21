@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "lint": "prettier . --write",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "prettier . --check && node tests/*.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "zulip-js": "^2.0.8"
   },
   "devDependencies": {
+    "deepmerge": "^4.2.2",
     "prettier": "^2.0.5"
   }
 }
