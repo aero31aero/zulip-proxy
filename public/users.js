@@ -82,7 +82,9 @@ window.users = (() => {
             view: build_user_view(user),
         }));
 
-        const pane = await split_pane.render(conf);
+        // TODO: persist the widget
+        const pane_widget = split_pane.make(conf);
+        const pane = await pane_widget.render();
 
         return pane;
     }
