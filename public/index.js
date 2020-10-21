@@ -24,10 +24,14 @@ $(document).ready(async () => {
         ws: ws,
     });
 
+    let main_widget;
+
     async function redraw_everything() {
-        const main_page = await window.main.render(page_params);
+        const main_page = await main_widget.render();
         $('#main').html(main_page);
     }
+
+    main_widget = window.main.make(redraw_everything);
 
     redraw_everything();
 });
