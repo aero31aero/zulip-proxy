@@ -1,13 +1,14 @@
 window.users = (() => {
-    let data;
-
     async function get_user_data() {
-        if (data === undefined) {
+        let users = model().users;
+        if (users.length === 0) {
             const response = await fetch('/z/users');
-            data = await response.json();
+            const data = await response.json();
+            const members = data.members;
+            members.sort((a, b) => a.full_name.localeCompare(b.full_name));
+            users = model({ users: members }).users;
         }
-
-        return data;
+        return users;
     }
 
     async function get_message_data(user_id) {
@@ -72,10 +73,7 @@ window.users = (() => {
     }
 
     async function render() {
-        const data = await get_user_data();
-        const members = data.members;
-
-        members.sort((a, b) => a.full_name.localeCompare(b.full_name));
+        const members = await get_user_data();
 
         const conf = members.map((user) => ({
             label: user.full_name,
