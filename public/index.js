@@ -9,6 +9,10 @@ $(document).ready(async () => {
 
     const pane_config = [
         {
+            label: 'Tic Tac Toe',
+            view: () => window.tictactoe.render(),
+        },
+        {
             label: 'Users',
             view: () => window.users.render(),
         },
