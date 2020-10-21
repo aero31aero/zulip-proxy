@@ -12,4 +12,15 @@ window._ = {
         }
         return users;
     },
+    fetch_streams: async () => {
+        let streams = model().streams;
+        if (streams.length === 0) {
+            const response = await fetch('/z/users/me/subscriptions');
+            const data = await response.json();
+            const subs = data.subscriptions;
+            subs.sort((a, b) => a.name.localeCompare(b.name));
+            streams = model({ streams: subs }).streams;
+        }
+        return streams;
+    },
 };
