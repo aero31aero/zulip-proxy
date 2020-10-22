@@ -1,30 +1,33 @@
 window.main = (() => {
-    const pane_config = [
-        {
-            label: 'Tic Tac Toe',
-            name: 'tic-tac-toe',
-            view: () => window.tictactoe.render(),
-        },
-        {
-            label: 'Users',
-            name: 'users',
-            view: () => window.users.render(),
-        },
-        {
-            label: 'Messages',
-            name: 'messages',
-            view: () => window.messages.render(),
-        },
-        {
-            label: 'Streams',
-            name: 'streams',
-            view: () => window.streams.render(),
-        },
-    ];
-
-    const main_pane_widget = window.split_pane.make(pane_config, 'main');
-
     function make(redraw_callback) {
+        const user_widget = window.users.make();
+        const stream_widget = window.streams.make();
+
+        const pane_config = [
+            {
+                label: 'Tic Tac Toe',
+                name: 'tic-tac-toe',
+                view: () => window.tictactoe.render(),
+            },
+            {
+                label: 'Users',
+                name: 'users',
+                view: () => user_widget.render(),
+            },
+            {
+                label: 'Messages',
+                name: 'messages',
+                view: () => window.messages.render(),
+            },
+            {
+                label: 'Streams',
+                name: 'streams',
+                view: () => stream_widget.render(),
+            },
+        ];
+
+        const main_pane_widget = window.split_pane.make(pane_config, 'main');
+
         async function render() {
             const top_div = $('<div>');
             top_div.text(`${_.me().full_name} - `);
