@@ -14,8 +14,8 @@ window.streams = (() => {
 
         const pane_widget = split_pane.make(conf, 'streams');
 
-        async function render() {
-            const pane = await pane_widget.render();
+        function render() {
+            const pane = pane_widget.render();
             return pane;
         }
 
