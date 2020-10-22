@@ -1,17 +1,4 @@
 window.messages = (() => {
-    let message_data;
-
-    async function get_message_data() {
-        if (message_data === undefined) {
-            const response = await fetch(
-                '/z/messages?num_before=5&anchor=newest&num_after=0'
-            );
-            message_data = await response.json();
-        }
-
-        return message_data;
-    }
-
     function build_message_table(messages) {
         const message_ul = $('<ul>');
 
@@ -27,9 +14,39 @@ window.messages = (() => {
     }
 
     function make() {
-        async function render() {
-            const data = await get_message_data();
-            return build_message_table(data.messages);
+        let fetched;
+        let message_data;
+        let div;
+
+        async function get_message_data() {
+            const response = await fetch(
+                '/z/messages?num_before=15&anchor=newest&num_after=0'
+            );
+            message_data = await response.json();
+            fetched = true;
+        }
+
+        function render() {
+            div = $('<div>');
+            if (fetched) {
+                console.info('already fetched!');
+                populate(div);
+                return div;
+            }
+
+            div.html('loading...');
+            console.info('loading');
+            get_message_data().then(() => {
+                populate(div);
+            });
+
+            return div;
+        }
+
+        function populate(div) {
+            const table = build_message_table(message_data.messages);
+            div.empty();
+            div.append(table);
         }
 
         return {
