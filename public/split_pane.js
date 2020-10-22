@@ -1,66 +1,86 @@
 window.split_pane = (() => {
     function make(config, name) {
+        let pane;
+        let left;
+        let search;
+        let right;
+        let active_idx = 0;
+        let search_val = '';
+
         async function render() {
-            const pane = $('<div>')
-                .addClass('split-pane')
-                .attr('id', `pane-${name}`);
+            pane = $('<div>').addClass('split-pane').attr('id', `pane-${name}`);
+            left = $('<div>').addClass('left');
+            right = $('<div>').addClass('right');
 
-            const left = $('<div>').addClass('left');
-            const right = $('<div>').addClass('right');
+            pane.append(left);
+            pane.append(right);
 
+            search = $('<input>').attr({ type: 'text' });
+
+            await populate(pane);
+
+            search.val(search_val);
+
+            return pane;
+        }
+
+        function left_click_handler(button, idx) {
+            return async () => {
+                active_idx = idx;
+
+                button.css('opacity', '50%');
+                right.html('loading...');
+                await populate(pane);
+            };
+        }
+
+        async function populate(pane) {
             pane.css('display', 'flex');
 
-            const search = $('<input>').attr({ type: 'text' });
+            left.empty();
+
             const search_div = $('<div>').addClass('search');
             const items_div = $('<div>').addClass('items');
             search_div.append(search);
             left.append(search_div);
             left.append(items_div);
 
-            search.on('keyup', (evt) => {
-                const val = search.val().toLowerCase();
-                const buttons = left.find('button');
-                buttons.show();
-                buttons.each(function () {
-                    const button = $(this);
-                    const text = button.text().toLowerCase();
-                    if (!text.includes(val)) {
-                        button.hide();
-                    }
-                });
+            search.on('keyup', async () => {
+                search_val = search.val().toLowerCase();
+                await populate(pane);
+                search.focus();
             });
 
-            for (const conf of config) {
+            config.forEach((conf, idx) => {
+                if (!conf.label.toLowerCase().includes(search_val)) {
+                    if (idx === active_idx) {
+                        active_idx = undefined;
+                    }
+                    return;
+                }
+
                 const button = $('<button>').text(conf.label);
                 const div = $('<div>').html(button);
 
                 items_div.append(div);
 
-                button.on('click', async function () {
-                    $(this)
-                        .parent()
-                        .siblings()
-                        .find('button')
-                        .css('background-color', '#008CBA');
-                    $(this).css('background-color', '#4CAF50');
-                    right.html('loading...');
-                    const contents = await conf.view();
-                    right.empty();
-                    right.append(contents);
-                });
+                button.on('click', left_click_handler(button, idx));
+
+                if (idx === active_idx) {
+                    button.css('background-color', '#4CAF50');
+                } else {
+                    button.css('background-color', '008CBA');
+                }
 
                 button.css('width', '90%');
+            });
+
+            right.empty();
+
+            if (active_idx !== undefined) {
+                const right_contents = await config[active_idx].view();
+                right.html(right_contents);
             }
-
-            left.find('button').first().css('background-color', '#4CAF50');
-
-            const left_contents = await config[0].view();
-            right.html(left_contents);
-
-            pane.append(left);
-            pane.append(right);
-
-            return pane;
         }
 
         return {
