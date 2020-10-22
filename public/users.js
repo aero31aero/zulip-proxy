@@ -1,5 +1,14 @@
 window.users = (() => {
     function make() {
+        const members = model().users;
+
+        const conf = members.map((user) => ({
+            label: user.full_name,
+            view: build_user_view(user),
+        }));
+
+        const pane_widget = split_pane.make(conf, 'users');
+
         async function get_message_data(user_id) {
             // TODO: cache data for user
             const narrow = JSON.stringify([
@@ -64,15 +73,6 @@ window.users = (() => {
         }
 
         async function render() {
-            const members = model().users;
-
-            const conf = members.map((user) => ({
-                label: user.full_name,
-                view: build_user_view(user),
-            }));
-
-            // TODO: persist the widget
-            const pane_widget = split_pane.make(conf, 'users');
             const pane = await pane_widget.render();
 
             return pane;
