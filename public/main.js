@@ -2,6 +2,7 @@ window.main = (() => {
     function make(redraw_callback) {
         const user_widget = window.users.make();
         const stream_widget = window.streams.make();
+        const message_widget = window.messages.make();
 
         const pane_config = [
             {
@@ -15,14 +16,14 @@ window.main = (() => {
                 view: () => user_widget.render(),
             },
             {
-                label: 'Messages',
-                name: 'messages',
-                view: () => window.messages.render(),
-            },
-            {
                 label: 'Streams',
                 name: 'streams',
                 view: () => stream_widget.render(),
+            },
+            {
+                label: 'All Messages',
+                name: 'messages',
+                view: () => message_widget.render(),
             },
         ];
 

@@ -26,13 +26,19 @@ window.messages = (() => {
         return message_ul;
     }
 
-    async function render() {
-        const data = await get_message_data();
-        return build_message_table(data.messages);
+    function make() {
+        async function render() {
+            const data = await get_message_data();
+            return build_message_table(data.messages);
+        }
+
+        return {
+            render: render,
+        };
     }
 
     return {
-        render: render,
+        make: make,
         build_message_table: build_message_table,
     };
 })();
