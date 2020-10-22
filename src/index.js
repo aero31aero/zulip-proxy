@@ -5,7 +5,7 @@ const qs = require('qs');
 const axios = require('axios');
 const FormData = require('form-data');
 const app = express();
-const session = require('express-session');
+const sessionHandler = require('express-session');
 const game = require('./game');
 
 // TODO: configure 3030
@@ -23,12 +23,6 @@ try {
     process.exit();
 }
 
-function pretty(obj) {
-    return JSON.stringify(obj, null, 4);
-}
-
-console.info(`oauth_config:\n ${pretty(oauth_config)}\n`);
-
 const host = oauth_config.host;
 const port = oauth_config.port;
 const app_url = oauth_config.app_url;
@@ -36,6 +30,19 @@ const client_id = oauth_config.client_id;
 const client_secret = oauth_config.client_secret;
 const redirect_uri = oauth_config.redirect_uri;
 const session_secret = oauth_config.session_secret;
+
+const session_opts = {
+    secret: session_secret,
+    cookie: { maxAge: 604800, sameSite: 'strict' },
+    resave: false,
+    saveUninitialized: false,
+};
+
+function pretty(obj) {
+    return JSON.stringify(obj, null, 4);
+}
+
+console.info(`oauth_config:\n ${pretty(oauth_config)}\n`);
 
 async function start_session(session, token_resp) {
     session.access_token = token_resp.access_token;
@@ -191,12 +198,5 @@ app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
-app.use(
-    session({
-        secret: session_secret,
-        cookie: { maxAge: 604800, sameSite: 'strict' },
-        resave: false,
-        saveUninitialized: false,
-    })
-);
+app.use(sessionHandler(session_opts));
 oauth();
