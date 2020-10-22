@@ -39,7 +39,11 @@ window.main = (() => {
 
             const redraw_button = $('<button>').text('redraw app');
 
-            redraw_button.on('click', redraw_callback);
+            redraw_button.on('click', (e) => {
+                e.stopPropagation();
+                redraw_button.css('background', 'blue');
+                redraw_callback();
+            });
 
             const main_pane = await main_pane_widget.render();
 
