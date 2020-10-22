@@ -183,50 +183,36 @@ window.tictactoe = (() => {
         );
     }
 
-    function activate(opts) {
+    function populate(opts) {
         const elem = opts.elem;
         const callback = opts.callback;
-
-        const tictactoe_data = new TicTacToeData();
+        const tictactoe_data = opts.tictactoe_data;
 
         function handle_click(idx) {
             const data = tictactoe_data.handle.square_click.outbound(idx);
             callback(data);
         }
 
-        function render() {
-            const widget_data = tictactoe_data.get_widget_data();
-            const status = $('<div>').html(
-                $('<b>').text(widget_data.move_status)
-            );
-            const board = render_board(widget_data, {
-                handle_click: handle_click,
-            });
+        const widget_data = tictactoe_data.get_widget_data();
+        const status = $('<div>').html($('<b>').text(widget_data.move_status));
+        const board = render_board(widget_data, {
+            handle_click: handle_click,
+        });
 
-            const player_greeting = `hello ${game_info.user.name} (player ${game_info.player_id})`;
-            const player = $('<div>').text(player_greeting);
+        const player_greeting = `hello ${game_info.user.name} (player ${game_info.player_id})`;
+        const player = $('<div>').text(player_greeting);
 
-            elem.empty();
-            elem.append(status);
-            elem.append(board);
-            elem.append(player);
-        }
-
-        elem.handle_events = function (events) {
-            for (const event of events) {
-                tictactoe_data.handle_event(event);
-            }
-
-            render();
-        };
-
-        render();
+        elem.empty();
+        elem.append(status);
+        elem.append(board);
+        elem.append(player);
     }
 
-    async function render() {
+    function make() {
         const div = $('<div>');
+        const tictactoe_data = new TicTacToeData();
 
-        activate({
+        const opts = {
             elem: div,
             callback: (event) => {
                 // try to send event to socket
@@ -238,11 +224,20 @@ window.tictactoe = (() => {
                 // for game play yet; we are just
                 // having the server broadcast the
                 // events
-                div.handle_events([event]);
+                tictactoe_data.handle_event(event);
+                render();
             },
-        });
+            tictactoe_data: tictactoe_data,
+        };
 
-        return div;
+        function render() {
+            populate(opts);
+            return div;
+        }
+
+        return {
+            render: render,
+        };
     }
 
     function initialize(opts) {
@@ -257,6 +252,6 @@ window.tictactoe = (() => {
 
     return {
         initialize: initialize,
-        render: render,
+        make: make,
     };
 })();
