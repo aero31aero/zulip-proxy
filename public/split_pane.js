@@ -7,7 +7,7 @@ window.split_pane = (() => {
         let active_idx = 0;
         let search_val = '';
 
-        async function render() {
+        function render() {
             pane = $('<div>').addClass('split-pane').attr('id', `pane-${name}`);
             left = $('<div>').addClass('left');
             right = $('<div>').addClass('right');
@@ -17,7 +17,7 @@ window.split_pane = (() => {
 
             search = $('<input>').attr({ type: 'text' });
 
-            await populate(pane);
+            populate(pane);
 
             search.val(search_val);
 
@@ -30,11 +30,11 @@ window.split_pane = (() => {
 
                 button.css('opacity', '50%');
                 right.html('loading...');
-                await populate(pane);
+                populate(pane);
             };
         }
 
-        async function populate(pane) {
+        function populate(pane) {
             pane.css('display', 'flex');
 
             left.empty();
@@ -47,7 +47,7 @@ window.split_pane = (() => {
 
             search.on('keyup', async () => {
                 search_val = search.val().toLowerCase();
-                await populate(pane);
+                populate(pane);
                 search.focus();
             });
 
@@ -78,7 +78,7 @@ window.split_pane = (() => {
             right.empty();
 
             if (active_idx !== undefined) {
-                const right_contents = await config[active_idx].view();
+                const right_contents = config[active_idx].view();
                 right.html(right_contents);
             }
         }

@@ -13,9 +13,8 @@ window.users = (() => {
 
         const pane_widget = split_pane.make(conf, 'users');
 
-        async function render() {
-            const pane = await pane_widget.render();
-
+        function render() {
+            const pane = pane_widget.render();
             return pane;
         }
 
