@@ -2,7 +2,9 @@ window.streams = (() => {
     function make() {
         function build_stream_view(stream) {
             return () => {
-                return $('<pre>').text(stream.description);
+                return $('<pre>').text(
+                    stream.description || `${stream.name} needs description`
+                );
             };
         }
 
