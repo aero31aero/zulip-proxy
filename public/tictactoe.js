@@ -199,7 +199,7 @@ window.tictactoe = (() => {
             handle_click: handle_click,
         });
 
-        const player_greeting = `hello ${game_info.user.name} (player ${game_info.player_id})`;
+        const player_greeting = `hello ${game_info.user.name} (${game_info.user.user_id})`;
         const player = $('<div>').text(player_greeting);
 
         elem.empty();
