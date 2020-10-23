@@ -23,19 +23,19 @@ exports.get_info = (info, user) => {
 };
 
 exports.start_ws = (game_port) => {
-    const socketServer = new WebSocket.Server({ port: game_port });
-    socketServer.on('connection', (socketClient) => {
+    const server = new WebSocket.Server({ port: game_port });
+    server.on('connection', (client) => {
         console.log('connected');
-        console.log('client Set length: ', socketServer.clients.size);
+        console.log('client Set length: ', server.clients.size);
 
-        socketClient.on('close', (socketClient) => {
+        client.on('close', (client) => {
             console.log('closed');
-            console.log('Number of clients: ', socketServer.clients.size);
+            console.log('Number of clients: ', server.clients.size);
         });
 
-        socketClient.on('message', (message) => {
+        client.on('message', (message) => {
             console.info('about to broadcast', JSON.stringify(message));
-            socketServer.clients.forEach((client) => {
+            server.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(message);
                 }
