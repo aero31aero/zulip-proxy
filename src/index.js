@@ -70,7 +70,7 @@ async function single_page_app(res, session) {
     page_params.me = me;
     page_params.app_url = app_url;
     page_params.game = session.game;
-    page_params.game_port = game_port;
+    page_params.game_port = port;
 
     res.render('index.pug', {
         page_params: JSON.stringify(page_params),
@@ -140,19 +140,57 @@ function build_endpoints(app) {
 }
 
 const app = express();
+
+const session_parser = sessionHandler(session_opts);
+
 app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
-app.use(sessionHandler(session_opts));
+app.use(session_parser);
 build_endpoints(app);
 
 const server = http.createServer(app);
 
-// TODO: configure 3030
-const game_port = 3030;
-const ws = new WebSocket.Server({ port: game_port });
-game.handle_ws_server(ws);
+const wss = new WebSocket.Server({
+    clientTracking: false,
+    noServer: true,
+});
+
+const clients = [];
+
+server.on('upgrade', function (request, socket, head) {
+    console.log('Parsing session from request...');
+
+    session_parser(request, {}, () => {
+        const user_id = request.session.user_id;
+
+        if (!user_id) {
+            socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+            socket.destroy();
+            return;
+        }
+
+        wss.handleUpgrade(request, socket, head, function (ws) {
+            const client = {
+                ws: ws,
+                user_id: user_id,
+            };
+            clients.push(client);
+
+            console.log(`${user_id} connected via sockets`);
+
+            ws.on('close', () => {
+                // TODO: remove from list
+                console.log('closed');
+            });
+
+            ws.on('message', (message) => {
+                game.handle_message(clients, client, message);
+            });
+        });
+    });
+});
 
 server.listen(port, () => {
     console.log(`TO START: visit ${host}:${port} in your browser`);

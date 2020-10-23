@@ -246,7 +246,7 @@ window.tictactoe = (() => {
 
         ws.onmessage = (message) => {
             const event = JSON.parse(message.data);
-            console.log('got ack', event);
+            console.log('got message', event);
         };
     }
 
