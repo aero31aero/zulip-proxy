@@ -1,14 +1,13 @@
-const axios = require('axios');
 const bodyParser = require('body-parser');
 const express = require('express');
 const FormData = require('form-data');
 const http = require('http');
 const process = require('process');
-const qs = require('qs');
 const sessionHandler = require('express-session');
 const WebSocket = require('ws');
 
 const game = require('./game');
+const zulip = require('./zulip');
 
 let oauth_config;
 
@@ -42,60 +41,19 @@ function pretty(obj) {
 
 console.info(`oauth_config:\n ${pretty(oauth_config)}\n`);
 
+const z = zulip.make({
+    app_url: app_url,
+});
+
 async function start_session(session, token_resp) {
     session.access_token = token_resp.access_token;
     session.save();
 }
 
-function url(short_url) {
-    return `${app_url}/api/v1/${short_url}`;
-}
-
-function get_helper(session) {
-    const helper = {};
-    const headers = { Bearer: session.access_token };
-
-    helper.get = async (short_url, data) => {
-        const resp = await axios({
-            method: 'get',
-            url: url(short_url),
-            params: data,
-            headers: headers,
-        });
-        return resp.data;
-    };
-
-    helper.pipe = async (short_url, data, res) => {
-        const resp = await axios({
-            method: 'get',
-            url: `${app_url}/${short_url}`,
-            params: data,
-            headers: headers,
-            responseType: 'stream',
-        });
-        resp.data.pipe(res);
-    };
-
-    helper.post = async (short_url, data) => {
-        const resp = await axios({
-            method: 'post',
-            url: url(short_url),
-            data: qs.stringify(data),
-            headers: headers,
-        });
-        return resp.data;
-    };
-
-    return helper;
-}
-
 async function single_page_app(res, session) {
     const page_params = {};
 
-    const helper = get_helper(session);
-    const get = helper.get;
-
-    const me = await get('users/me');
+    const me = await z.get_current_user(session);
 
     const game_user = {
         name: me.full_name,
@@ -119,6 +77,8 @@ function build_endpoints(app) {
 
         if (!session || !session.access_token) {
             console.info('NEED TO AUTH FIRST!!!!!');
+            // Is there a reason we don't just
+            // directly redirect to Zulip?
             return res.redirect('o/authorize');
         }
 
@@ -126,7 +86,7 @@ function build_endpoints(app) {
     });
 
     app.get('/o/authorize', (req, res) => {
-        const code_url = `${app_url}/o/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
+        const code_url = `${app_url}/${z.oauth_prefix}/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
         res.redirect(code_url);
     });
 
@@ -141,9 +101,7 @@ function build_endpoints(app) {
             form.append('redirect_uri', redirect_uri);
             form.append('grant_type', 'authorization_code');
             form.append('code', req.query.code);
-            const token_resp = await axios.post(`${app_url}/o/token/`, form, {
-                headers: form.getHeaders(),
-            });
+            const token_resp = await z.get_access_token(form);
 
             console.log(token_resp.data);
 
@@ -162,29 +120,16 @@ function build_endpoints(app) {
 
     app.get('/z/*', async (req, res) => {
         const url = req.path.slice(3);
-
-        const helper = get_helper(req.session);
-        const get = helper.get;
-
-        const result = await get(url, req.query);
-        res.json(result);
-    });
-
-    app.get('/user_uploads/*', async (req, res) => {
-        const helper = get_helper(req.session);
-        const pipe = helper.pipe;
-        const url = req.path;
-        await pipe(url, req.query, res);
+        z.api_get(req, res, url);
     });
 
     app.post('/z/*', async (req, res) => {
         const url = req.path.slice(3);
+        z.api_post(req, res, url);
+    });
 
-        const helper = get_helper(req.session);
-        const post = helper.post;
-
-        const result = await post(url, req.body);
-        res.json(result);
+    app.get('/user_uploads/*', async (req, res) => {
+        z.handle_user_uploads(req, res);
     });
 }
 
