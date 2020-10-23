@@ -21,8 +21,14 @@ exports.make = function (opts) {
     }
 
     function get_helper(session) {
+        const access_token = session.access_token;
+
+        if (!access_token) {
+            throw Error('Access token is undefined!');
+        }
+
         const helper = {};
-        const headers = { Bearer: session.access_token };
+        const headers = { Bearer: access_token };
 
         helper.get = async (short_url, data) => {
             const resp = await axios({
