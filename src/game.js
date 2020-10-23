@@ -17,23 +17,13 @@ exports.get_info = (info, user) => {
     return new_info;
 };
 
-exports.handle_ws_server = (server) => {
-    server.on('connection', (client) => {
-        console.log('connected');
-        console.log('client Set length: ', server.clients.size);
-
-        client.on('close', (client) => {
-            console.log('closed');
-            console.log('Number of clients: ', server.clients.size);
-        });
-
-        client.on('message', (message) => {
-            console.info('about to broadcast', JSON.stringify(message));
-            server.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send(message);
-                }
-            });
-        });
+exports.handle_message = (clients, client, message) => {
+    payload = {
+        message: JSON.parse(message),
+        user_id: client.user_id,
+    };
+    clients.forEach((client) => {
+        console.info('about to reply', JSON.stringify(payload));
+        client.ws.send(JSON.stringify(payload));
     });
 };
