@@ -47,12 +47,18 @@ const z = zulip.make({
 
 async function start_session(session, token_resp) {
     session.access_token = token_resp.access_token;
+    const me = await z.get_current_user(session);
+    session.user_id = me.user_id;
     session.save();
 }
 
 async function single_page_app(res, session) {
+    console.info(`User ${session.user_id} has connected`);
+
     const page_params = {};
 
+    // Get full user info, in case things
+    // like names have changed.
     const me = await z.get_current_user(session);
 
     const game_user = {
@@ -105,7 +111,7 @@ function build_endpoints(app) {
 
             console.log(token_resp.data);
 
-            start_session(req.session, token_resp.data);
+            await start_session(req.session, token_resp.data);
 
             // redirect to the home page
             res.redirect('/');
