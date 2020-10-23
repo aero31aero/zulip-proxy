@@ -1,7 +1,5 @@
 const WebSocket = require('ws');
 
-let player_seq = 100;
-
 exports.get_info = (info, user) => {
     if (info && info.user.user_id == user.user_id) {
         // just update the name
@@ -9,10 +7,7 @@ exports.get_info = (info, user) => {
         return info;
     }
 
-    player_seq += 1;
-
     const new_info = {
-        player_id: player_seq,
         user: {
             user_id: user.user_id,
             name: user.name,
