@@ -6,6 +6,7 @@ const http = require('http');
 const process = require('process');
 const qs = require('qs');
 const sessionHandler = require('express-session');
+const WebSocket = require('ws');
 
 const game = require('./game');
 
@@ -199,7 +200,8 @@ const server = http.createServer(app);
 
 // TODO: configure 3030
 const game_port = 3030;
-game.start_ws(game_port);
+const ws = new WebSocket.Server({ port: game_port });
+game.handle_ws_server(ws);
 
 server.listen(port, () => {
     console.log(`TO START: visit ${host}:${port} in your browser`);

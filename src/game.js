@@ -22,8 +22,7 @@ exports.get_info = (info, user) => {
     return new_info;
 };
 
-exports.start_ws = (game_port) => {
-    const server = new WebSocket.Server({ port: game_port });
+exports.handle_ws_server = (server) => {
     server.on('connection', (client) => {
         console.log('connected');
         console.log('client Set length: ', server.clients.size);
