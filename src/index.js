@@ -4,7 +4,6 @@ const express = require('express');
 const qs = require('qs');
 const axios = require('axios');
 const FormData = require('form-data');
-const app = express();
 const sessionHandler = require('express-session');
 const game = require('./game');
 
@@ -115,7 +114,7 @@ async function single_page_app(res, session) {
     });
 }
 
-function oauth() {
+function build_endpoints(app) {
     app.get('/', (req, res) => {
         const session = req.session;
 
@@ -188,15 +187,16 @@ function oauth() {
         const result = await post(url, req.body);
         res.json(result);
     });
-
-    app.listen(port, () => {
-        console.log(`TO START: visit ${host}:${port} in your browser`);
-    });
 }
 
+const app = express();
 app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(sessionHandler(session_opts));
-oauth();
+build_endpoints(app);
+
+app.listen(port, () => {
+    console.log(`TO START: visit ${host}:${port} in your browser`);
+});
