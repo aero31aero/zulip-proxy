@@ -9,10 +9,10 @@ const WebSocket = require('ws');
 const game = require('./game');
 const zulip = require('./zulip');
 
-let oauth_config;
+let config;
 
 try {
-    oauth_config = require('../oauth_config');
+    config = require('../oauth_config');
 } catch {
     console.info('\n\nERROR IN CONFIG\n');
     console.info('cp oauth_config.example.js oauth_config');
@@ -20,13 +20,13 @@ try {
     process.exit();
 }
 
-const host = oauth_config.host;
-const port = oauth_config.port;
-const app_url = oauth_config.app_url;
-const client_id = oauth_config.client_id;
-const client_secret = oauth_config.client_secret;
-const redirect_uri = oauth_config.redirect_uri;
-const session_secret = oauth_config.session_secret;
+const host = config.host;
+const port = config.port;
+const app_url = config.app_url;
+const client_id = config.client_id;
+const client_secret = config.client_secret;
+const redirect_uri = config.redirect_uri;
+const session_secret = config.session_secret;
 
 const session_opts = {
     secret: session_secret,
@@ -39,7 +39,7 @@ function pretty(obj) {
     return JSON.stringify(obj, null, 4);
 }
 
-console.info(`oauth_config:\n ${pretty(oauth_config)}\n`);
+console.info(`config:\n ${pretty(config)}\n`);
 
 const z = zulip.make({
     app_url: app_url,
