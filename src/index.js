@@ -1,10 +1,12 @@
-const bodyParser = require('body-parser');
-const process = require('process');
-const express = require('express');
-const qs = require('qs');
 const axios = require('axios');
+const bodyParser = require('body-parser');
+const express = require('express');
 const FormData = require('form-data');
+const http = require('http');
+const process = require('process');
+const qs = require('qs');
 const sessionHandler = require('express-session');
+
 const game = require('./game');
 
 // TODO: configure 3030
@@ -197,6 +199,7 @@ app.use(express.static('public'));
 app.use(sessionHandler(session_opts));
 build_endpoints(app);
 
-app.listen(port, () => {
+const server = http.createServer(app);
+server.listen(port, () => {
     console.log(`TO START: visit ${host}:${port} in your browser`);
 });
