@@ -9,10 +9,6 @@ const sessionHandler = require('express-session');
 
 const game = require('./game');
 
-// TODO: configure 3030
-const game_port = 3030;
-game.start_ws(game_port);
-
 let oauth_config;
 
 try {
@@ -200,6 +196,11 @@ app.use(sessionHandler(session_opts));
 build_endpoints(app);
 
 const server = http.createServer(app);
+
+// TODO: configure 3030
+const game_port = 3030;
+game.start_ws(game_port);
+
 server.listen(port, () => {
     console.log(`TO START: visit ${host}:${port} in your browser`);
 });
