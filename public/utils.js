@@ -23,4 +23,16 @@ window._ = {
         }
         return streams;
     },
+    find_pms_with: (user_id) => {
+        let messages = model().messages;
+        return messages.filter((m) => {
+            if (m.type !== 'private') {
+                return false;
+            }
+            if (m.display_recipient.findIndex((e) => e.id === user_id) !== -1) {
+                return true;
+            }
+            return false;
+        });
+    },
 };

@@ -25,12 +25,17 @@ $(document).ready(async () => {
         ws: ws,
     });
 
+    events(ws);
+
     let main_widget;
 
     async function redraw_everything() {
+        console.log('Redrawing');
         const main_page = await main_widget.render();
         $('#main').html(main_page);
     }
+
+    $(document).on('zulipRedrawEverything', redraw_everything);
 
     main_widget = window.main.make(redraw_everything);
 

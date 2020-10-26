@@ -274,7 +274,6 @@ window.tictactoe = (() => {
     function initialize(opts) {
         game_info = opts.params;
         ws = opts.ws;
-
         ws.onmessage = (message) => {
             const event = JSON.parse(message.data);
             console.log('got ws message', event);

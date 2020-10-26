@@ -6,7 +6,12 @@ window.model = (() => {
             },
         ],
         streams: [{}],
-        messages: [{}],
+        messages: [
+            {
+                id: 1,
+                content: 'string',
+            },
+        ],
         state: {
             user_id: 1,
             server: 'string',
@@ -65,13 +70,38 @@ window.model = (() => {
         has_same_structure(new_model, base_model);
     };
 
+    const merge = (new_model) => {
+        const merge_messages = (a, b) => {
+            // for conflicts: overwrite local message with one from server.
+            b.forEach((m) => {
+                const idx = a.findIndex((e) => e.id === m.id);
+                if (idx === -1) {
+                    a.push(m);
+                } else {
+                    a[idx] = m;
+                }
+            });
+            return a;
+        };
+
+        const opts = {
+            customMerge: (key) => {
+                if (key === 'messages') {
+                    return merge_messages;
+                }
+            },
+        };
+        model = deepmerge(model, new_model, opts);
+        return model;
+    };
+
     const main = (new_model, overwrite = false) => {
         if (new_model) {
             verify(new_model);
             if (overwrite) {
                 model = new_model;
             } else {
-                model = deepmerge(model, new_model);
+                model = merge(new_model);
             }
         }
         return model;
