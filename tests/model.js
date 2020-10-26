@@ -62,4 +62,19 @@ assert.throws(
     }
 );
 
+// If we try to add a message with the same id as an existing message,
+// overwrite the existing message instead of adding a new one.
+
+m = model({ messages: [{ id: 1, content: 'one' }] }, true);
+assert(m.messages.length === 1);
+assert(m.messages[0].content === 'one');
+
+m = model({ messages: [{ id: 2, content: 'two' }] });
+assert(m.messages.length === 2);
+assert(m.messages[1].content === 'two');
+
+m = model({ messages: [{ id: 1, content: 'one-edited' }] });
+assert(m.messages.length === 2);
+assert(m.messages[0].content === 'one-edited');
+
 console.log('model: Passed tests');

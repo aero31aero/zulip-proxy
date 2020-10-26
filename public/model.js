@@ -1,4 +1,11 @@
 window.model = (() => {
+    // base_model is used to check the structure of any incoming data
+
+    // For example, if we try to give the data: users: [{user_id: true}],
+    // it will cause a mismatch because we want user_id to be an integer.
+
+    // Some additional constraints are in the code to merge new data into
+    // existing data; see the merge function a bit below in the file.
     const base_model = {
         users: [
             {
