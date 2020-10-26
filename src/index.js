@@ -62,16 +62,9 @@ async function single_page_app(res, session) {
     // like names have changed.
     const me = await z.get_current_user(session);
 
-    const game_user = {
-        name: me.full_name,
-        user_id: me.user_id,
-    };
-
-    session.game = game.get_info(session.game, game_user);
     page_params.me = me;
     page_params.app_url = app_url;
-    page_params.game = session.game;
-    page_params.game_port = port;
+    page_params.ws_port = port;
 
     res.render('index.pug', {
         page_params: JSON.stringify(page_params),

@@ -1,22 +1,5 @@
 const WebSocket = require('ws');
 
-exports.get_info = (info, user) => {
-    if (info && info.user.user_id == user.user_id) {
-        // just update the name
-        info.user.name = user.name;
-        return info;
-    }
-
-    const new_info = {
-        user: {
-            user_id: user.user_id,
-            name: user.name,
-        },
-    };
-
-    return new_info;
-};
-
 exports.handle_message = (clients, client, message) => {
     payload = {
         message: JSON.parse(message),
