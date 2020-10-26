@@ -5,6 +5,7 @@ const http = require('http');
 const process = require('process');
 const sessionHandler = require('express-session');
 const WebSocket = require('ws');
+const client_events = require('./client_events');
 
 const game = require('./game');
 const zulip = require('./zulip');
@@ -175,6 +176,7 @@ server.on('upgrade', function (request, socket, head) {
             const client = {
                 ws: ws,
                 user_id: user_id,
+                session: request.session,
             };
             clients.push(client);
 
@@ -188,6 +190,7 @@ server.on('upgrade', function (request, socket, head) {
             ws.on('message', (message) => {
                 game.handle_message(clients, client, message);
             });
+            client_events(z, client);
         });
     });
 });

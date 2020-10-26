@@ -95,6 +95,11 @@ exports.make = function (opts) {
         await pipe(url, req.query, res);
     }
 
+    function get_raw_methods(session) {
+        const helper = get_helper(session);
+        return helper;
+    }
+
     return {
         api_get: api_get,
         api_post: api_post,
@@ -102,5 +107,6 @@ exports.make = function (opts) {
         get_current_user: get_current_user,
         handle_user_uploads: handle_user_uploads,
         oauth_prefix: oauth_prefix,
+        get_raw_methods: get_raw_methods,
     };
 };
