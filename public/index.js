@@ -20,11 +20,8 @@ $(document).ready(async () => {
     };
 
     await init_data();
-    window.tictactoe.initialize({
-        params: page_params.game,
-        ws: ws,
-    });
 
+    window.tictactoe.initialize(ws);
     events(ws);
 
     let main_widget;
