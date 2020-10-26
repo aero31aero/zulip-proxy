@@ -11,6 +11,8 @@ window.tictactoe = (() => {
         square_values = new Map();
         num_filled = 0;
         game_over = false;
+        x_player;
+        y_player;
 
         is_game_over() {
             const lines = [
@@ -89,17 +91,39 @@ window.tictactoe = (() => {
                     return event;
                 },
 
-                inbound: (data) => {
+                inbound: (data, user_id) => {
                     const idx = data.idx;
 
+                    if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(idx)) {
+                        console.log('bad square');
+                        return;
+                    }
+
+                    if (!this.x_player) {
+                        this.x_player = user_id;
+                    } else if (!this.y_player) {
+                        this.y_player = user_id;
+                    }
+
                     if (data.num_filled !== this.num_filled) {
-                        throw Error('out of sync', data.num_filled);
+                        console.log('out of sync', data.num_filled);
                         return;
                     }
 
                     const token = this.num_filled % 2 === 0 ? 'X' : 'O';
 
+                    if (token === 'X' && user_id != this.x_player) {
+                        console.log('bad X player');
+                        return;
+                    }
+
+                    if (token === 'Y' && user_id != this.y_player) {
+                        console.log('bad Y player');
+                        return;
+                    }
+
                     if (this.square_values.has(idx)) {
+                        console.log('square already clicked');
                         return;
                     }
 
@@ -114,13 +138,14 @@ window.tictactoe = (() => {
         };
 
         handle_event(payload) {
+            const user_id = payload.user_id;
             const data = payload.message;
             console.info('payload', payload);
             console.info('data', data);
 
             const type = data.type;
             if (this.handle[type]) {
-                this.handle[type].inbound(data);
+                this.handle[type].inbound(data, user_id);
             }
         }
     }
@@ -203,8 +228,15 @@ window.tictactoe = (() => {
             handle_click: handle_click,
         });
 
-        const player_greeting = `hello ${game_info.user.name} (${game_info.user.user_id})`;
-        const player = $('<div>').text(player_greeting);
+        const player = $('<div>');
+
+        if (tictactoe_data.x_player) {
+            player.append($('<div>').text(`X: ${tictactoe_data.x_player}`));
+        }
+
+        if (tictactoe_data.y_player) {
+            player.append($('<div>').text(`Y: ${tictactoe_data.y_player}`));
+        }
 
         elem.empty();
         elem.append(status);
