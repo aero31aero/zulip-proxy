@@ -53,3 +53,10 @@ img {
 .split-pane .items > div {
     padding: 1px;
 }
+
+.message-list {
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column-reverse;
+}
