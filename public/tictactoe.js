@@ -4,6 +4,7 @@ window.tictactoe = (() => {
 
     let game_info;
     let ws;
+    let active_game;
 
     class TicTacToeData {
         // TODO: Have multiple players.
@@ -112,7 +113,11 @@ window.tictactoe = (() => {
             },
         };
 
-        handle_event(data) {
+        handle_event(payload) {
+            const data = payload.message;
+            console.info('payload', payload);
+            console.info('data', data);
+
             const type = data.type;
             if (this.handle[type]) {
                 this.handle[type].inbound(data);
@@ -185,12 +190,11 @@ window.tictactoe = (() => {
 
     function populate(opts) {
         const elem = opts.elem;
-        const callback = opts.callback;
         const tictactoe_data = opts.tictactoe_data;
 
         function handle_click(idx) {
             const data = tictactoe_data.handle.square_click.outbound(idx);
-            callback(data);
+            ws.send(JSON.stringify(data));
         }
 
         const widget_data = tictactoe_data.get_widget_data();
@@ -214,19 +218,6 @@ window.tictactoe = (() => {
 
         const opts = {
             elem: div,
-            callback: (event) => {
-                // try to send event to socket
-                console.info('sending', event);
-                ws.send(JSON.stringify(event));
-
-                // handle event internally -- we
-                // are not actually using the server
-                // for game play yet; we are just
-                // having the server broadcast the
-                // events
-                tictactoe_data.handle_event(event);
-                render();
-            },
             tictactoe_data: tictactoe_data,
         };
 
@@ -235,9 +226,17 @@ window.tictactoe = (() => {
             return div;
         }
 
-        return {
+        function handle_event(event) {
+            tictactoe_data.handle_event(event);
+            render();
+        }
+
+        active_game = {
             render: render,
+            handle_event: handle_event,
         };
+
+        return active_game;
     }
 
     function initialize(opts) {
@@ -246,7 +245,8 @@ window.tictactoe = (() => {
 
         ws.onmessage = (message) => {
             const event = JSON.parse(message.data);
-            console.log('got message', event);
+            console.log('got ws message', event);
+            active_game.handle_event(event);
         };
     }
 
