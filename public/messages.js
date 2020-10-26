@@ -17,36 +17,18 @@ window.messages = (() => {
         let fetched;
         let message_data;
         let div;
-
-        async function get_message_data() {
-            const response = await fetch(
-                '/z/messages?num_before=15&anchor=newest&num_after=0'
-            );
-            message_data = await response.json();
-            fetched = true;
-        }
+        const LIMIT = 20; // load last 20 messages;
 
         function render() {
-            div = $('<div>');
-            if (fetched) {
-                console.info('already fetched!');
-                populate(div);
-                return div;
+            div = $('<div>').addClass('message-list');
+            let message_data = model().messages;
+            if (message_data.length > LIMIT) {
+                message_data = message_data.slice(LIMIT * -1);
             }
-
-            div.html('loading...');
-            console.info('loading');
-            get_message_data().then(() => {
-                populate(div);
-            });
-
-            return div;
-        }
-
-        function populate(div) {
-            const table = build_message_table(message_data.messages);
+            const table = build_message_table(message_data);
             div.empty();
             div.append(table);
+            return div;
         }
 
         return {
