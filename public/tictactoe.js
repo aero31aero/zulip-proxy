@@ -271,18 +271,17 @@ window.tictactoe = (() => {
         return active_game;
     }
 
-    function initialize(opts) {
-        game_info = opts.params;
-        ws = opts.ws;
-        ws.onmessage = (message) => {
-            const event = JSON.parse(message.data);
-            console.log('got ws message', event);
-            active_game.handle_event(event);
-        };
+    function handle_event(event) {
+        active_game.handle_event(event);
+    }
+
+    function initialize(_ws) {
+        ws = _ws;
     }
 
     return {
         initialize: initialize,
         make: make,
+        handle_event: handle_event,
     };
 })();
