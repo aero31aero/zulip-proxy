@@ -11,7 +11,7 @@ const init_data = async () => {
 
 $(document).ready(async () => {
     const ws_url =
-        'ws://' + window.location.hostname + ':' + page_params.game_port;
+        'ws://' + window.location.hostname + ':' + page_params.ws_port;
     console.info(ws_url);
     const ws = new WebSocket(ws_url);
 
