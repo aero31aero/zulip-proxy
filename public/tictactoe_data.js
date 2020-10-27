@@ -3,7 +3,7 @@ window.TicTacToeData = (() => {
         square_values = new Map();
         num_filled = 0;
         x_player;
-        y_player;
+        o_player;
         game_id;
 
         constructor(_game_id) {
@@ -47,7 +47,7 @@ window.TicTacToeData = (() => {
                 // Refactorings are welcome.
                 if (token === 'X' && this.x_player == this.me()) {
                     return 'me';
-                } else if (token === 'Y' && this.y_player == this.me()) {
+                } else if (token === 'O' && this.o_player == this.me()) {
                     return 'me';
                 } else {
                     return 'them';
@@ -95,7 +95,7 @@ window.TicTacToeData = (() => {
                 move_status = 'Game over. Looks like a tie.';
             }
 
-            const active_player = token == 'X' ? this.x_player : this.y_player;
+            const active_player = token == 'X' ? this.x_player : this.o_player;
             const is_my_turn = !active_player || active_player === this.me();
 
             const widget_data = {
@@ -130,8 +130,8 @@ window.TicTacToeData = (() => {
 
                     if (!this.x_player) {
                         this.x_player = user_id;
-                    } else if (!this.y_player) {
-                        this.y_player = user_id;
+                    } else if (!this.o_player) {
+                        this.o_player = user_id;
                     }
 
                     if (data.num_filled !== this.num_filled) {
@@ -146,8 +146,8 @@ window.TicTacToeData = (() => {
                         return;
                     }
 
-                    if (token === 'Y' && user_id != this.y_player) {
-                        console.log('bad Y player');
+                    if (token === 'O' && user_id != this.o_player) {
+                        console.log('bad O player');
                         return;
                     }
 
