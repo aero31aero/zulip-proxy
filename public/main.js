@@ -36,6 +36,7 @@ window.main = (() => {
             const link = $('<a>', {
                 text: `Server: ${model().state.server}`,
                 href: model().state.server,
+                target: '_blank',
             });
             top_div.append(link);
 
