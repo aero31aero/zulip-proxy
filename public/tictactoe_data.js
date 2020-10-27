@@ -68,10 +68,15 @@ window.TicTacToeData = (() => {
                 move_status = 'Game over!';
             }
 
+            const active_player = token == 'X' ? this.x_player : this.y_player;
+            const me = window._.me().user_id;
+            const is_my_turn = !active_player || active_player === me;
+
             const widget_data = {
                 squares: squares,
                 move_status: move_status,
                 game_over: this.game_over,
+                is_my_turn: is_my_turn,
             };
 
             return widget_data;
