@@ -2,7 +2,6 @@ window.tictactoe = (() => {
     // This is roughly based on:
     // https://github.com/zulip/zulip/blob/master/static/js/tictactoe_widget.js
 
-    let ws;
     let active_game;
     let games;
     let active_game_id = 101;
@@ -226,7 +225,7 @@ window.tictactoe = (() => {
 
         function handle_click(idx) {
             const data = tictactoe_data.handle.square_click.outbound(idx);
-            ws.send(JSON.stringify(data));
+            window.ws.send(JSON.stringify(data));
         }
 
         const widget_data = tictactoe_data.get_widget_data();
@@ -288,9 +287,8 @@ window.tictactoe = (() => {
         active_game.handle_event(event);
     }
 
-    function initialize(_ws, _games) {
+    function initialize(_games) {
         console.info('initialize games', _games);
-        ws = _ws;
         games = _games;
     }
 
