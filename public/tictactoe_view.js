@@ -62,6 +62,16 @@ window.tictactoe_view = (() => {
         );
     }
 
+    function user_info(user_id) {
+        const user = window._.get_user_by_id(user_id);
+
+        if (user) {
+            return `${user_id} (${user.full_name})`;
+        }
+
+        return user_id;
+    }
+
     function make(opts) {
         const elem = opts.elem;
         const tictactoe_data = opts.tictactoe_data;
@@ -80,11 +90,15 @@ window.tictactoe_view = (() => {
         const player = $('<div>');
 
         if (tictactoe_data.x_player) {
-            player.append($('<div>').text(`X: ${tictactoe_data.x_player}`));
+            player.append(
+                $('<div>').text(`X: ${user_info(tictactoe_data.x_player)}`)
+            );
         }
 
         if (tictactoe_data.y_player) {
-            player.append($('<div>').text(`Y: ${tictactoe_data.y_player}`));
+            player.append(
+                $('<div>').text(`Y: ${user_info(tictactoe_data.y_player)}`)
+            );
         }
 
         elem.empty();
