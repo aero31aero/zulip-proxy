@@ -13,16 +13,16 @@ $(document).ready(async () => {
     const ws_url =
         'ws://' + window.location.hostname + ':' + page_params.ws_port;
     console.info(ws_url);
-    const ws = new WebSocket(ws_url);
+    window.ws = new WebSocket(ws_url);
 
-    ws.onopen = () => {
+    window.ws.onopen = () => {
         console.log('now connected');
     };
 
     await init_data();
 
-    window.tictactoe.initialize(ws, page_params.games);
-    events(ws);
+    window.tictactoe.initialize(page_params.games);
+    events();
 
     let main_widget;
 

@@ -8,9 +8,15 @@ window.events = (() => {
         }
     };
 
-    const init = (ws) => {
+    const init = () => {
         console.log('init events');
-        ws.onmessage = (message) => {
+
+        if (!window.ws) {
+            console.warn('No web socket!');
+            return;
+        }
+
+        window.ws.onmessage = (message) => {
             const event = JSON.parse(message.data);
             console.log('got message', event);
             if (event.type === 'update') {
