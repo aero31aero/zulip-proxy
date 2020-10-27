@@ -6,6 +6,7 @@ const games = {};
 
 games[game_seq] = {
     events: [],
+    players: [],
 };
 
 exports.data = () => {
@@ -18,9 +19,11 @@ exports.handle_message = (clients, client, payload) => {
 
     const game_id = message.game_id;
 
+    const user_id = client.user_id;
+
     event = {
         message: message,
-        user_id: client.user_id,
+        user_id: user_id,
         type: 'tictactoe',
     };
 
@@ -29,6 +32,17 @@ exports.handle_message = (clients, client, payload) => {
     if (!game) {
         console.warn(`client sent bad game id ${game_id}`);
         return;
+    }
+
+    const num_players = 2;
+
+    if (game.players.length >= num_players) {
+        if (!game.players.includes(user_id)) {
+            console.warn(`${user_id} is too late for this game`);
+            return;
+        }
+    } else {
+        game.players.push(user_id);
     }
 
     game.events.push(event);
