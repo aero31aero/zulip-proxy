@@ -43,6 +43,10 @@ window.tictactoe_view = (() => {
                 return '';
             }
 
+            if (!widget_data.is_my_turn) {
+                return idx;
+            }
+
             const button = $('<button>').html($('<b>'));
 
             button.text(idx);
