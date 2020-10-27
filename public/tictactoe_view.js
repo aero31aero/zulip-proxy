@@ -99,9 +99,9 @@ window.tictactoe_view = (() => {
             );
         }
 
-        if (tictactoe_data.y_player) {
+        if (tictactoe_data.o_player) {
             player.append(
-                $('<div>').text(`Y: ${user_info(tictactoe_data.y_player)}`)
+                $('<div>').text(`Y: ${user_info(tictactoe_data.o_player)}`)
             );
         }
 
