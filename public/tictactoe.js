@@ -2,9 +2,10 @@ window.tictactoe = (() => {
     // This is roughly based on:
     // https://github.com/zulip/zulip/blob/master/static/js/tictactoe_widget.js
 
-    let game_info;
     let ws;
     let active_game;
+    let games;
+    let active_game_id = 101;
 
     class TicTacToeData {
         // TODO: Have multiple players.
@@ -13,6 +14,11 @@ window.tictactoe = (() => {
         game_over = false;
         x_player;
         y_player;
+        game_id;
+
+        constructor(_game_id) {
+            this.game_id = _game_id;
+        }
 
         is_game_over() {
             const lines = [
@@ -87,6 +93,7 @@ window.tictactoe = (() => {
                         type: 'square_click',
                         idx: idx,
                         num_filled: this.num_filled,
+                        game_id: this.game_id,
                     };
                     return event;
                 },
@@ -246,7 +253,13 @@ window.tictactoe = (() => {
 
     function make() {
         const div = $('<div>');
-        const tictactoe_data = new TicTacToeData();
+        const game = games[active_game_id];
+
+        const tictactoe_data = new TicTacToeData(active_game_id);
+
+        for (const event of game.events) {
+            tictactoe_data.handle_event(event);
+        }
 
         const opts = {
             elem: div,
@@ -275,8 +288,10 @@ window.tictactoe = (() => {
         active_game.handle_event(event);
     }
 
-    function initialize(_ws) {
+    function initialize(_ws, _games) {
+        console.info('initialize games', _games);
         ws = _ws;
+        games = _games;
     }
 
     return {

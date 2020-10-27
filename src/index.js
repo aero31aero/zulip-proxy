@@ -62,6 +62,7 @@ async function single_page_app(res, session) {
     // like names have changed.
     const me = await z.get_current_user(session);
 
+    page_params.games = game.data();
     page_params.me = me;
     page_params.app_url = app_url;
     page_params.ws_port = port;
