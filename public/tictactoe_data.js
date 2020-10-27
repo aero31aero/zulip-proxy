@@ -2,7 +2,6 @@ window.TicTacToeData = (() => {
     class TicTacToeData {
         square_values = new Map();
         num_filled = 0;
-        game_over = false;
         x_player;
         y_player;
         game_id;
@@ -11,7 +10,11 @@ window.TicTacToeData = (() => {
             this.game_id = _game_id;
         }
 
-        is_game_over() {
+        me() {
+            return window._.me().user_id;
+        }
+
+        game_result() {
             const lines = [
                 [1, 2, 3],
                 [4, 5, 6],
@@ -23,29 +26,45 @@ window.TicTacToeData = (() => {
                 [7, 5, 3],
             ];
 
-            const line_won = (line) => {
+            for (const line of lines) {
                 const token = this.square_values.get(line[0]);
 
                 if (!token) {
-                    return false;
+                    continue;
                 }
 
-                return (
+                const victory =
                     this.square_values.get(line[1]) === token &&
-                    this.square_values.get(line[2]) === token
-                );
-            };
+                    this.square_values.get(line[2]) === token;
+
+                if (!victory) {
+                    continue;
+                }
+
+                // The logic here is slightly convoluted, so
+                // that we account for somebody playing herself,
+                // in which case we want her to win regardless.
+                // Refactorings are welcome.
+                if (token === 'X' && this.x_player == this.me()) {
+                    return 'me';
+                } else if (token === 'Y' && this.y_player == this.me()) {
+                    return 'me';
+                } else {
+                    return 'them';
+                }
+            }
 
             const board = [1, 2, 3, 4, 5, 6, 7, 8, 9];
             const filled = (i) => this.square_values.get(i);
 
-            return lines.some(line_won) || board.every(filled);
+            if (board.every(filled)) {
+                return 'tie';
+            }
         }
 
         get_widget_data() {
             const square = (i) => ({
                 val: this.square_values.get(i),
-                // disabled: this.waiting || this.square_values.get(i) || this.game_over,
             });
 
             const squares = [
@@ -64,19 +83,26 @@ window.TicTacToeData = (() => {
             const token = this.num_filled % 2 === 0 ? 'X' : 'O';
             let move_status = token + "'s turn";
 
-            if (this.game_over) {
-                move_status = 'Game over!';
+            const result = this.game_result();
+
+            // We may eventually want to let the view control
+            // the messaging, but this is fine for now.
+            if (result === 'me') {
+                move_status = 'Game over! YOU WON!';
+            } else if (result === 'them') {
+                move_status = 'Game over! Sorry, you lost.';
+            } else if (result === 'tie') {
+                move_status = 'Game over. Looks like a tie.';
             }
 
             const active_player = token == 'X' ? this.x_player : this.y_player;
-            const me = window._.me().user_id;
-            const is_my_turn = !active_player || active_player === me;
+            const is_my_turn = !active_player || active_player === this.me();
 
             const widget_data = {
                 squares: squares,
                 move_status: move_status,
-                game_over: this.game_over,
                 is_my_turn: is_my_turn,
+                game_over: result !== undefined,
             };
 
             return widget_data;
@@ -130,12 +156,8 @@ window.TicTacToeData = (() => {
                         return;
                     }
 
-                    // this.waiting = sender_id === this.me;
-
                     this.square_values.set(idx, token);
                     this.num_filled += 1;
-
-                    this.game_over = this.is_game_over();
                 },
             },
         };
