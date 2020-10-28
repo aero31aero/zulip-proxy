@@ -1,6 +1,5 @@
 window.compose_box = (() => {
     function build_for_user(user) {
-        console.trace('building compose', user.full_name);
         const div = $('<div>');
 
         const box = $('<textarea>').val('');
@@ -16,6 +15,7 @@ window.compose_box = (() => {
                 to: JSON.stringify([user.user_id]),
                 content: box.val(),
             };
+            box.val('');
 
             const response = await fetch('/z/messages', {
                 method: 'POST',
