@@ -26,9 +26,9 @@ $(document).ready(async () => {
 
     let main_widget;
 
-    async function redraw_everything() {
+    function redraw_everything() {
         console.log('Redrawing');
-        const main_page = await main_widget.render();
+        const main_page = main_widget.render();
         $('#main').html(main_page);
     }
 
