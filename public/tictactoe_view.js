@@ -76,8 +76,8 @@ window.tictactoe_view = (() => {
         return user_id;
     }
 
-    function make(opts) {
-        const elem = opts.elem;
+    function render(opts) {
+        const div = $('<div>');
         const tictactoe_data = opts.tictactoe_data;
 
         function handle_click(idx) {
@@ -105,13 +105,15 @@ window.tictactoe_view = (() => {
             );
         }
 
-        elem.empty();
-        elem.append(status);
-        elem.append(board);
-        elem.append(player);
+        div.empty();
+        div.append(status);
+        div.append(board);
+        div.append(player);
+
+        return div;
     }
 
     return {
-        make: make,
+        render: render,
     };
 })();

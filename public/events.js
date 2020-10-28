@@ -21,8 +21,8 @@ window.events = (() => {
             console.log('got message', event);
             if (event.type === 'update') {
                 handle_model_updates(event);
-            } else if (event.type === 'tictactoe') {
-                window.tictactoe.handle_event(event);
+            } else if (event.type === 'game') {
+                window.games.handle_event(event);
             }
         };
     };
