@@ -26,15 +26,15 @@ $(document).ready(async () => {
 
     let main_widget;
 
-    function redraw_everything() {
-        console.log('Redrawing');
-        const main_page = main_widget.render();
-        $('#main').html(main_page);
+    function update() {
+        console.log('Updating');
+        main_widget.update();
     }
 
-    $(document).on('zulipRedrawEverything', redraw_everything);
+    $(document).on('zulipRedrawEverything', update);
 
-    main_widget = window.main.make(redraw_everything);
+    main_widget = window.main.make();
 
-    redraw_everything();
+    const main_page = main_widget.render();
+    $('#main').html(main_page);
 });

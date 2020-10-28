@@ -8,18 +8,15 @@ window.users = (() => {
             return {
                 label: user.full_name,
                 view: view_widget.render,
+                update: view_widget.update,
             };
         });
 
         const pane_widget = split_pane.make(conf, 'users');
 
-        function render() {
-            const pane = pane_widget.render();
-            return pane;
-        }
-
         return {
-            render: render,
+            render: pane_widget.render,
+            update: pane_widget.update,
         };
     }
 

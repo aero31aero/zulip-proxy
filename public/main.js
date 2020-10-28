@@ -1,5 +1,5 @@
 window.main = (() => {
-    function make(redraw_callback) {
+    function make() {
         const games_widget = window.games.make();
         const user_widget = window.users.make();
         const stream_widget = window.streams.make();
@@ -15,6 +15,7 @@ window.main = (() => {
                 label: 'Users',
                 name: 'users',
                 view: user_widget.render,
+                update: user_widget.update,
             },
             {
                 label: 'Streams',
@@ -29,6 +30,12 @@ window.main = (() => {
         ];
 
         const main_pane_widget = window.split_pane.make(pane_config, 'main');
+        let redraw_button;
+
+        function update() {
+            main_pane_widget.update();
+            redraw_button.css('background', '');
+        }
 
         function render() {
             const top_div = $('<div>');
@@ -40,12 +47,12 @@ window.main = (() => {
             });
             top_div.append(link);
 
-            const redraw_button = $('<button>').text('redraw app');
+            redraw_button = $('<button>').text('redraw app');
 
             redraw_button.on('click', (e) => {
                 e.stopPropagation();
                 redraw_button.css('background', 'blue');
-                redraw_callback();
+                $(document).trigger('zulipRedrawEverything');
             });
 
             const main_pane = main_pane_widget.render();
@@ -65,6 +72,7 @@ window.main = (() => {
 
         return {
             render: render,
+            update: update,
         };
     }
 
