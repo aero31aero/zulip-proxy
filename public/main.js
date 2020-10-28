@@ -30,7 +30,7 @@ window.main = (() => {
 
         const main_pane_widget = window.split_pane.make(pane_config, 'main');
 
-        async function render() {
+        function render() {
             const top_div = $('<div>');
             top_div.text(`${_.me().full_name} - `);
             const link = $('<a>', {
@@ -48,7 +48,7 @@ window.main = (() => {
                 redraw_callback();
             });
 
-            const main_pane = await main_pane_widget.render();
+            const main_pane = main_pane_widget.render();
 
             const navbar = $('<div>').addClass('navbar');
             navbar.append(redraw_button);
