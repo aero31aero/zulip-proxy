@@ -80,13 +80,37 @@ window.split_pane = (() => {
             right.empty();
 
             if (active_idx !== undefined) {
+                console.info('about to redraw right', config[active_idx]);
                 const right_contents = config[active_idx].view();
                 right.html(right_contents);
             }
         }
 
+        function update() {
+            // TODO: Allow left-pane updates.
+
+            if (active_idx === undefined) {
+                right.empty();
+                return;
+            }
+
+            const item = config[active_idx];
+
+            if (item.update) {
+                item.update();
+                return;
+            }
+
+            // If our item does not know how to update itself,
+            // just re-render the whole thing.
+            right.empty();
+            const right_contents = item.view();
+            right.html(right_contents);
+        }
+
         return {
             render: render,
+            update: update,
         };
     }
 
