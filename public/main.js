@@ -52,7 +52,7 @@ window.main = (() => {
             redraw_button.on('click', (e) => {
                 e.stopPropagation();
                 redraw_button.css('background', 'blue');
-                $(document).trigger('zulipRedrawEverything');
+                _.redraw();
             });
 
             const main_pane = main_pane_widget.render();

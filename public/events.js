@@ -2,7 +2,7 @@ window.events = (() => {
     const handle_model_updates = (event) => {
         try {
             model(event.model);
-            $(document).trigger('zulipRedrawEverything');
+            _.redraw();
         } catch (e) {
             console.error('Error updating model:', event, e);
         }
