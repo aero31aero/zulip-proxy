@@ -21,7 +21,7 @@ $(document).ready(async () => {
 
     await init_data();
 
-    window.tictactoe.initialize(page_params.games);
+    window.games.initialize(page_params.games);
     events();
 
     let main_widget;

@@ -1,13 +1,21 @@
 const WebSocket = require('ws');
 
-const game_seq = 101;
+let game_seq = 100;
 
 const games = {};
 
-games[game_seq] = {
-    events: [],
-    players: [],
-};
+function add_game() {
+    game_seq += 1;
+    games[game_seq] = {
+        events: [],
+        players: [],
+    };
+}
+
+// Start with 3 canned games.
+add_game();
+add_game();
+add_game();
 
 exports.data = () => {
     console.info('game info', JSON.stringify(games, null, 4));
@@ -24,7 +32,8 @@ exports.handle_message = (clients, client, payload) => {
     event = {
         message: message,
         user_id: user_id,
-        type: 'tictactoe',
+        type: 'game',
+        game_type: 'tictactoe',
     };
 
     const game = games[game_id];

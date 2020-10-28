@@ -1,6 +1,6 @@
 window.main = (() => {
     function make(redraw_callback) {
-        const tictactoe_widget = window.tictactoe.make();
+        const games_widget = window.games.make();
         const user_widget = window.users.make();
         const stream_widget = window.streams.make();
         const message_widget = window.messages.make();
@@ -9,7 +9,7 @@ window.main = (() => {
             {
                 label: 'Tic Tac Toe',
                 name: 'tic-tac-toe',
-                view: tictactoe_widget.render,
+                view: games_widget.render,
             },
             {
                 label: 'Users',
