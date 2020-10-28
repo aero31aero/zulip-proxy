@@ -35,4 +35,7 @@ window._ = {
             return false;
         });
     },
+    redraw: () => {
+        $(document).trigger('zulipRedrawEverything');
+    },
 };
