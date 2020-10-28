@@ -3,22 +3,32 @@ html
         title Zulip Oauth Client
         link(rel="icon", href="data:,")
         link(rel="stylesheet" href="/index.css")
+
+        // third party
         script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js')
         script(src='https://unpkg.com/deepmerge@4.2.2/dist/umd.js')
-        script(src='/split_pane.js')
-        script(src='/model.js')
+
+        // core
         script(src='/utils.js')
-        script(src='/pm_view.js')
+        script(src='/model.js')
+
+        // views
+        script(src='/views/split_pane.js')
+        script(src='/views/pm_view.js')
+        script(src='/views/messages.js')
+        script(src='/views/users.js')
+        script(src='/views/streams.js')
+        script(src='/views/games.js')
+        script(src='/views/main.js')
+
+        // others
         script(src='/compose_box.js')
-        script(src='/messages.js')
-        script(src='/users.js')
-        script(src='/streams.js')
         script(src='/tictactoe_data.js')
         script(src='/tictactoe_view.js')
-        script(src='/games.js')
         script(src='/events.js')
-        script(src='/main.js')
         script(src='/index.js')
+
+        // inject page_params
         script
             | page_params = !{page_params}
     body
