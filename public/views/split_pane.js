@@ -78,8 +78,12 @@ window.split_pane = (() => {
             },
             populate: populate,
             update: (self, widget_container, data) => {
-                update_left(self, config);
-                update_right(self, config);
+                let c = config;
+                if (typeof config === 'function') {
+                    c = config();
+                }
+                update_left(self, c);
+                update_right(self, c);
             },
         });
         window.x = widget;
