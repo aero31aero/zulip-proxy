@@ -46,9 +46,9 @@ $(document).ready(async () => {
     let main_widget;
 
     async function redraw_everything() {
+        const main_page = main_widget.render();
         console.log('Redrawing');
-        const main_page = await main_widget.render();
-        $('#main').html(main_page);
+        $('body').html(main_page);
     }
 
     $(document).on('zulipRedrawEverything', redraw_everything);
@@ -57,5 +57,5 @@ $(document).ready(async () => {
 
     redraw_everything();
 
-    test_widgets();
+    // test_widgets();
 });
