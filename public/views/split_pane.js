@@ -4,7 +4,6 @@ window.split_pane = (() => {
             self.active_idx = idx;
 
             button.css('opacity', '50%');
-            self.right.html('loading...');
             $(document).trigger('zulipRedrawEverything');
         };
     }
@@ -45,11 +44,19 @@ window.split_pane = (() => {
     }
 
     function update_right(self, config) {
+        if (
+            self.active_idx !== undefined &&
+            self.rendered_idx === self.active_idx
+        ) {
+            self.right_widget.render();
+            return;
+        }
         self.right.empty();
 
         if (self.active_idx !== undefined) {
-            const right_contents = config[self.active_idx].view();
-            self.right.html(right_contents);
+            self.right_widget = config[self.active_idx].view;
+            self.right.append(self.right_widget.render());
+            self.rendered_idx = self.active_idx;
         }
     }
 
@@ -59,6 +66,7 @@ window.split_pane = (() => {
         self.left = $('<div>').addClass('left');
         self.right = $('<div>').addClass('right');
         self.active_idx = 0;
+        self.rendered_idx = undefined;
         self.search_val = '';
         self.search = search = $('<input>').attr({ type: 'text' });
         self.search_div = $('<div>').addClass('search');
@@ -86,7 +94,6 @@ window.split_pane = (() => {
                 update_right(self, c);
             },
         });
-        window.x = widget;
         return widget;
     }
     return {

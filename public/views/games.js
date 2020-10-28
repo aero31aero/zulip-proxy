@@ -14,7 +14,9 @@ window.games = (() => {
 
         return {
             label: game_id,
-            view: render,
+            view: {
+                render: render,
+            },
         };
     }
 

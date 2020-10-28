@@ -7,7 +7,7 @@ window.users = (() => {
 
                 return {
                     label: user.full_name,
-                    view: view_widget.render,
+                    view: view_widget,
                 };
             });
         };

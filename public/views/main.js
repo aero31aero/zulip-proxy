@@ -9,22 +9,22 @@ window.main = (() => {
             {
                 label: 'Tic Tac Toe',
                 name: 'tic-tac-toe',
-                view: games_widget.render,
+                view: games_widget,
             },
             {
                 label: 'Users',
                 name: 'users',
-                view: user_widget.render,
+                view: user_widget,
             },
             {
                 label: 'Streams',
                 name: 'streams',
-                view: stream_widget.render,
+                view: stream_widget,
             },
             {
                 label: 'All Messages',
                 name: 'messages',
-                view: message_widget.render,
+                view: message_widget,
             },
         ];
 

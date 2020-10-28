@@ -16,6 +16,7 @@ window.widgets = {
                 self.p.addClass(data.class);
             },
             destroy: () => {},
+            init_self: (self) => {},
         };
 
         return (function new_widget() {
@@ -23,6 +24,9 @@ window.widgets = {
             let children = [];
             let self = {};
             let opts = Object.assign(default_opts, user_opts);
+
+            opts.init_self(self);
+
             const widget_container = $('<div>')
                 .addClass('zulip-widget')
                 .attr('id', opts.name);

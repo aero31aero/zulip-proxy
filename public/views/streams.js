@@ -11,7 +11,9 @@ window.streams = (() => {
         const streams = model().streams;
         const conf = streams.map((stream) => ({
             label: stream.name,
-            view: build_stream_view(stream),
+            view: {
+                render: build_stream_view(stream),
+            },
         }));
 
         const pane_widget = split_pane.make(conf, 'streams');

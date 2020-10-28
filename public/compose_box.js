@@ -1,8 +1,9 @@
 window.compose_box = (() => {
     function build_for_user(user) {
+        console.trace('building compose', user.full_name);
         const div = $('<div>');
 
-        const box = $('<textarea>').val('canned message');
+        const box = $('<textarea>').val('');
         const button = $('<button>').text('Send PM');
 
         button.on('click', async () => {
