@@ -54,7 +54,7 @@ window.top_nav = (() => {
             });
 
             console.info('about to redraw bottom', config[active_idx]);
-            const bottom_contents = config[active_idx].view();
+            const bottom_contents = config[active_idx].render();
             bottom.html(bottom_contents);
         }
 
@@ -69,7 +69,7 @@ window.top_nav = (() => {
             // If our item does not know how to update itself,
             // just re-render the whole thing.
             bottom.empty();
-            const bottom_contents = item.view();
+            const bottom_contents = item.render();
             bottom.html(bottom_contents);
         }
 

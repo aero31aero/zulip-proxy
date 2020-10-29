@@ -12,12 +12,7 @@ window.users = (() => {
         function right_handler(user_id) {
             const user = user_map.get(user_id);
 
-            const view_widget = window.pm_view.make(user);
-
-            return {
-                view: view_widget.render,
-                update: view_widget.update,
-            };
+            return window.pm_view.make(user);
         }
 
         function key_to_label(user_id) {

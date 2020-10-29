@@ -15,7 +15,7 @@ window.games = (() => {
         }
 
         return {
-            view: render,
+            render: render,
         };
     }
 

@@ -19,7 +19,7 @@ window.streams = (() => {
             }
 
             return {
-                view: render,
+                render: render,
             };
         }
 
