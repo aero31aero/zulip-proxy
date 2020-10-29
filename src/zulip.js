@@ -30,11 +30,11 @@ exports.make = function (opts) {
         const helper = {};
         const headers = { Bearer: access_token };
 
-        helper.get = async (short_url, data) => {
+        helper.get = async (short_url, params) => {
             const resp = await axios({
                 method: 'get',
                 url: url(short_url),
-                params: data,
+                params: params,
                 headers: headers,
             });
             return resp.data;
@@ -51,10 +51,11 @@ exports.make = function (opts) {
             resp.data.pipe(res);
         };
 
-        helper.post = async (short_url, data) => {
+        helper.post = async (short_url, data, params = {}) => {
             const resp = await axios({
                 method: 'post',
                 url: url(short_url),
+                params: params,
                 data: qs.stringify(data),
                 headers: headers,
             });

@@ -43,5 +43,7 @@ module.exports = (zulip, client) => {
         );
         console.log('Loaded messages: ', res.messages.length);
     });
-    queue(z)(call_on_each, ['message', 'realm_emoji']);
+    queue(z)(call_on_each, ['message', 'realm_emoji'], {
+        apply_markdown: true,
+    });
 };

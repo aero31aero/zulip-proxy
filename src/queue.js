@@ -8,12 +8,12 @@ module.exports = (z) => {
         console.log('zulip-js: Error while communicating with server:', error);
     }
 
-    async function registerQueue(req, eventTypes = null) {
+    async function registerQueue(eventTypes = null, query_params) {
         let res;
         while (true) {
             try {
                 const params = { eventTypes };
-                res = await z.post('register', params);
+                res = await z.post('register', params, query_params);
                 if (res.result === 'error') {
                     logError(res.msg);
                     await sleep(1000);
@@ -29,7 +29,7 @@ module.exports = (z) => {
         }
     }
 
-    async function callOnEachEvent(callback, eventTypes = null) {
+    async function callOnEachEvent(callback, eventTypes = null, query_params) {
         let queueId = null;
         let lastEventId = -1;
         const handleEvent = (event) => {
@@ -38,7 +38,7 @@ module.exports = (z) => {
         };
         while (true) {
             if (!queueId) {
-                const queueData = await registerQueue(eventTypes);
+                const queueData = await registerQueue(eventTypes, query_params);
                 queueId = queueData.queueId;
                 lastEventId = queueData.lastEventId;
             }
