@@ -16,6 +16,7 @@ const send_model_update = (json, client) => {
 const process_event = (event, client) => {
     if (!event) return;
     if (event.type === 'message') {
+        event.message.local_id = event.local_message_id;
         send_model_update(
             {
                 messages: [event.message],

@@ -1,5 +1,11 @@
 window.events = (() => {
     const handle_model_updates = (event) => {
+        if (event.model.messages) {
+            const message = event.model.messages[0];
+            if (message.local_id) {
+                window.transmit.ack_local(message);
+            }
+        }
         try {
             model(event.model);
             _.redraw();

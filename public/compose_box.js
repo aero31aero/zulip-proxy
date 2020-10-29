@@ -8,23 +8,17 @@ window.compose_box = (() => {
 
         const box = $('<textarea>').val(drafts.get(user_id) || '');
         const button = $('<button>').text('Send PM');
-        const loader = $('<div>');
-
-        div.append(loader);
 
         box.on('change', () => {
             drafts.set(user_id, box.val());
         });
 
-        const send = async () => {
-            loader.text('sending...');
+        const send = () => {
             const content = box.val();
             box.val('');
             drafts.delete(user_id);
 
-            await window.transmit.send_pm(user_id, content);
-
-            loader.text('sent!');
+            window.transmit.send_pm(user_id, content);
         };
 
         button.on('click', send);
