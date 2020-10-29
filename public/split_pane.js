@@ -1,11 +1,18 @@
 window.split_pane = (() => {
     function make(config, name) {
+        for (const item of config) {
+            if (!item.key) {
+                throw Error('illegal configuration');
+            }
+        }
+
         let pane;
         let left;
         let search;
         let right;
-        let active_idx = 0;
+        let active_key = config[0].key;
         let search_val = '';
+        let active_conf;
 
         function render() {
             pane = $('<div>').addClass('split-pane').attr('id', `pane-${name}`);
@@ -26,7 +33,7 @@ window.split_pane = (() => {
 
         function left_click_handler(button, idx) {
             return async () => {
-                active_idx = idx;
+                active_key = config[idx].key;
 
                 button.css('opacity', '50%');
                 right.html('loading...');
@@ -51,12 +58,15 @@ window.split_pane = (() => {
                 search.focus();
             });
 
+            active_conf = undefined;
+
             config.forEach((conf, idx) => {
                 if (!conf.label.toLowerCase().includes(search_val)) {
-                    if (idx === active_idx) {
-                        active_idx = undefined;
-                    }
                     return;
+                }
+
+                if (conf.key === active_key) {
+                    active_conf = conf;
                 }
 
                 const button = $('<button>').text(conf.label);
@@ -66,7 +76,7 @@ window.split_pane = (() => {
 
                 button.on('click', left_click_handler(button, idx));
 
-                if (idx === active_idx) {
+                if (conf.key === active_key) {
                     button.css('background-color', '#4CAF50');
                 } else {
                     button.css('background-color', '008CBA');
@@ -79,9 +89,9 @@ window.split_pane = (() => {
 
             right.empty();
 
-            if (active_idx !== undefined) {
-                console.info('about to redraw right', config[active_idx]);
-                const right_contents = config[active_idx].view();
+            if (active_conf) {
+                console.info('about to redraw right', active_conf);
+                const right_contents = active_conf.view();
                 right.html(right_contents);
             }
         }
@@ -89,12 +99,12 @@ window.split_pane = (() => {
         function update() {
             // TODO: Allow left-pane updates.
 
-            if (active_idx === undefined) {
+            if (active_conf === undefined) {
                 right.empty();
                 return;
             }
 
-            const item = config[active_idx];
+            const item = active_conf;
 
             if (item.update) {
                 item.update();

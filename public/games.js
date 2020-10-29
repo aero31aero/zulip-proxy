@@ -13,6 +13,7 @@ window.games = (() => {
         }
 
         return {
+            key: game_id,
             label: game_id,
             view: render,
         };
