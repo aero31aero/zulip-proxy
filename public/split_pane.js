@@ -95,7 +95,7 @@ window.split_pane = (() => {
 
             if (active_conf) {
                 console.info('about to redraw right');
-                const right_contents = active_conf.view();
+                const right_contents = active_conf.render();
                 right.html(right_contents);
             }
         }
@@ -118,7 +118,7 @@ window.split_pane = (() => {
             // If our item does not know how to update itself,
             // just re-render the whole thing.
             right.empty();
-            const right_contents = item.view();
+            const right_contents = item.render();
             right.html(right_contents);
         }
 
