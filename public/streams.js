@@ -15,7 +15,7 @@ window.streams = (() => {
             view: build_stream_view(stream),
         }));
 
-        const pane_widget = split_pane.make(conf, 'streams');
+        const pane_widget = split_pane.make(conf);
 
         function render() {
             const pane = pane_widget.render();
