@@ -19,9 +19,30 @@ window.games = (() => {
         };
     }
 
+    function name(user_id) {
+        if (user_id === window.model().state.user_id) {
+            return 'me';
+        }
+
+        const user = window._.get_user_by_id(user_id);
+        return user.full_name;
+    }
+
     function key_to_label(game_id) {
         // TODO: show actual players
-        return game_id;
+        let label = game_id;
+
+        const data = model.get(game_id);
+
+        if (data.x_player) {
+            label += ' ' + name(data.x_player);
+        }
+
+        if (data.o_player) {
+            label += ' vs. ' + name(data.o_player);
+        }
+
+        return label;
     }
 
     function make() {
