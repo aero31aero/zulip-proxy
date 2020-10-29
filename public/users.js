@@ -1,4 +1,19 @@
 window.users = (() => {
+    function get_user_ids_by_recency() {
+        const user_set = new Set();
+        model()
+            .messages.reverse()
+            .forEach((m) => {
+                user_set.add(m.sender_id);
+            });
+        model().users.forEach((u) => {
+            user_set.add(u.user_id);
+        });
+        return Array.from(user_set).filter(
+            (e) => _.get_user_by_id(e) !== undefined
+        );
+    }
+
     function make() {
         const users = model().users;
         const user_map = new Map();
@@ -6,8 +21,6 @@ window.users = (() => {
         for (const user of users) {
             user_map.set(user.user_id, user);
         }
-
-        const user_ids = Array.from(user_map.keys());
 
         function right_handler(user_id) {
             const user = user_map.get(user_id);
@@ -20,9 +33,9 @@ window.users = (() => {
         }
 
         const opts = {
-            keys: user_ids,
             key_to_label: key_to_label,
             right_handler: right_handler,
+            get_keys: get_user_ids_by_recency,
         };
 
         const pane_widget = split_pane.make(opts);

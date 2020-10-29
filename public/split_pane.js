@@ -1,11 +1,15 @@
 window.split_pane = (() => {
     function make(opts) {
         let keys = opts.keys;
+        let get_keys = opts.get_keys;
         let key_to_label = opts.key_to_label;
         let right_handler = opts.right_handler;
 
-        if (!keys || !key_to_label || !right_handler) {
+        if (!(keys || get_keys) || !key_to_label || !right_handler) {
             throw Error('misconfigured split_pane');
+        }
+        if (get_keys) {
+            keys = get_keys();
         }
 
         let pane;
@@ -17,6 +21,9 @@ window.split_pane = (() => {
         let active_conf;
 
         function render() {
+            if (get_keys) {
+                keys = get_keys();
+            }
             pane = $('<div>').addClass('split-pane');
             left = $('<div>').addClass('left');
             right = $('<div>').addClass('right');
@@ -43,9 +50,7 @@ window.split_pane = (() => {
             };
         }
 
-        function populate(pane) {
-            pane.css('display', 'flex');
-
+        function populate_left() {
             left.empty();
 
             const search_div = $('<div>').addClass('search');
@@ -90,7 +95,12 @@ window.split_pane = (() => {
                 button.css('white-space', 'nowrap');
                 button.css('text-align', 'left');
             });
+        }
 
+        function populate(pane) {
+            pane.css('display', 'flex');
+
+            populate_left();
             right.empty();
 
             if (active_conf) {
@@ -101,7 +111,10 @@ window.split_pane = (() => {
         }
 
         function update() {
-            // TODO: Allow left-pane updates.
+            if (get_keys) {
+                keys = get_keys();
+                populate_left();
+            }
 
             if (active_conf === undefined) {
                 right.empty();
