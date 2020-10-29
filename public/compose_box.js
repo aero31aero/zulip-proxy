@@ -14,7 +14,7 @@ window.compose_box = (() => {
             drafts.set(user_id, box.val());
         });
 
-        button.on('click', async () => {
+        const send = async () => {
             loader.text('sending...');
             const data = {
                 type: 'private',
@@ -34,6 +34,14 @@ window.compose_box = (() => {
             });
 
             loader.text('sent!');
+        };
+
+        button.on('click', send);
+
+        box.on('keyup', (event) => {
+            if (event.keyCode === 13) {
+                send();
+            }
         });
 
         div.append(box);
