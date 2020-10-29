@@ -29,7 +29,7 @@ window.main = (() => {
             },
         ];
 
-        const main_pane_widget = window.split_pane.make(pane_config, 'main');
+        const main_pane_widget = window.top_nav.make(pane_config, 'main');
         let redraw_button;
 
         function update() {
