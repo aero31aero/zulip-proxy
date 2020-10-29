@@ -68,6 +68,10 @@ img {
     padding: 1px;
 }
 
+.split-pane .right {
+    padding-left: 10px;
+}
+
 .message-list {
     height: 90%;
     overflow-y: scroll;
