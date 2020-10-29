@@ -85,7 +85,10 @@ window.model = (() => {
                 if (idx === -1) {
                     a.push(m);
                 } else {
-                    a[idx] = m;
+                    // merge the two messages.
+                    // we do this to handle message updates and update_message
+                    // events don't contain all the information about the message.
+                    a[idx] = Object.assign(a[idx], m);
                 }
             });
             return a;
