@@ -41,6 +41,11 @@ module.exports = (z) => {
                 const queueData = await registerQueue(eventTypes, query_params);
                 queueId = queueData.queueId;
                 lastEventId = queueData.lastEventId;
+                console.log('SENDING QUEUE ID');
+                callback({
+                    type: 'queue_id',
+                    queue_id: queueId,
+                });
             }
             try {
                 const res = await z.get('events', {

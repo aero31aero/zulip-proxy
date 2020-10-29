@@ -22,6 +22,7 @@ window.model = (() => {
         state: {
             user_id: 1,
             server: 'string',
+            queue_id: 'string',
         },
     };
 
@@ -31,6 +32,7 @@ window.model = (() => {
         messages: [],
         state: {
             user_id: null,
+            queue_id: null,
         },
     };
 
