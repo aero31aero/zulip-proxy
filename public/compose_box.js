@@ -1,9 +1,15 @@
 window.compose_box = (() => {
-    function build_for_user(user) {
+    const drafts = new Map();
+
+    function build_for_user(user_id) {
         const div = $('<div>');
 
-        const box = $('<textarea>').val('canned message');
+        const box = $('<textarea>').val(drafts.get(user_id) || '');
         const button = $('<button>').text('Send PM');
+
+        box.on('change', () => {
+            drafts.set(user_id, box.val());
+        });
 
         button.on('click', async () => {
             const loader = $('<div>').text('sending...');
@@ -12,9 +18,12 @@ window.compose_box = (() => {
 
             const data = {
                 type: 'private',
-                to: JSON.stringify([user.user_id]),
+                to: JSON.stringify([user_id]),
                 content: box.val(),
             };
+
+            box.val('');
+            drafts.delete(user_id);
 
             const response = await fetch('/z/messages', {
                 method: 'POST',
