@@ -7,15 +7,15 @@ window.main = (() => {
 
         const pane_config = [
             {
-                label: 'Tic Tac Toe',
-                name: 'tic-tac-toe',
-                render: games_widget.render,
-            },
-            {
                 label: 'Users',
                 name: 'users',
                 render: user_widget.render,
                 update: user_widget.update,
+            },
+            {
+                label: 'Tic Tac Toe',
+                name: 'tic-tac-toe',
+                render: games_widget.render,
             },
             {
                 label: 'Streams',
