@@ -3,7 +3,9 @@ window.games = (() => {
     let pane_widget;
     let div;
 
-    function game_conf([game_id, data_handler]) {
+    function right_handler(game_id) {
+        const data_handler = model.get(game_id);
+
         function render() {
             const opts = {
                 tictactoe_data: data_handler,
@@ -13,17 +15,26 @@ window.games = (() => {
         }
 
         return {
-            key: game_id,
-            label: game_id,
             view: render,
         };
+    }
+
+    function key_to_label(game_id) {
+        // TODO: show actual players
+        return game_id;
     }
 
     function make() {
         div = $('<div>');
 
-        const conf = Array.from(model, game_conf);
-        pane_widget = split_pane.make(conf);
+        const game_ids = Array.from(model.keys());
+        const opts = {
+            keys: game_ids,
+            key_to_label: key_to_label,
+            right_handler: right_handler,
+        };
+
+        pane_widget = split_pane.make(opts);
 
         function render() {
             populate();

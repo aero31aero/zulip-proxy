@@ -1,16 +1,18 @@
 window.split_pane = (() => {
-    function make(config) {
-        for (const item of config) {
-            if (!item.key) {
-                throw Error('illegal configuration');
-            }
+    function make(opts) {
+        let keys = opts.keys;
+        let key_to_label = opts.key_to_label;
+        let right_handler = opts.right_handler;
+
+        if (!keys || !key_to_label || !right_handler) {
+            throw Error('misconfigured split_pane');
         }
 
         let pane;
         let left;
         let search;
         let right;
-        let active_key = config[0].key;
+        let active_key = keys[0];
         let search_val = '';
         let active_conf;
 
@@ -33,7 +35,7 @@ window.split_pane = (() => {
 
         function left_click_handler(button, idx) {
             return async () => {
-                active_key = config[idx].key;
+                active_key = keys[idx];
 
                 button.css('opacity', '50%');
                 right.html('loading...');
@@ -60,23 +62,25 @@ window.split_pane = (() => {
 
             active_conf = undefined;
 
-            config.forEach((conf, idx) => {
-                if (!conf.label.toLowerCase().includes(search_val)) {
+            keys.forEach((key, idx) => {
+                const label = key_to_label(key);
+
+                if (!label.toLowerCase().includes(search_val)) {
                     return;
                 }
 
-                if (conf.key === active_key) {
-                    active_conf = conf;
+                if (key === active_key) {
+                    active_conf = right_handler(key);
                 }
 
-                const button = $('<button>').text(conf.label);
+                const button = $('<button>').text(label);
                 const div = $('<div>').html(button);
 
                 items_div.append(div);
 
                 button.on('click', left_click_handler(button, idx));
 
-                if (conf.key === active_key) {
+                if (key === active_key) {
                     button.css('background-color', '#4CAF50');
                 } else {
                     button.css('background-color', '008CBA');
@@ -90,7 +94,7 @@ window.split_pane = (() => {
             right.empty();
 
             if (active_conf) {
-                console.info('about to redraw right', active_conf);
+                console.info('about to redraw right');
                 const right_contents = active_conf.view();
                 right.html(right_contents);
             }
