@@ -33,6 +33,19 @@ const process_event = (event, client) => {
             },
             client
         );
+    } else if (event.type === 'queue_id') {
+        // This event is received almost immediately;
+        // let's let the client get loaded first.
+        setTimeout(function () {
+            send_model_update(
+                {
+                    state: {
+                        queue_id: event.queue_id,
+                    },
+                },
+                client
+            );
+        }, 5000);
     }
 };
 
