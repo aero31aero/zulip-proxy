@@ -6,6 +6,7 @@ window.users = (() => {
             const view_widget = window.pm_view.make(user);
 
             return {
+                key: user.user_id,
                 label: user.full_name,
                 view: view_widget.render,
                 update: view_widget.update,

@@ -10,6 +10,7 @@ window.streams = (() => {
 
         const streams = model().streams;
         const conf = streams.map((stream) => ({
+            key: stream.stream_id,
             label: stream.name,
             view: build_stream_view(stream),
         }));
