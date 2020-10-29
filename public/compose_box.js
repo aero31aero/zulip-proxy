@@ -6,16 +6,16 @@ window.compose_box = (() => {
 
         const box = $('<textarea>').val(drafts.get(user_id) || '');
         const button = $('<button>').text('Send PM');
+        const loader = $('<div>');
+
+        div.append(loader);
 
         box.on('change', () => {
             drafts.set(user_id, box.val());
         });
 
         button.on('click', async () => {
-            const loader = $('<div>').text('sending...');
-
-            div.append(loader);
-
+            loader.text('sending...');
             const data = {
                 type: 'private',
                 to: JSON.stringify([user_id]),
