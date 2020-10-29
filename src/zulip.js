@@ -24,6 +24,7 @@ exports.make = function (opts) {
         const access_token = session.access_token;
 
         if (!access_token) {
+            console.log(session);
             throw Error('Access token is undefined!');
         }
 

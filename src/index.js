@@ -31,8 +31,12 @@ const session_secret = config.session_secret;
 
 const session_opts = {
     secret: session_secret,
-    cookie: { maxAge: 604800, sameSite: 'strict' },
+    cookie: {
+        maxAge: 60 * 60 * 1000, // 1 hour
+        sameSite: 'strict',
+    },
     resave: false,
+    rolling: true, // updates the cookie so it'll never expire under constant use.
     saveUninitialized: false,
 };
 
