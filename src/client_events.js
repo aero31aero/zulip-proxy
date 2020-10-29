@@ -22,6 +22,17 @@ const process_event = (event, client) => {
             },
             client
         );
+    } else if (event.type === 'update_message') {
+        const new_message = {
+            id: event.message_id,
+            content: event.rendered_content,
+        };
+        send_model_update(
+            {
+                messages: [new_message],
+            },
+            client
+        );
     }
 };
 
