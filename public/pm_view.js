@@ -20,8 +20,11 @@ window.pm_view = (() => {
         function update_messages() {
             message_div.empty();
 
-            const message_data = _.find_pms_with(user_id);
-            const message_table = messages.build_message_table(message_data);
+            const messages = _.find_pms_with(user_id);
+            const new_messages = window.transmit.in_flight_messages(user_id);
+            messages.push(...new_messages);
+
+            const message_table = window.messages.build_message_table(messages);
             message_div.append(message_table);
         }
 
