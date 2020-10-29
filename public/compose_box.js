@@ -1,4 +1,6 @@
 window.compose_box = (() => {
+    // This only works for PMs now, and it assumes
+    // its parent is pm_list.js.
     const drafts = new Map();
 
     function build_for_user(user_id) {
@@ -16,22 +18,11 @@ window.compose_box = (() => {
 
         const send = async () => {
             loader.text('sending...');
-            const data = {
-                type: 'private',
-                to: JSON.stringify([user_id]),
-                content: box.val(),
-            };
-
+            const content = box.val();
             box.val('');
             drafts.delete(user_id);
 
-            const response = await fetch('/z/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            await window.transmit.send_pm(user_id, content);
 
             loader.text('sent!');
         };
