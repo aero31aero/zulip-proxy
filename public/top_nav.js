@@ -7,14 +7,14 @@ window.top_nav = (() => {
     need to update it.
     */
 
-    function make(config, name) {
+    function make(config) {
         let pane;
         let left;
         let right;
         let active_idx = 0;
 
         function render() {
-            pane = $('<div>').addClass('split-pane').attr('id', `pane-${name}`);
+            pane = $('<div>').addClass('split-pane');
             left = $('<div>').addClass('left');
             right = $('<div>').addClass('right');
 

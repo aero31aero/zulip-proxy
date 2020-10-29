@@ -1,5 +1,5 @@
 window.split_pane = (() => {
-    function make(config, name) {
+    function make(config) {
         for (const item of config) {
             if (!item.key) {
                 throw Error('illegal configuration');
@@ -15,7 +15,7 @@ window.split_pane = (() => {
         let active_conf;
 
         function render() {
-            pane = $('<div>').addClass('split-pane').attr('id', `pane-${name}`);
+            pane = $('<div>').addClass('split-pane');
             left = $('<div>').addClass('left');
             right = $('<div>').addClass('right');
 

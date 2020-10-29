@@ -13,7 +13,7 @@ window.users = (() => {
             };
         });
 
-        const pane_widget = split_pane.make(conf, 'users');
+        const pane_widget = split_pane.make(conf);
 
         return {
             render: pane_widget.render,

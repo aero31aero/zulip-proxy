@@ -23,7 +23,7 @@ window.games = (() => {
         div = $('<div>');
 
         const conf = Array.from(model, game_conf);
-        pane_widget = split_pane.make(conf, 'games');
+        pane_widget = split_pane.make(conf);
 
         function render() {
             populate();
