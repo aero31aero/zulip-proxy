@@ -1,3 +1,9 @@
+* {
+    /* We want to style using paddings to keep calculations simpler */
+    box-sizing: border-box;
+    margin: 0 !important;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -23,11 +29,14 @@ img {
 
 .navbar {
     display: inline-flex;
+    height: 25px;
+    margin-bottom: 5px;
 }
 
 .main > div {
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 30px);
 }
 
 .main > div > .split-pane {
@@ -38,9 +47,10 @@ img {
     display: flex;
     flex-direction: column;
 }
-
 .top-nav .top {
-    padding-bottom: 15px;
+    padding-bottom: 5px;
+    height: 40px;
+    padding-top: 5px;
 }
 
 .top-nav .top .items {
@@ -49,7 +59,7 @@ img {
 }
 
 .split-pane {
-    height: 90vh;
+    height: calc(100vh - 30px - 40px);
     display: flex;
     flex-direction: row;
 }
@@ -90,12 +100,9 @@ img {
     width: 100%;
     display: flex;
     flex-direction: row;
+    padding: 5px;
 }
 
 .compose-box textarea {
     flex-grow: 1;
-}
-
-.compose-box > * {
-    margin: 5px;
 }
