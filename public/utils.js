@@ -17,7 +17,8 @@ window._ = {
 
     fetch_messages: async () => {
         const params = $.param({
-            num_before: 1000,
+            narrow: JSON.stringify([{ operator: 'is', operand: 'private' }]),
+            num_before: 300,
             num_after: 0,
             anchor: 'newest',
         });
