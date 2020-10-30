@@ -15,8 +15,6 @@ window.events = (() => {
     };
 
     const init = () => {
-        console.log('init events');
-
         if (!window.ws) {
             console.warn('No web socket!');
             return;
@@ -24,7 +22,6 @@ window.events = (() => {
 
         window.ws.onmessage = (message) => {
             const event = JSON.parse(message.data);
-            console.log('got message', event);
             if (event.type === 'update') {
                 handle_model_updates(event);
             } else if (event.type === 'game') {

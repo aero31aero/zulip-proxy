@@ -43,7 +43,6 @@ window.transmit = (() => {
             queue_id: queue_id,
             local_id: local_id,
         };
-        console.info('data', data);
 
         fetch('/z/messages', {
             method: 'POST',
