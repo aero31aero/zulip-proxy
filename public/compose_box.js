@@ -16,6 +16,7 @@ window.compose_box = (() => {
         });
 
         const send = () => {
+            console.trace();
             const content = box.val();
             if (content === '') {
                 // we cannot send empty messages;
