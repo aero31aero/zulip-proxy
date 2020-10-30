@@ -9,7 +9,7 @@ window.compose_box = (() => {
         const box = $('<textarea>')
             .val(drafts.get(user_id) || '')
             .attr('rows', 4);
-        const button = $('<button>').text('Send PM');
+        const send_button = $('<button>').text('Send PM');
 
         box.on('change', () => {
             drafts.set(user_id, box.val());
@@ -28,7 +28,7 @@ window.compose_box = (() => {
             window.transmit.send_pm(user_id, content);
         };
 
-        button.on('click', send);
+        send_button.on('click', send);
 
         box.on('keyup', (event) => {
             if (event.keyCode === 13) {
@@ -37,7 +37,7 @@ window.compose_box = (() => {
         });
 
         div.append(box);
-        div.append(button);
+        div.append(send_button);
         return div;
     }
 
