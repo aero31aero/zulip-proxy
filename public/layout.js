@@ -27,13 +27,16 @@ window.layout = (() => {
             let i = 0;
             while (i < current_panes) {
                 panes[i].html.css('display', 'block');
-                console.log('SHOWING', i);
                 i++;
             }
             while (i < max_panes) {
                 panes[i].html.css('display', 'none');
-                console.log('HIDING', i);
                 i++;
+            }
+            if (current_panes === 1) {
+                container.css('justify-content', 'center');
+            } else {
+                container.css('justify-content', 'flex-start');
             }
         };
         let redraw_button;
