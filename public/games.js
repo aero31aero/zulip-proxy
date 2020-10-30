@@ -1,7 +1,5 @@
 window.games = (() => {
     let model = new Map();
-    let pane_widget;
-    let div;
 
     function right_handler(game_id) {
         const data_handler = model.get(game_id);
@@ -45,8 +43,8 @@ window.games = (() => {
         return label;
     }
 
-    function make() {
-        div = $('<div>');
+    function make_view() {
+        const div = $('<div>');
 
         const game_ids = Array.from(model.keys());
         const opts = {
@@ -55,25 +53,17 @@ window.games = (() => {
             right_handler: right_handler,
         };
 
-        pane_widget = split_pane.make(opts);
+        const pane_widget = split_pane.make(opts);
 
         function render() {
-            populate();
+            div.empty();
+            div.append(pane_widget.render());
             return div;
         }
 
         return {
             render: render,
         };
-    }
-
-    function populate() {
-        if (!div) {
-            console.info('tried to populate before div was made');
-            return;
-        }
-        div.empty();
-        div.append(pane_widget.render());
     }
 
     function handle_event(event) {
@@ -86,7 +76,7 @@ window.games = (() => {
         }
 
         data_handler.handle_event(event);
-        populate();
+        window._.redraw();
     }
 
     function initialize(games) {
@@ -104,7 +94,7 @@ window.games = (() => {
 
     return {
         initialize: initialize,
-        make: make,
+        make_view: make_view,
         handle_event: handle_event,
     };
 })();

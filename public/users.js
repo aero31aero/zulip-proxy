@@ -15,7 +15,7 @@ window.users = (() => {
         );
     }
 
-    function make() {
+    function make_view() {
         const users = model().users;
         const user_map = new Map();
 
@@ -48,6 +48,6 @@ window.users = (() => {
     }
 
     return {
-        make: make,
+        make_view: make_view,
     };
 })();

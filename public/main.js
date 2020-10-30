@@ -1,7 +1,7 @@
 window.main = (() => {
     function make() {
-        const games_widget = window.games.make();
-        const user_widget = window.users.make();
+        const games_widget = window.games.make_view();
+        const user_widget = window.users.make_view();
 
         const pane_config = [
             {
