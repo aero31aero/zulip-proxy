@@ -1,73 +1,92 @@
 window.layout = (() => {
     function make() {
-        const layouts = {
-            single: {
-                container: {
-                    'grid-template-rows': 'auto',
-                    'grid-template-columns': 'auto',
-                },
-                items: [
-                    {
-                        'grid-rows': '0/1',
-                        'grid-columns': '0/1',
-                    },
-                ],
-            },
-            double: {
-                container: {
-                    'grid-template-rows': 'auto',
-                    'grid-template-columns': 'auto auto',
-                },
-                items: [
-                    {
-                        'grid-rows': '1 / span 1',
-                        'grid-columns': '1 / span 1',
-                    },
-                    {
-                        'grid-rows': '1 / span 1',
-                        'grid-columns': '2 / span 1',
-                    },
-                ],
-            },
-        };
-
-        const max_views = 3;
+        const max_panes = 5;
+        let current_panes = 1;
+        const root = $('<div>').addClass('layout-root');
         const container = $('<div>').addClass('layout-container');
-        const views = Array.apply(null, Array(max_views)).map((e) => {
+        let panes = Array.apply(null, Array(max_panes)).map((e) => {
             const view = window.main.make();
             return view;
         });
-        let current_layout = 'single';
-
-        views.forEach((e) => {
-            container.append(e.render());
+        panes = panes.map((p) => {
+            return {
+                pane: p,
+                html: p.render(),
+            };
         });
 
-        const set_layout = (name) => {
-            const l = layouts[name];
-            if (!l) {
-                console.error(`layout ${name} not found`);
-                return;
-            }
-            container.css(l.container);
-        };
+        panes.forEach((p) => {
+            container.append(p.html);
+        });
 
         const update = () => {
-            set_layout(current_layout);
-            views.forEach((x) => {
-                x.update();
+            redraw_button.css('background', '');
+            panes.forEach((p) => {
+                p.pane.update();
             });
+            let i = 0;
+            while (i < current_panes) {
+                panes[i].html.css('display', 'block');
+                console.log('SHOWING', i);
+                i++;
+            }
+            while (i < max_panes) {
+                panes[i].html.css('display', 'none');
+                console.log('HIDING', i);
+                i++;
+            }
+        };
+        let redraw_button;
+        let panes_input;
+
+        const render_navbar = () => {
+            const top_div = $('<div>');
+            top_div.text(`${_.me().full_name} - `);
+            const link = $('<a>', {
+                text: `Server: ${model().state.server}`,
+                href: model().state.server,
+                target: '_blank',
+            });
+            top_div.append(link);
+
+            redraw_button = $('<button>').text('redraw app');
+
+            redraw_button.on('click', (e) => {
+                e.stopPropagation();
+                redraw_button.css('background', 'blue');
+                _.redraw();
+            });
+
+            panes_input = $('<select>');
+            for (let i = 1; i <= max_panes; i++) {
+                $('<option/>')
+                    .val(i)
+                    .html(`${i} pane(s)`)
+                    .appendTo(panes_input);
+            }
+            panes_input.on('change', function () {
+                current_panes = parseInt(this.value);
+                _.redraw();
+            });
+
+            const navbar = $('<div>').addClass('navbar');
+            navbar.append(redraw_button);
+            navbar.append(top_div);
+            navbar.append(panes_input);
+            root.append(navbar);
         };
 
         const render = () => {
+            root.empty();
+            render_navbar();
+            root.append(container);
             update();
-            return container;
+            return root;
         };
 
         return {
             update,
             render,
-            set_layout,
         };
     }
 

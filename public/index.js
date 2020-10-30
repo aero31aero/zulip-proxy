@@ -33,6 +33,7 @@ $(document).ready(async () => {
 
     $(document).on('zulipRedrawEverything', update);
 
+    console.log('RESDG');
     main_widget = window.layout.make();
 
     const main_page = main_widget.render();
