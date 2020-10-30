@@ -18,7 +18,11 @@ window.split_pane = (() => {
         let search_val = '';
         let search;
         let active_key = keys[0];
-        let active_conf = right_handler(active_key);
+        let active_conf;
+
+        if (active_key) {
+            active_conf = right_handler(active_key);
+        }
 
         function render() {
             if (get_keys) {
@@ -33,11 +37,15 @@ window.split_pane = (() => {
             pane.append(left);
             pane.append(right);
 
+            if (keys.length === 0) {
+                left.html('no items');
+                return pane;
+            }
+
             search = $('<input>').attr({ type: 'text' });
+            search.val(search_val);
 
             populate();
-
-            search.val(search_val);
 
             return pane;
         }
@@ -60,6 +68,11 @@ window.split_pane = (() => {
 
         function populate_left() {
             left.empty();
+
+            if (keys.length === 0) {
+                left.html('no items');
+                return;
+            }
 
             const search_div = $('<div>').addClass('search');
             const items_div = $('<div>').addClass('items');
@@ -117,6 +130,10 @@ window.split_pane = (() => {
             if (get_keys) {
                 keys = get_keys();
                 populate_left();
+            }
+
+            if (!active_conf) {
+                return;
             }
 
             if (!active_conf.update) {
