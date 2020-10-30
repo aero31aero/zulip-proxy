@@ -5,14 +5,14 @@ window.pm_view = (() => {
         const user_id = user.user_id;
 
         function render() {
-            div = $('<div>').addClass('message-list');
+            div = $('<div>');
 
-            message_div = $('<div>');
+            message_div = $('<div>').addClass('message-list');
             update_messages();
 
             div.empty();
-            div.append(compose_box.build_for_user(user_id));
             div.append(message_div);
+            div.append(compose_box.build_for_user(user_id));
 
             return div;
         }
