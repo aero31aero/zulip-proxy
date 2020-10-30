@@ -80,6 +80,7 @@ img {
 
 .split-pane .right {
     padding-left: 10px;
+    flex-grow: 1;
 }
 
 .pm-view {
