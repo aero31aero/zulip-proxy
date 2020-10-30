@@ -14,11 +14,11 @@ window.split_pane = (() => {
 
         let pane;
         let left;
-        let search;
         let right;
-        let active_key = keys[0];
         let search_val = '';
-        let active_conf;
+        let search;
+        let active_key = keys[0];
+        let active_conf = right_handler(active_key);
 
         function render() {
             if (get_keys) {
@@ -28,12 +28,14 @@ window.split_pane = (() => {
             left = $('<div>').addClass('left');
             right = $('<div>').addClass('right');
 
+            pane.css('display', 'flex');
+
             pane.append(left);
             pane.append(right);
 
             search = $('<input>').attr({ type: 'text' });
 
-            populate(pane);
+            populate();
 
             search.val(search_val);
 
@@ -43,11 +45,17 @@ window.split_pane = (() => {
         function left_click_handler(button, idx) {
             return async () => {
                 active_key = keys[idx];
+                active_conf = right_handler(active_key);
 
                 button.css('opacity', '50%');
                 right.html('loading...');
-                populate(pane);
+                populate();
             };
+        }
+
+        function is_key_visible(key) {
+            const label = key_to_label(key);
+            return label.toLowerCase().includes(search_val);
         }
 
         function populate_left() {
@@ -65,18 +73,12 @@ window.split_pane = (() => {
                 search.focus();
             });
 
-            active_conf = undefined;
-
             keys.forEach((key, idx) => {
-                const label = key_to_label(key);
-
-                if (!label.toLowerCase().includes(search_val)) {
+                if (!is_key_visible(key)) {
                     return;
                 }
 
-                if (key === active_key) {
-                    active_conf = right_handler(key);
-                }
+                const label = key_to_label(key);
 
                 const button = $('<button>').text(label);
                 const div = $('<div>').html(button);
@@ -97,17 +99,18 @@ window.split_pane = (() => {
             });
         }
 
-        function populate(pane) {
-            pane.css('display', 'flex');
-
-            populate_left();
+        function populate_right() {
             right.empty();
 
-            if (active_conf) {
-                console.info('about to redraw right');
+            if (is_key_visible(active_key)) {
                 const right_contents = active_conf.render();
                 right.html(right_contents);
             }
+        }
+
+        function populate(pane) {
+            populate_left();
+            populate_right();
         }
 
         function update() {
@@ -116,23 +119,15 @@ window.split_pane = (() => {
                 populate_left();
             }
 
-            if (active_conf === undefined) {
+            if (!active_conf.update) {
+                populate_right();
+                return;
+            }
+
+            if (!is_key_visible(active_key)) {
                 right.empty();
-                return;
             }
-
-            const item = active_conf;
-
-            if (item.update) {
-                item.update();
-                return;
-            }
-
-            // If our item does not know how to update itself,
-            // just re-render the whole thing.
-            right.empty();
-            const right_contents = item.render();
-            right.html(right_contents);
+            active_conf.update();
         }
 
         return {
