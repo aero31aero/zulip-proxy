@@ -1,6 +1,7 @@
 window._ = {
     get_user_by_id: (id) => model().users.find((e) => e.user_id === id),
     me: () => _.get_user_by_id(model().state.user_id),
+    is_me: (user_id) => _.me().user_id === user_id,
 
     fetch_users: async () => {
         let users = model().users;
@@ -33,7 +34,18 @@ window._ = {
             if (m.type !== 'private') {
                 return false;
             }
-            if (m.display_recipient.findIndex((e) => e.id === user_id) !== -1) {
+            let recp = m.display_recipient;
+            if (_.is_me(user_id)) {
+                if (recp.length === 1) {
+                    return true;
+                }
+                return false;
+            }
+            if (recp.length > 2) {
+                // Group PMs. We don't support Group PMs.
+                return false;
+            }
+            if (recp.findIndex((e) => e.id === user_id) !== -1) {
                 return true;
             }
             return false;
