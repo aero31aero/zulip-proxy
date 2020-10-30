@@ -26,7 +26,10 @@ window.compose_box = (() => {
             }
 
             box.val('');
-            box.focus();
+
+            // Not focusing here prevents the double-send, which seems
+            // to imply that focus generates keyup=13
+            // box.focus();
             drafts.delete(user_id);
             send_button.prop('disabled', true);
 
