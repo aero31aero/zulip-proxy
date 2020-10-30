@@ -1,11 +1,9 @@
 window.users = (() => {
     function get_user_ids_by_recency() {
         const user_set = new Set();
-        model()
-            .messages.reverse()
-            .forEach((m) => {
-                user_set.add(m.sender_id);
-            });
+        model().messages.forEach((m) => {
+            user_set.add(m.sender_id);
+        });
         model().users.forEach((u) => {
             user_set.add(u.user_id);
         });
