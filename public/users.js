@@ -1,12 +1,15 @@
 window.users = (() => {
-    function get_user_ids_by_recency() {
+    function get_user_ids_by_recency(show_all = false) {
         const user_set = new Set();
-        model().messages.forEach((m) => {
-            user_set.add(m.sender_id);
-        });
-        model().users.forEach((u) => {
-            user_set.add(u.user_id);
-        });
+        const messages = model().messages;
+        for (let i = messages.length - 1; i >= 0; i--) {
+            user_set.add(messages[i].sender_id);
+        }
+        if (show_all) {
+            model().users.forEach((u) => {
+                user_set.add(u.user_id);
+            });
+        }
         return Array.from(user_set).filter(
             (e) => _.get_user_by_id(e) !== undefined
         );
