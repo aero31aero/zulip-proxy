@@ -107,3 +107,13 @@ img {
 .compose-box textarea {
     flex-grow: 1;
 }
+
+.layout-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.layout-container > div {
+    flex-grow: 1;
+    flex-basis: 0;
+}
