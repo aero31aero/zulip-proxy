@@ -1,7 +1,7 @@
 window.users = (() => {
     function get_user_ids_by_recency(show_all = false) {
         const user_set = new Set();
-        const messages = model().messages;
+        const messages = model().messages.filter((m) => m.type === 'private');
         for (let i = messages.length - 1; i >= 0; i--) {
             user_set.add(messages[i].sender_id);
         }
