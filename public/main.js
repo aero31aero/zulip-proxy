@@ -51,8 +51,6 @@ window.main = (() => {
 
             const page = $('<div>');
             page.append(navbar);
-            page.append('<hr>');
-
             page.append(main_pane);
 
             return page;
