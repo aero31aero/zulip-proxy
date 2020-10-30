@@ -17,6 +17,11 @@ window.compose_box = (() => {
 
         const send = () => {
             const content = box.val();
+            if (content === '') {
+                // we cannot send empty messages;
+                return;
+            }
+
             box.val('');
             drafts.delete(user_id);
 
