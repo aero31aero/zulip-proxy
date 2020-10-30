@@ -4,9 +4,11 @@ window.compose_box = (() => {
     const drafts = new Map();
 
     function build_for_user(user_id) {
-        const div = $('<div>');
+        const div = $('<div>').addClass('compose-box');
 
-        const box = $('<textarea>').val(drafts.get(user_id) || '');
+        const box = $('<textarea>')
+            .val(drafts.get(user_id) || '')
+            .attr('rows', 4);
         const button = $('<button>').text('Send PM');
 
         box.on('change', () => {
