@@ -33,7 +33,7 @@ $(document).ready(async () => {
 
     $(document).on('zulipRedrawEverything', update);
 
-    main_widget = window.main.make();
+    main_widget = window.layout.make();
 
     const main_page = main_widget.render();
     $('#main').html(main_page);
