@@ -2,8 +2,6 @@ window.main = (() => {
     function make() {
         const games_widget = window.games.make();
         const user_widget = window.users.make();
-        const stream_widget = window.streams.make();
-        const message_widget = window.messages.make();
 
         const pane_config = [
             {
@@ -16,16 +14,6 @@ window.main = (() => {
                 label: 'Tic Tac Toe',
                 name: 'tic-tac-toe',
                 render: games_widget.render,
-            },
-            {
-                label: 'Streams',
-                name: 'streams',
-                render: stream_widget.render,
-            },
-            {
-                label: 'All Messages',
-                name: 'messages',
-                render: message_widget.render,
             },
         ];
 

@@ -12,7 +12,6 @@ window.model = (() => {
                 user_id: 1,
             },
         ],
-        streams: [{}],
         messages: [
             {
                 id: 1,
@@ -28,7 +27,6 @@ window.model = (() => {
 
     let model = {
         users: [],
-        streams: [],
         messages: [],
         state: {
             user_id: null,
