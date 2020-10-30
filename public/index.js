@@ -7,6 +7,7 @@ const init_data = async () => {
     });
     await _.fetch_users();
     await _.fetch_streams();
+    await _.fetch_messages();
 };
 
 $(document).ready(async () => {

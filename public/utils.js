@@ -1,6 +1,7 @@
 window._ = {
     get_user_by_id: (id) => model().users.find((e) => e.user_id === id),
     me: () => _.get_user_by_id(model().state.user_id),
+
     fetch_users: async () => {
         let users = model().users;
         if (users.length === 0) {
@@ -12,6 +13,7 @@ window._ = {
         }
         return users;
     },
+
     fetch_streams: async () => {
         let streams = model().streams;
         if (streams.length === 0) {
@@ -23,6 +25,20 @@ window._ = {
         }
         return streams;
     },
+
+    fetch_messages: async () => {
+        const params = $.param({
+            num_before: 1000,
+            num_after: 0,
+            anchor: 'newest',
+        });
+        const url = `/z/messages?${params}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        console.info('first message fetched', data.messages[0]);
+        model({ messages: data.messages });
+    },
+
     find_pms_with: (user_id) => {
         let messages = model().messages;
         return messages.filter((m) => {
@@ -35,6 +51,7 @@ window._ = {
             return false;
         });
     },
+
     redraw: () => {
         $(document).trigger('zulipRedrawEverything');
     },

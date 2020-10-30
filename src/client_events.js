@@ -55,19 +55,6 @@ module.exports = (zulip, client) => {
         process_event(event, client);
     };
     const z = zulip.get_raw_methods(client.session);
-    z.get('messages', {
-        num_before: 1000,
-        num_after: 0,
-        anchor: 'newest',
-    }).then((res) => {
-        send_model_update(
-            {
-                messages: res.messages,
-            },
-            client
-        );
-        console.log('Loaded messages: ', res.messages.length);
-    });
     queue(z)(call_on_each, ['message', 'realm_emoji'], {
         apply_markdown: true,
     });
