@@ -24,6 +24,7 @@ window.compose_box = (() => {
 
             box.val('');
             drafts.delete(user_id);
+            box.focus();
 
             window.transmit.send_pm(user_id, content);
         };
@@ -38,6 +39,7 @@ window.compose_box = (() => {
 
         div.append(box);
         div.append(send_button);
+
         return div;
     }
 
