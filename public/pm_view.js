@@ -5,7 +5,7 @@ window.pm_view = (() => {
         const user_id = user.user_id;
 
         function render() {
-            div = $('<div>');
+            div = $('<div>').addClass('pm-view');
 
             message_div = $('<div>').addClass('message-list');
             update_messages();
