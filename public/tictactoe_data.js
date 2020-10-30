@@ -165,8 +165,6 @@ window.TicTacToeData = (() => {
         handle_event(payload) {
             const user_id = payload.user_id;
             const data = payload.message;
-            console.info('payload', payload);
-            console.info('data', data);
 
             const type = data.type;
             if (this.handle[type]) {

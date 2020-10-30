@@ -80,8 +80,6 @@ window.games = (() => {
     }
 
     function initialize(games) {
-        console.info('initialize games', games);
-
         for (const [game_id, game] of Object.entries(games)) {
             const data_handler = new window.TicTacToeData(game_id);
             for (const event of game.events) {

@@ -25,7 +25,6 @@ window._ = {
         const url = `/z/messages?${params}`;
         const response = await fetch(url);
         const data = await response.json();
-        console.info('first message fetched', data.messages[0]);
         model({ messages: data.messages });
     },
 

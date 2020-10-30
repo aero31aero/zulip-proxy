@@ -53,7 +53,6 @@ window.top_nav = (() => {
                 button.css('white-space', 'nowrap');
             });
 
-            console.info('about to redraw bottom', config[active_idx]);
             const bottom_contents = config[active_idx].render();
             bottom.html(bottom_contents);
         }
