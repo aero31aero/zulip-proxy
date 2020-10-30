@@ -16,6 +16,8 @@ const init_data = async () => {
 };
 
 $(document).ready(async () => {
+    $('#loading-js').remove();
+
     const ws_url =
         'ws://' + window.location.hostname + ':' + page_params.ws_port;
     console.info(ws_url);
