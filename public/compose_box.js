@@ -6,26 +6,27 @@ window.compose_box = (() => {
     function build_for_user(user_id) {
         const div = $('<div>').addClass('compose-box');
 
-        const box = $('<textarea>')
-            .val(drafts.get(user_id) || '')
-            .attr('rows', 4);
+        const draft = drafts.get(user_id) || '';
+
+        const box = $('<textarea>').val(draft).attr('rows', 4);
+
         const send_button = $('<button>').text('Send PM');
 
-        box.on('change', () => {
-            drafts.set(user_id, box.val());
-        });
+        send_button.prop('disabled', !draft);
 
         const send = () => {
             console.trace();
-            const content = box.val();
+            const content = box.val().trim();
             if (content === '') {
                 // we cannot send empty messages;
+                console.warn('did not expect button to be enabled');
                 return;
             }
 
             box.val('');
-            drafts.delete(user_id);
             box.focus();
+            drafts.delete(user_id);
+            send_button.prop('disabled', true);
 
             window.transmit.send_pm(user_id, content);
         };
@@ -35,7 +36,12 @@ window.compose_box = (() => {
         box.on('keyup', (event) => {
             if (event.keyCode === 13) {
                 send();
+                return;
             }
+
+            const content = box.val().trim();
+            drafts.set(user_id, content);
+            send_button.prop('disabled', !content);
         });
 
         div.append(box);
