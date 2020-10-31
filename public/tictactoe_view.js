@@ -114,6 +114,6 @@ window.tictactoe_view = (() => {
     }
 
     return {
-        render: render,
+        render,
     };
 })();

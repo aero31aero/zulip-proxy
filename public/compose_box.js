@@ -51,6 +51,6 @@ window.compose_box = (() => {
     }
 
     return {
-        build_for_user: build_for_user,
+        build_for_user,
     };
 })();

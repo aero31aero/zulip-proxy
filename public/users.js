@@ -41,13 +41,10 @@ window.users = (() => {
 
         const pane_widget = split_pane.make(opts);
 
-        return {
-            render: pane_widget.render,
-            update: pane_widget.update,
-        };
+        return pane_widget;
     }
 
     return {
-        make_view: make_view,
+        make_view,
     };
 })();
