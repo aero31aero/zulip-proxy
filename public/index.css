@@ -16,6 +16,34 @@ img {
     max-width: 300px;
 }
 
+.modal {
+    /* right now our modal class actually takes up an entire pane */
+    padding-top: 40px;
+    padding-bottom: 300px;
+}
+
+.modal p {
+    padding: 10px;
+    font-size: 130%;
+}
+
+.modal button {
+    font-size: 130%;
+}
+
+.cancel-red {
+    color: red;
+}
+
+.ok-green {
+    color: green;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-around;
+}
+
 .tab-bar .top button,
 .split-pane .left button {
     border: none;

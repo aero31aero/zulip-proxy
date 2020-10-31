@@ -3,7 +3,47 @@ window.compose_box = (() => {
     // its parent is pm_list.js.
     const drafts = new Map();
 
-    function build_for_user(user_id) {
+    function build_for_user(user_id, helpers) {
+        function enter_goodbye_modal() {
+            const partner = window._.get_user_by_id(user_id);
+
+            const div = $('<div>');
+
+            const cancel_button = $('<button>').text('No (cancel)');
+            cancel_button.attr('class', 'cancel-red');
+
+            cancel_button.on('click', () => {
+                helpers.exit_modal();
+            });
+
+            const ok_button = $('<button>').text('Yes (and say goodbye)');
+            ok_button.attr('class', 'ok-green');
+
+            ok_button.on('click', () => {
+                window.transmit.send_pm(user_id, 'goodbye!');
+                helpers.exit_modal();
+            });
+
+            const button_div = $('<div>').attr('class', 'button-row');
+
+            button_div.append(cancel_button);
+            button_div.append(ok_button);
+
+            div.append(
+                $('<p>').text(`Are you done talking to ${partner.full_name}?`)
+            );
+            div.append(button_div);
+            div.append(
+                $('<p>').text(
+                    'todo: give options to customize goodbye and to mark messages as read'
+                )
+            );
+
+            helpers.enter_modal(div, () => {
+                ok_button.focus();
+            });
+        }
+
         const div = $('<div>').addClass('compose-box');
 
         const draft = drafts.get(user_id) || '';
@@ -11,6 +51,7 @@ window.compose_box = (() => {
         const box = $('<textarea>').val(draft).attr('rows', 4);
 
         const send_button = $('<button>').text('Send PM');
+        const bye_button = $('<button>').text('Say goodbye');
 
         send_button.prop('disabled', !draft);
 
@@ -18,6 +59,7 @@ window.compose_box = (() => {
             const content = box.val().trim();
             drafts.set(user_id, content);
             send_button.prop('disabled', !content);
+            bye_button.prop('disabled', !!content);
         }
 
         function clear_box() {
@@ -25,6 +67,7 @@ window.compose_box = (() => {
             box.off('keyup');
             box.val('');
             send_button.prop('disabled', true);
+            bye_button.prop('disabled', false);
             box.focus();
             box.on('keyup', handle_box_keyup);
         }
@@ -44,8 +87,13 @@ window.compose_box = (() => {
         send_button.on('click', send);
         box.on('keyup', handle_box_keyup);
 
+        bye_button.on('click', () => {
+            enter_goodbye_modal();
+        });
+
         div.append(box);
         div.append(send_button);
+        div.append(bye_button);
 
         return div;
     }
