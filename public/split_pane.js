@@ -106,9 +106,8 @@ window.split_pane = (() => {
                     button.css('background-color', '008CBA');
                 }
 
-                button.css('width', '95%');
+                button.css('width', '100%');
                 button.css('white-space', 'nowrap');
-                button.css('text-align', 'left');
             });
         }
 

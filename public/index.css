@@ -44,12 +44,21 @@ img {
     justify-content: space-around;
 }
 
-.tab-bar .top button,
-.split-pane .left button {
+.tab-bar .top button {
     border: none;
     color: white;
     padding: 5px 32px;
     text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.split-pane .left button {
+    border: none;
+    color: white;
+    padding: 7px 10px;
+    text-align: left;
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
@@ -103,14 +112,18 @@ img {
     flex-direction: row;
 }
 
+.split-pane .search {
+    padding-bottom: 5px;
+}
+
 .split-pane .left {
     display: flex;
     flex-direction: column;
 }
 
 .split-pane .items {
-    padding: 5px;
-    overflow-y: scroll;
+    padding-right: 5px;
+    overflow-y: auto;
 }
 
 .split-pane .items > div {
