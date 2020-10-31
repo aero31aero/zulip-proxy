@@ -3,7 +3,7 @@ window.main = (() => {
         const games_widget = window.games.make_view();
         const user_widget = window.users.make_view();
 
-        const pane_config = [
+        const config = [
             {
                 label: 'Users',
                 name: 'users',
@@ -17,7 +17,7 @@ window.main = (() => {
             },
         ];
 
-        const main_pane_widget = window.top_nav.make(pane_config);
+        const main_pane_widget = window.tab_bar.make(config);
 
         function update() {
             main_pane_widget.update();
