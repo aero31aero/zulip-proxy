@@ -19,6 +19,8 @@ window.layout = (() => {
             container.append(p.html);
         });
 
+        let redraw_button;
+
         const update = () => {
             redraw_button.css('background', '');
             panes.forEach((p) => {
@@ -39,28 +41,34 @@ window.layout = (() => {
                 container.css('justify-content', 'flex-start');
             }
         };
-        let redraw_button;
-        let panes_input;
 
-        const render_navbar = () => {
-            const top_div = $('<div>');
-            top_div.text(`${_.me().full_name} - `);
-            const link = $('<a>', {
-                text: `Server: ${model().state.server}`,
-                href: model().state.server,
-                target: '_blank',
-            });
-            top_div.append(link);
+        function make_redraw_button() {
+            const button = $('<button>').text('redraw app');
 
-            redraw_button = $('<button>').text('redraw app');
-
-            redraw_button.on('click', (e) => {
+            button.on('click', (e) => {
                 e.stopPropagation();
                 redraw_button.css('background', 'blue');
                 _.redraw();
             });
 
-            panes_input = $('<select>');
+            return button;
+        }
+
+        function make_top_div() {
+            const div = $('<div>');
+            div.text(`${_.me().full_name} - `);
+            const link = $('<a>', {
+                text: `Server: ${model().state.server}`,
+                href: model().state.server,
+                target: '_blank',
+            });
+            div.append(link);
+
+            return div;
+        }
+
+        function make_panes_selector() {
+            const panes_input = $('<select>');
             for (let i = 1; i <= max_panes; i++) {
                 $('<option/>')
                     .val(i)
@@ -71,11 +79,17 @@ window.layout = (() => {
                 current_panes = parseInt(this.value);
                 _.redraw();
             });
+            return panes_input;
+        }
 
+        const render_navbar = () => {
             const navbar = $('<div>').addClass('navbar');
+
+            redraw_button = make_redraw_button();
+
             navbar.append(redraw_button);
-            navbar.append(top_div);
-            navbar.append(panes_input);
+            navbar.append(make_top_div());
+            navbar.append(make_panes_selector());
             root.append(navbar);
         };
 
