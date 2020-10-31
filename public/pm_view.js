@@ -1,5 +1,5 @@
 window.pm_view = (() => {
-    function make(user) {
+    function make(user, helpers) {
         let div;
         let message_div;
         const user_id = user.user_id;
@@ -11,7 +11,7 @@ window.pm_view = (() => {
 
             div.empty();
             div.append(message_div);
-            div.append(compose_box.build_for_user(user_id));
+            div.append(compose_box.build_for_user(user_id, helpers));
 
             update();
 

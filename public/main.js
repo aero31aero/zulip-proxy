@@ -1,7 +1,35 @@
 window.main = (() => {
     function make() {
+        let main_pane;
+
+        const modal_div = $('<div>', {
+            class: 'modal',
+        });
+
+        function enter_modal(div, set_focus) {
+            modal_div.html(div);
+            main_pane.hide();
+            modal_div.show();
+
+            if (set_focus) {
+                console.info('focus');
+                set_focus();
+            }
+        }
+
+        function exit_modal() {
+            main_pane.show();
+            modal_div.hide();
+            update();
+        }
+
+        const helpers = {
+            enter_modal,
+            exit_modal,
+        };
+
         const games_widget = window.games.make_view();
-        const user_widget = window.users.make_view();
+        const user_widget = window.users.make_view(helpers);
 
         const config = [
             {
@@ -21,12 +49,14 @@ window.main = (() => {
 
         function update() {
             main_pane_widget.update();
+            // modals aren't allowed to be live-updated yet
         }
 
         function render() {
             const page = $('<div>');
-            const main_pane = main_pane_widget.render();
+            main_pane = main_pane_widget.render();
             page.append(main_pane);
+            page.append(modal_div);
 
             return page;
         }
