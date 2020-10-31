@@ -16,7 +16,7 @@ img {
     max-width: 300px;
 }
 
-.top-nav .top button,
+.tab-bar .top button,
 .split-pane .left button {
     border: none;
     color: white;
@@ -46,17 +46,17 @@ img {
     flex-grow: 1;
 }
 
-.top-nav {
+.tab-bar {
     display: flex;
     flex-direction: column;
 }
-.top-nav .top {
+.tab-bar .top {
     padding-bottom: 5px;
     height: 40px;
     padding-top: 5px;
 }
 
-.top-nav .top .items {
+.tab-bar .top .items {
     display: flex;
     flex-direction: row;
 }

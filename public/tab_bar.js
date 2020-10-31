@@ -1,4 +1,4 @@
-window.top_nav = (() => {
+window.tab_bar = (() => {
     function make(config) {
         let pane;
         let top;
@@ -6,7 +6,7 @@ window.top_nav = (() => {
         let active_idx = 0;
 
         function render() {
-            pane = $('<div>').addClass('top-nav');
+            pane = $('<div>').addClass('tab-bar');
             top = $('<div>').addClass('top');
             bottom = $('<div>').addClass('bottom');
 
