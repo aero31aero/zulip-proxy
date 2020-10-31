@@ -108,6 +108,6 @@ window.layout = (() => {
     }
 
     return {
-        make: make,
+        make,
     };
 })();

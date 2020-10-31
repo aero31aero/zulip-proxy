@@ -32,12 +32,12 @@ window.main = (() => {
         }
 
         return {
-            render: render,
-            update: update,
+            render,
+            update,
         };
     }
 
     return {
-        make: make,
+        make,
     };
 })();

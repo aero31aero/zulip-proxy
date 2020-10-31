@@ -8,16 +8,17 @@ window.pm_view = (() => {
             div = $('<div>').addClass('pm-view');
 
             message_div = $('<div>').addClass('message-list');
-            update_messages();
 
             div.empty();
             div.append(message_div);
             div.append(compose_box.build_for_user(user_id));
 
+            update();
+
             return div;
         }
 
-        function update_messages() {
+        function update() {
             message_div.empty();
 
             const messages = _.find_pms_with(user_id);
@@ -29,12 +30,12 @@ window.pm_view = (() => {
         }
 
         return {
-            render: render,
-            update: update_messages,
+            render,
+            update,
         };
     }
 
     return {
-        make: make,
+        make,
     };
 })();

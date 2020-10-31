@@ -13,7 +13,7 @@ window.games = (() => {
         }
 
         return {
-            render: render,
+            render,
         };
     }
 
@@ -62,7 +62,7 @@ window.games = (() => {
         }
 
         return {
-            render: render,
+            render,
         };
     }
 
@@ -91,8 +91,8 @@ window.games = (() => {
     }
 
     return {
-        initialize: initialize,
-        make_view: make_view,
-        handle_event: handle_event,
+        initialize,
+        make_view,
+        handle_event,
     };
 })();
