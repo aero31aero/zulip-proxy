@@ -57,11 +57,11 @@ img {
 
 .navbar {
     display: inline-flex;
-    height: 25px;
-    margin-bottom: 5px;
+    padding: 7px;
     align-items: flex-end;
     justify-content: space-between;
     width: 100vw;
+    border-bottom: 1px solid black;
 }
 
 .main > div {
@@ -79,8 +79,12 @@ img {
     flex-direction: column;
 }
 .tab-bar .top {
+    padding-top: 5px;
     padding-bottom: 5px;
-    height: 40px;
+    border-bottom: 1px solid blue;
+}
+
+.tab-bar .bottom {
     padding-top: 5px;
 }
 
@@ -90,7 +94,11 @@ img {
 }
 
 .split-pane {
-    height: calc(100vh - 30px - 40px);
+    /* This is fudged for now, since I am more concerned
+       about the top of the page looking nice, without
+       hard coding a height up there.
+    */
+    height: calc(100vh - 90px);
     display: flex;
     flex-direction: row;
 }
@@ -101,7 +109,7 @@ img {
 }
 
 .split-pane .items {
-    margin: 5px;
+    padding: 5px;
     overflow-y: scroll;
 }
 
