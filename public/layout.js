@@ -29,6 +29,7 @@ window.layout = (() => {
             let i = 0;
             while (i < current_panes) {
                 panes[i].html.css('display', 'block');
+                panes[i].html.attr('class', 'layout-pane');
                 i++;
             }
             while (i < max_panes) {
