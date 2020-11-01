@@ -43,14 +43,18 @@ window.games = (() => {
         return label;
     }
 
+    function get_keys() {
+        const game_ids = Array.from(model.keys());
+        return game_ids;
+    }
+
     function make_view() {
         const div = $('<div>');
 
-        const game_ids = Array.from(model.keys());
         const opts = {
-            keys: game_ids,
-            key_to_label: key_to_label,
-            right_handler: right_handler,
+            get_keys,
+            key_to_label,
+            right_handler,
         };
 
         const pane_widget = split_pane.make(opts);
