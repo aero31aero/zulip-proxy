@@ -98,9 +98,7 @@ window.split_pane = (() => {
                 button.on('click', left_click_handler(button, idx));
 
                 if (key === active_key) {
-                    button.css('background-color', '#4CAF50');
-                } else {
-                    button.css('background-color', '008CBA');
+                    button.addClass('active-item');
                 }
 
                 button.css('width', '100%');

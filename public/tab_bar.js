@@ -44,9 +44,7 @@ window.tab_bar = (() => {
                 button.on('click', top_click_handler(button, idx));
 
                 if (idx === active_idx) {
-                    button.css('background-color', '#4CAF50');
-                } else {
-                    button.css('background-color', '008CBA');
+                    button.addClass('active-tab');
                 }
 
                 button.css('width', '95%');
