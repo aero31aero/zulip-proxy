@@ -29,6 +29,9 @@ const client_secret = config.client_secret;
 const redirect_uri = config.redirect_uri;
 const session_secret = config.session_secret;
 
+// Keep track of our websocket clients.
+const clients = [];
+
 const session_opts = {
     secret: session_secret,
     cookie: {
@@ -66,7 +69,7 @@ async function single_page_app(res, session) {
     // like names have changed.
     const me = await z.get_current_user(session);
 
-    page_params.games = game.data();
+    page_params.games = game.get_user_data(me.user_id, clients);
     page_params.me = me;
     page_params.app_url = app_url;
     page_params.ws_port = port;
@@ -155,8 +158,6 @@ const wss = new WebSocket.Server({
     clientTracking: false,
     noServer: true,
 });
-
-const clients = [];
 
 server.on('upgrade', function (request, socket, head) {
     console.log('Parsing session from request...');
