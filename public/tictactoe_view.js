@@ -4,6 +4,7 @@ window.tictactoe_view = (() => {
         // here we build up things in jQuery.
         function table(r1, r2, r3) {
             const table = $('<table>');
+            table.addClass('game-board');
             table.attr('border', 1);
             table.css('border-collapse', 'collapse');
 
