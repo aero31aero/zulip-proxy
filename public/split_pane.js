@@ -1,17 +1,14 @@
 window.split_pane = (() => {
     function make(opts) {
-        let keys = opts.keys;
         let get_keys = opts.get_keys;
         let key_to_label = opts.key_to_label;
         let right_handler = opts.right_handler;
 
-        if (!(keys || get_keys) || !key_to_label || !right_handler) {
+        if (!get_keys || !key_to_label || !right_handler) {
             throw Error('misconfigured split_pane');
         }
-        if (get_keys) {
-            keys = get_keys();
-        }
 
+        let keys = get_keys();
         let pane;
         let left;
         let right;
@@ -126,10 +123,8 @@ window.split_pane = (() => {
         }
 
         function update() {
-            if (get_keys) {
-                keys = get_keys();
-                populate_left();
-            }
+            keys = get_keys();
+            populate_left();
 
             if (!active_conf) {
                 return;
