@@ -68,6 +68,11 @@ img {
     background-color: #008cba;
 }
 
+table.game-board,
+.game-board td {
+    border-color: #008cba;
+}
+
 .navbar {
     display: inline-flex;
     padding: 7px;
