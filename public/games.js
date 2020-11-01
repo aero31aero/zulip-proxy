@@ -70,8 +70,27 @@ window.games = (() => {
         };
     }
 
+    function handle_start_game(game_id) {
+        if (model.get(game_id)) {
+            console.warn(`got dup start_game for game ${game_id}`);
+            return;
+        }
+
+        console.info('create new handler');
+        const data_handler = new window.TicTacToeData(game_id);
+        model.set(game_id, data_handler);
+        window._.redraw();
+    }
+
     function handle_event(event) {
         const game_id = event.message.game_id;
+
+        if (event.message.type === 'start_game') {
+            console.info('handle start_game');
+            handle_start_game(game_id);
+            return;
+        }
+
         const data_handler = model.get(game_id);
 
         if (!data_handler) {
