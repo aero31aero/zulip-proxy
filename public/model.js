@@ -7,11 +7,6 @@ window.model = (() => {
     // Some additional constraints are in the code to merge new data into
     // existing data; see the merge function a bit below in the file.
     const base_model = {
-        users: [
-            {
-                user_id: 1,
-            },
-        ],
         messages: [
             {
                 id: 1,
@@ -26,7 +21,6 @@ window.model = (() => {
     };
 
     let model = {
-        users: [],
         messages: [],
         state: {
             user_id: null,
@@ -117,7 +111,40 @@ window.model = (() => {
         return model;
     };
 
-    class Stream {
+    const classes = {};
+
+    classes.user = class User {
+        constructor(data) {
+            // fields from Zulip's API
+            this.avatar_url = data.avatar_url;
+            this.avatar_version = data.avatar_version;
+            this.date_joined = data.date_joined;
+            this.email = data.email;
+            this.full_name = data.full_name;
+            this.is_active = data.is_active;
+            this.is_admin = data.is_admin;
+            this.is_bot = data.is_bot;
+            this.is_guest = data.is_guest;
+            this.is_owner = data.is_owner;
+            this.timezone = data.timezone;
+            this.user_id = data.user_id;
+        }
+
+        get name() {
+            return this.full_name;
+        }
+        set name(name) {
+            this.full_name = name;
+        }
+        get id() {
+            return this.user_id;
+        }
+        set id(id) {
+            this.user_id = id;
+        }
+    };
+
+    classes.stream = class Stream {
         constructor(data) {
             // fields from Zulip's API
             this.name = data.name;
@@ -138,51 +165,68 @@ window.model = (() => {
             // our fields
             this.topics = [];
         }
-    }
+        get id() {
+            return this.stream_id;
+        }
+        set id(id) {
+            this.stream_id = id;
+        }
+    };
+
+    const users = {};
     const streams = {}; // id, data pairs
 
-    const Streams = {
-        add: function (data) {
-            if (streams[data.stream_id]) {
-                throw new Error(
-                    `Stream with id ${data.stream_id} already added!`
-                );
-            }
-            streams[data.stream_id] = new Stream(data);
-        },
-        by_id: function (id) {
-            const stream = streams[id];
-            if (!stream) {
-                throw new Error(`Stream with id ${id} not found!`);
-            }
-            return stream;
-        },
-        by_name: function (name) {
-            for (key in streams) {
-                if (streams[key].name === name) {
-                    return streams[key];
+    const ZulipAccessor = function (type, data_obj) {
+        return {
+            add: function (data) {
+                // this part might cause issues with messages later.
+                const key = `${type}_id`;
+
+                if (data_obj[data[key]]) {
+                    throw new Error(
+                        `${type} with id ${data.id} already added!`
+                    );
                 }
-            }
-            throw new Error(`Stream with name ${name} not found!`);
-        },
-        clone: function () {
-            return Object.assign({}, streams);
-        },
-        filter: function (fn) {
-            const results = [];
-            fn = fn || (() => true); // return all by default;
-            for (key in streams) {
-                if (fn(streams[key]) === true) {
-                    results.push(streams[key]);
+                data_obj[data[key]] = new classes[type](data);
+            },
+            by_id: function (id) {
+                const item = data_obj[id];
+                if (!item) {
+                    throw new Error(`${type} with id ${id} not found!`);
                 }
-            }
-            return results;
-        },
+                return item;
+            },
+            by_name: function (name) {
+                for (key in data_obj) {
+                    if (data_obj[key].name === name) {
+                        return data_obj[key];
+                    }
+                }
+                throw new Error(`${type} with name ${name} not found!`);
+            },
+            clone: function () {
+                return Object.assign({}, data_obj);
+            },
+            filter: function (fn) {
+                const results = [];
+                fn = fn || (() => true); // return all by default;
+                for (key in data_obj) {
+                    if (fn(data_obj[key]) === true) {
+                        results.push(data_obj[key]);
+                    }
+                }
+                return results;
+            },
+        };
     };
+
+    const Streams = ZulipAccessor('stream', streams);
+    const Users = ZulipAccessor('user', users);
 
     return {
         main,
         Streams,
+        Users,
     };
 })();
 

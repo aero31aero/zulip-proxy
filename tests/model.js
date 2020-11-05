@@ -7,18 +7,15 @@ const model = require('../public/model');
 let m = model.main();
 
 assert(typeof m === 'object');
-assert(Array.isArray(m.users));
 
 // Update the model.
 m = model.main({ messages: [{ id: 1 }] });
 
-assert(m.users.length === 0);
 assert(m.messages[0].id === 1);
 
 // Set the model to this object
 m = model.main({ messages: [{ id: 2 }] }, true);
 
-assert(m.users === undefined);
 assert(m.messages[0].id === 2);
 
 // Add something to an array, ensure it doesn't wipe existing array.
@@ -36,29 +33,6 @@ assert.throws(
     {
         name: 'Error',
         message: 'Invalid data: Expected Object',
-    }
-);
-
-assert.throws(
-    () => {
-        // A user's user_id should be a number.
-        model.main({
-            users: [
-                {
-                    user_id: 1,
-                    full_name: 'Jane Doe',
-                },
-                {
-                    user_id: 'gibberish',
-                    full_name: 'John Smith',
-                },
-            ],
-        });
-    },
-    {
-        name: 'Error',
-        message:
-            'Invalid data: "user_id: gibberish" should be number but is string',
     }
 );
 
