@@ -161,15 +161,28 @@ window.model = (() => {
             this.rendered_description = data.rendered_description;
             this.stream_post_policy = data.stream_post_policy;
             this.subscribers = data.subscribers;
-
-            // our fields
-            this.topics = [];
         }
+
         get id() {
             return this.stream_id;
         }
         set id(id) {
             this.stream_id = id;
+        }
+
+        get subs() {
+            const subs = [];
+            // This is an O(n^2) operation. Let's make the server return subs with user_ids
+            // instead of emails so we can easily make this O(n).
+            this.subscribers.forEach((sub) => {
+                try {
+                    subs.push(Users.filter((user) => user.email === sub)[0]);
+                } catch (err) {
+                    // probably the user isn't loaded yet; ignore
+                    console.warn(err);
+                }
+            });
+            return subs;
         }
     };
 
