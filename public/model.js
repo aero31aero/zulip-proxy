@@ -217,6 +217,9 @@ window.model = (() => {
                 }
                 return results;
             },
+            list: function () {
+                return this.filter();
+            },
         };
     };
 
