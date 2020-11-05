@@ -36,8 +36,8 @@ window.users = (() => {
         }
 
         const opts = {
-            key_to_label: key_to_label,
-            right_handler: right_handler,
+            key_to_label,
+            right_handler,
             get_keys: get_user_ids_by_recency,
         };
 
