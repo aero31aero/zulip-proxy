@@ -16,6 +16,10 @@ window.transmit = (() => {
         });
     }
 
+    function send_stream_message(stream, topic, content) {
+        console.log('Consider it done.', content);
+    }
+
     function send_pm(user_id, content) {
         local_id_seq += 1;
         const local_id = local_id_seq + 0.01;

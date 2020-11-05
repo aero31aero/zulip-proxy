@@ -3,9 +3,11 @@ window.compose_box = (() => {
     // its parent is pm_list.js.
     const drafts = new Map();
 
-    function build_for_user(user_id, helpers) {
+    function build(recipient, helpers) {
+        const is_pm = !!recipient.user_id; // coerce user_id to boolean'
+
         function enter_goodbye_modal() {
-            const partner = window._.get_user_by_id(user_id);
+            const partner = window._.get_user_by_id(recipient.user_id);
 
             const div = $('<div>');
 
@@ -20,7 +22,7 @@ window.compose_box = (() => {
             ok_button.attr('class', 'ok-green');
 
             ok_button.on('click', () => {
-                window.transmit.send_pm(user_id, 'goodbye!');
+                window.transmit.send_pm(recipient.user_id, 'goodbye!');
                 helpers.exit_modal();
             });
 
@@ -46,7 +48,7 @@ window.compose_box = (() => {
 
         const div = $('<div>').addClass('compose-box');
 
-        const draft = drafts.get(user_id) || '';
+        const draft = drafts.get(JSON.stringify(recipient)) || '';
 
         const box = $('<textarea>').val(draft).attr('rows', 4);
 
@@ -57,13 +59,13 @@ window.compose_box = (() => {
 
         function handle_box_keyup(event) {
             const content = box.val().trim();
-            drafts.set(user_id, content);
+            drafts.set(JSON.stringify(recipient), content);
             send_button.prop('disabled', !content);
             bye_button.prop('disabled', !!content);
         }
 
         function clear_box() {
-            drafts.delete(user_id);
+            drafts.delete(JSON.stringify(recipient));
             box.off('keyup');
             box.val('');
             send_button.prop('disabled', true);
@@ -81,13 +83,23 @@ window.compose_box = (() => {
             }
 
             clear_box();
-            window.transmit.send_pm(user_id, content);
+
+            if (is_pm) {
+                window.transmit.send_pm(recipient.user_id, content);
+            } else {
+                window.transmit.send_stream_message(
+                    recipient.stream,
+                    recipient.topic,
+                    content
+                );
+            }
         };
 
         send_button.on('click', send);
         box.on('keyup', handle_box_keyup);
 
         bye_button.on('click', () => {
+            if (!is_pm) return; // don't do anything for stream/topic.
             enter_goodbye_modal();
         });
 
@@ -99,6 +111,6 @@ window.compose_box = (() => {
     }
 
     return {
-        build_for_user,
+        build,
     };
 })();
