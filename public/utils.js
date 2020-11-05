@@ -1,16 +1,16 @@
 window._ = {
-    get_user_by_id: (id) => model().users.find((e) => e.user_id === id),
-    me: () => _.get_user_by_id(model().state.user_id),
+    get_user_by_id: (id) => model.main().users.find((e) => e.user_id === id),
+    me: () => _.get_user_by_id(model.main().state.user_id),
     is_me: (user_id) => _.me().user_id === user_id,
 
     fetch_users: async () => {
-        let users = model().users;
+        let users = model.main().users;
         if (users.length === 0) {
             const response = await fetch('/z/users');
             const data = await response.json();
             const members = data.members;
             members.sort((a, b) => a.full_name.localeCompare(b.full_name));
-            users = model({ users: members }).users;
+            users = model.main({ users: members }).users;
         }
         return users;
     },
@@ -25,11 +25,11 @@ window._ = {
         const url = `/z/messages?${params}`;
         const response = await fetch(url);
         const data = await response.json();
-        model({ messages: data.messages });
+        model.main({ messages: data.messages });
     },
 
     find_pms_with: (user_id) => {
-        let messages = model().messages;
+        let messages = model.main().messages;
         return messages.filter((m) => {
             if (m.type !== 'private') {
                 return false;

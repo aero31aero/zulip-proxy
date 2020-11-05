@@ -1,12 +1,14 @@
 window.users = (() => {
     function get_user_ids_by_recency(show_all = false) {
         const user_set = new Set();
-        const messages = model().messages.filter((m) => m.type === 'private');
+        const messages = model
+            .main()
+            .messages.filter((m) => m.type === 'private');
         for (let i = messages.length - 1; i >= 0; i--) {
             user_set.add(messages[i].sender_id);
         }
         if (show_all) {
-            model().users.forEach((u) => {
+            model.main().users.forEach((u) => {
                 user_set.add(u.user_id);
             });
         }
@@ -16,7 +18,7 @@ window.users = (() => {
     }
 
     function make_view(helpers) {
-        const users = model().users;
+        const users = model.main().users;
         const user_map = new Map();
 
         for (const user of users) {

@@ -2,7 +2,7 @@ const init_data = async () => {
     const br = '<br>';
 
     $('#main').html('loading model\n').append(br);
-    model({
+    model.main({
         state: {
             user_id: page_params.me.user_id,
             server: page_params.app_url,

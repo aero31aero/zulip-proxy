@@ -18,7 +18,7 @@ window.games = (() => {
     }
 
     function name(user_id) {
-        if (user_id === window.model().state.user_id) {
+        if (user_id === window.model.main().state.user_id) {
             return 'me';
         }
 

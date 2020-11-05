@@ -23,7 +23,7 @@ window.transmit = (() => {
     function send_pm(user_id, content) {
         local_id_seq += 1;
         const local_id = local_id_seq + 0.01;
-        const queue_id = window.model().state.queue_id;
+        const queue_id = window.model.main().state.queue_id;
 
         const message = {
             local_id: local_id,

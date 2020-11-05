@@ -4,25 +4,25 @@ global.deepmerge = require('deepmerge');
 const model = require('../public/model');
 
 // Get the model.
-let m = model();
+let m = model.main();
 
 assert(typeof m === 'object');
 assert(Array.isArray(m.users));
 
 // Update the model.
-m = model({ messages: [{ id: 1 }] });
+m = model.main({ messages: [{ id: 1 }] });
 
 assert(m.users.length === 0);
 assert(m.messages[0].id === 1);
 
 // Set the model to this object
-m = model({ messages: [{ id: 2 }] }, true);
+m = model.main({ messages: [{ id: 2 }] }, true);
 
 assert(m.users === undefined);
 assert(m.messages[0].id === 2);
 
 // Add something to an array, ensure it doesn't wipe existing array.
-m = model({ messages: [{ id: 3, name: 'my_stream' }] });
+m = model.main({ messages: [{ id: 3, name: 'my_stream' }] });
 
 assert(m.messages.length === 2);
 assert(m.messages[0].id === 2);
@@ -31,7 +31,7 @@ assert(m.messages[1].name === 'my_stream');
 assert.throws(
     () => {
         // Give invalid data to the model.
-        model('gibberish');
+        model.main('gibberish');
     },
     {
         name: 'Error',
@@ -42,7 +42,7 @@ assert.throws(
 assert.throws(
     () => {
         // A user's user_id should be a number.
-        model({
+        model.main({
             users: [
                 {
                     user_id: 1,
@@ -65,15 +65,15 @@ assert.throws(
 // If we try to add a message with the same id as an existing message,
 // overwrite the existing message instead of adding a new one.
 
-m = model({ messages: [{ id: 1, content: 'one' }] }, true);
+m = model.main({ messages: [{ id: 1, content: 'one' }] }, true);
 assert(m.messages.length === 1);
 assert(m.messages[0].content === 'one');
 
-m = model({ messages: [{ id: 2, content: 'two' }] });
+m = model.main({ messages: [{ id: 2, content: 'two' }] });
 assert(m.messages.length === 2);
 assert(m.messages[1].content === 'two');
 
-m = model({ messages: [{ id: 1, content: 'one-edited' }] });
+m = model.main({ messages: [{ id: 1, content: 'one-edited' }] });
 assert(m.messages.length === 2);
 assert(m.messages[0].content === 'one-edited');
 
