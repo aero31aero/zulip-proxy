@@ -28,6 +28,18 @@ window._ = {
         model.main({ messages: data.messages });
     },
 
+    fetch_streams: async () => {
+        const params = $.param({
+            include_subscribers: true,
+        });
+        const url = `z/users/me/subscriptions?${params}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        data.subscriptions.forEach((e) => {
+            model.Streams.add(e);
+        });
+    },
+
     find_pms_with: (user_id) => {
         let messages = model.main().messages;
         return messages.filter((m) => {

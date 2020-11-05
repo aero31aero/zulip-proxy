@@ -133,6 +133,7 @@ window.model = (() => {
             this.message_retention_days = data.message_retention_days;
             this.rendered_description = data.rendered_description;
             this.stream_post_policy = data.stream_post_policy;
+            this.subscribers = data.subscribers;
 
             // our fields
             this.topics = [];

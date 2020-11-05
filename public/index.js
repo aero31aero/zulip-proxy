@@ -12,6 +12,8 @@ const init_data = async () => {
     await _.fetch_users();
     $('#main').append('fetching messages').append(br);
     await _.fetch_messages();
+    $('#main').append('fetching streams').append(br);
+    await _.fetch_streams();
     $('#main').append('done with init_data').append(br);
 };
 
