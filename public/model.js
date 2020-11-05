@@ -165,6 +165,9 @@ window.model = (() => {
             }
             throw new Error(`Stream with name ${name} not found!`);
         },
+        clone: function () {
+            return Object.assign({}, streams);
+        },
         filter: function (fn) {
             const results = [];
             fn = fn || (() => true); // return all by default;
