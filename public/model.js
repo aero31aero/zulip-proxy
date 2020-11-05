@@ -138,10 +138,47 @@ window.model = (() => {
             this.topics = [];
         }
     }
+    const streams = {}; // id, data pairs
+
+    const Streams = {
+        add: function (data) {
+            if (streams[data.stream_id]) {
+                throw new Error(
+                    `Stream with id ${data.stream_id} already added!`
+                );
+            }
+            streams[data.stream_id] = new Stream(data);
+        },
+        by_id: function (id) {
+            const stream = streams[id];
+            if (!stream) {
+                throw new Error(`Stream with id ${id} not found!`);
+            }
+            return stream;
+        },
+        by_name: function (name) {
+            for (key in streams) {
+                if (streams[key].name === name) {
+                    return streams[key];
+                }
+            }
+            throw new Error(`Stream with name ${name} not found!`);
+        },
+        filter: function (fn) {
+            const results = [];
+            fn = fn || (() => true); // return all by default;
+            for (key in streams) {
+                if (fn(streams[key]) === true) {
+                    results.push(streams[key]);
+                }
+            }
+            return results;
+        },
+    };
 
     return {
         main,
-        Stream,
+        Streams,
     };
 })();
 
