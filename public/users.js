@@ -8,7 +8,7 @@ window.users = (() => {
             user_set.add(messages[i].sender_id);
         }
         if (show_all) {
-            model.Users.filter().forEach((u) => {
+            model.Users.list().forEach((u) => {
                 user_set.add(u.user_id);
             });
         }
@@ -18,7 +18,7 @@ window.users = (() => {
     }
 
     function make_view(helpers) {
-        const users = model.Users.filter();
+        const users = model.Users.list();
         const user_map = new Map();
 
         for (const user of users) {
