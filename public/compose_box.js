@@ -6,8 +6,16 @@ window.compose_box = (() => {
     function build(recipient, helpers) {
         const is_pm = !!recipient.user_id; // coerce user_id to boolean'
 
+        function get_display_recipient(recipient) {
+            if (is_pm) {
+                return window._.get_user_by_id(recipient.user_id).full_name;
+            } else {
+                return `# ${recipient.stream} > ${recipient.topic}`;
+            }
+        }
+
         function enter_goodbye_modal() {
-            const partner = window._.get_user_by_id(recipient.user_id);
+            const display_recipient = get_display_recipient(recipient);
 
             const div = $('<div>');
 
@@ -22,7 +30,7 @@ window.compose_box = (() => {
             ok_button.attr('class', 'ok-green');
 
             ok_button.on('click', () => {
-                window.transmit.send_pm(recipient.user_id, 'goodbye!');
+                window.transmit.send_message(recipient, 'goodbye!');
                 helpers.exit_modal();
             });
 
@@ -32,7 +40,7 @@ window.compose_box = (() => {
             button_div.append(ok_button);
 
             div.append(
-                $('<p>').text(`Are you done talking to ${partner.full_name}?`)
+                $('<p>').text(`Are you done talking to ${display_recipient}?`)
             );
             div.append(button_div);
             div.append(
@@ -83,16 +91,7 @@ window.compose_box = (() => {
             }
 
             clear_box();
-
-            if (is_pm) {
-                window.transmit.send_pm(recipient.user_id, content);
-            } else {
-                window.transmit.send_stream_message(
-                    recipient.stream,
-                    recipient.topic,
-                    content
-                );
-            }
+            transmit.send_message(recipient, content);
         };
 
         send_button.on('click', send);
