@@ -7,7 +7,7 @@ window.events = (() => {
             }
         }
         try {
-            model(event.model);
+            model.main(event.model);
             _.redraw();
         } catch (e) {
             console.error('Error updating model:', event, e);

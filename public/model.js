@@ -116,7 +116,33 @@ window.model = (() => {
         }
         return model;
     };
-    return main;
+
+    class Stream {
+        constructor(data) {
+            // fields from Zulip's API
+            this.name = data.name;
+            this.stream_id = data.stream_id;
+            this.date_created = data.date_created;
+            this.description = data.description;
+            this.first_message_id = data.first_message_id;
+            this.history_public_to_subscribers =
+                data.history_public_to_subscribers;
+            this.invite_only = data.invite_only;
+            this.is_announcement_only = data.is_announcement_only;
+            this.is_web_public = data.is_web_public;
+            this.message_retention_days = data.message_retention_days;
+            this.rendered_description = data.rendered_description;
+            this.stream_post_policy = data.stream_post_policy;
+
+            // our fields
+            this.topics = [];
+        }
+    }
+
+    return {
+        main,
+        Stream,
+    };
 })();
 
 if (typeof module !== 'undefined') {
