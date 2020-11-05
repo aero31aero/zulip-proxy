@@ -17,8 +17,21 @@ window.transmit = (() => {
     }
 
     function send_stream_message(stream_id, topic, content) {
-        const stream = model.Streams.by_id(stream_id);
-        console.log('Consider it done.', stream.name, topic, content);
+        // TODO merge with send_pm and use local echo.
+        const data = {
+            type: 'stream',
+            to: stream_id,
+            topic: topic,
+            content: content,
+        };
+
+        fetch('/z/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
     }
 
     function send_pm(user_id, content) {
