@@ -4,13 +4,15 @@ window.compose_box = (() => {
     const drafts = new Map();
 
     function build(recipient, helpers) {
-        const is_pm = !!recipient.user_id; // coerce user_id to boolean'
+        const is_pm = !!recipient.user_id; // coerce user_id to boolean
 
         function get_display_recipient(recipient) {
             if (is_pm) {
                 return window._.get_user_by_id(recipient.user_id).full_name;
             } else {
-                return `# ${recipient.stream} > ${recipient.topic}`;
+                return `# ${model.Streams.by_id(recipient.stream_id).name} > ${
+                    recipient.topic
+                }`;
             }
         }
 

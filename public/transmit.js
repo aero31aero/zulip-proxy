@@ -16,8 +16,9 @@ window.transmit = (() => {
         });
     }
 
-    function send_stream_message(stream, topic, content) {
-        console.log('Consider it done.', content);
+    function send_stream_message(stream_id, topic, content) {
+        const stream = model.Streams.by_id(stream_id);
+        console.log('Consider it done.', stream.name, topic, content);
     }
 
     function send_pm(user_id, content) {
@@ -61,7 +62,7 @@ window.transmit = (() => {
         if (recipient.user_id) {
             send_pm(recipient.user_id, content);
         } else {
-            send_stream_message(recipient.stream, recipient.topic, content);
+            send_stream_message(recipient.stream_id, recipient.topic, content);
         }
     }
 
