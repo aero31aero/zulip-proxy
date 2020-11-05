@@ -30,7 +30,7 @@ window.main = (() => {
 
         const games_widget = window.games.make_view();
         const user_widget = window.users.make_view(helpers);
-        const test_widget = window.tester.make_view();
+        const test_widget = window.tester.make_view(helpers);
 
         const config = [
             {

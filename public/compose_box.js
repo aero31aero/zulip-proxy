@@ -100,7 +100,6 @@ window.compose_box = (() => {
         box.on('keyup', handle_box_keyup);
 
         bye_button.on('click', () => {
-            if (!is_pm) return; // don't do anything for stream/topic.
             enter_goodbye_modal();
         });
 
