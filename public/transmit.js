@@ -57,9 +57,17 @@ window.transmit = (() => {
         });
     }
 
+    function send_message(recipient, content) {
+        if (recipient.user_id) {
+            send_pm(recipient.user_id, content);
+        } else {
+            send_stream_message(recipient.stream, recipient.topic, content);
+        }
+    }
+
     return {
-        in_flight_messages: in_flight_messages,
-        ack_local: ack_local,
-        send_pm: send_pm,
+        in_flight_messages,
+        ack_local,
+        send_message,
     };
 })();
