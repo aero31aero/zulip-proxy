@@ -1,18 +1,17 @@
 window._ = {
-    get_user_by_id: (id) => model.main().users.find((e) => e.user_id === id),
+    get_user_by_id: (id) => model.Users.by_id(id),
     me: () => _.get_user_by_id(model.main().state.user_id),
     is_me: (user_id) => _.me().user_id === user_id,
 
     fetch_users: async () => {
-        let users = model.main().users;
-        if (users.length === 0) {
-            const response = await fetch('/z/users');
-            const data = await response.json();
-            const members = data.members;
-            members.sort((a, b) => a.full_name.localeCompare(b.full_name));
-            users = model.main({ users: members }).users;
-        }
-        return users;
+        const response = await fetch('/z/users');
+        const data = await response.json();
+        data.members.forEach((e) => {
+            if (!e.user_id) {
+                console.log(e);
+            }
+            model.Users.add(e);
+        });
     },
 
     fetch_messages: async () => {
