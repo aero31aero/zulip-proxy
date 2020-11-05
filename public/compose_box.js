@@ -102,6 +102,10 @@ window.compose_box = (() => {
             enter_goodbye_modal();
         });
 
+        const compose_target = $('<p>');
+        compose_target.text(`To: ${get_display_recipient(recipient)}`);
+
+        div.append(compose_target);
         div.append(box);
         div.append(send_button);
         div.append(bye_button);
