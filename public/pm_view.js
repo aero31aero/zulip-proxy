@@ -11,7 +11,14 @@ window.pm_view = (() => {
 
             div.empty();
             div.append(message_div);
-            div.append(compose_box.build_for_user(user_id, helpers));
+            div.append(
+                compose_box.build(
+                    {
+                        user_id,
+                    },
+                    helpers
+                )
+            );
 
             update();
 
