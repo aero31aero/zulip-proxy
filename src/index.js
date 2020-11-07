@@ -84,18 +84,30 @@ function build_endpoints(app) {
         const session = req.session;
 
         if (!session || !session.access_token) {
-            console.info('NEED TO AUTH FIRST!!!!!');
-            // Is there a reason we don't just
-            // directly redirect to Zulip?
-            return res.redirect('o/authorize');
+            return res.redirect('/login');
         }
 
         single_page_app(res, session);
     });
 
-    app.get('/o/authorize', (req, res) => {
+    app.get('/login', (req, res) => {
         const code_url = `${app_url}/${z.oauth_prefix}/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
-        res.redirect(code_url);
+        res.send(`<a href=${code_url}>Login with your Zulip credentials</a>`);
+    });
+
+    app.get('/logout', (req, res) => {
+        const session = req.session;
+        if (session) {
+            const access_token = session.access_token;
+            session.destroy();
+            const params = {
+                access_token,
+                client_id,
+                client_secret,
+            };
+            z.revoke_token(params);
+        }
+        res.redirect('/login');
     });
 
     app.get('/o/callback', async (req, res) => {

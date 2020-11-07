@@ -55,6 +55,10 @@ window.layout = (() => {
             return button;
         }
 
+        function logout_link() {
+            return '<a href="logout">Log out </a>';
+        }
+
         function make_top_div() {
             const div = $('<div>');
             div.text(`${_.me().full_name} - `);
@@ -89,6 +93,7 @@ window.layout = (() => {
             redraw_button = make_redraw_button();
 
             navbar.append(redraw_button);
+            navbar.append(logout_link());
             navbar.append(make_top_div());
             navbar.append(make_panes_selector());
             root.append(navbar);
