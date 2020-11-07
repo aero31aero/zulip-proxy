@@ -102,13 +102,36 @@ exports.make = function (opts) {
         return helper;
     }
 
+    async function revoke_token(opts) {
+        const access_token = opts.access_token;
+        const client_id = opts.client_id;
+        const client_secret = opts.client_secret;
+
+        const url = `${app_url}/${oauth_prefix}/revoke-token/`;
+        const headers = { Bearer: access_token };
+        const data = {
+            token: access_token,
+            client_id,
+            client_secret,
+        };
+        console.info(url);
+        console.info(data);
+        await axios({
+            method: 'post',
+            url: url,
+            data: qs.stringify(data),
+            headers: headers,
+        });
+    }
+
     return {
-        api_get: api_get,
-        api_post: api_post,
-        get_access_token: get_access_token,
-        get_current_user: get_current_user,
-        handle_user_uploads: handle_user_uploads,
-        oauth_prefix: oauth_prefix,
-        get_raw_methods: get_raw_methods,
+        revoke_token,
+        api_get,
+        api_post,
+        get_access_token,
+        get_current_user,
+        handle_user_uploads,
+        oauth_prefix,
+        get_raw_methods,
     };
 };
