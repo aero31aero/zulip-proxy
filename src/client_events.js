@@ -61,5 +61,6 @@ exports.make_handler = (zulip, client) => {
 
     return {
         start,
+        stop: q.stop,
     };
 };

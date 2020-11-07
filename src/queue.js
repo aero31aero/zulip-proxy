@@ -4,16 +4,28 @@ function sleep(ms) {
 }
 
 exports.make = (z) => {
+    let stopped = false;
+
     function logError(error) {
         console.log('zulip-js: Error while communicating with server:', error);
     }
 
+    function stop() {
+        console.log('event handler is being told to stop');
+        stopped = true;
+    }
+
     async function registerQueue(eventTypes = null, query_params) {
         let res;
-        while (true) {
+        while (!stopped) {
             try {
                 const params = { eventTypes };
                 res = await z.post('register', params, query_params);
+
+                if (stopped) {
+                    break;
+                }
+
                 if (res.result === 'error') {
                     logError(res.msg);
                     await sleep(1000);
@@ -36,9 +48,14 @@ exports.make = (z) => {
             lastEventId = Math.max(lastEventId, event.id);
             callback(event);
         };
-        while (true) {
+        while (!stopped) {
             if (!queueId) {
                 const queueData = await registerQueue(eventTypes, query_params);
+
+                if (stopped) {
+                    break;
+                }
+
                 queueId = queueData.queueId;
                 lastEventId = queueData.lastEventId;
                 console.log('SENDING QUEUE ID');
@@ -53,6 +70,11 @@ exports.make = (z) => {
                     last_event_id: lastEventId,
                     dont_block: false,
                 });
+
+                if (stopped) {
+                    break;
+                }
+
                 if (res.events) {
                     res.events.forEach(handleEvent);
                 }
@@ -61,9 +83,11 @@ exports.make = (z) => {
             }
             await sleep(1000);
         }
+        console.log(`ending event loop for ${queueId}`);
     }
 
     return {
         start,
+        stop,
     };
 };
