@@ -197,6 +197,7 @@ server.on('upgrade', function (request, socket, head) {
             ws.on('close', () => {
                 // TODO: remove from list
                 console.log('closed');
+                event_handler.stop();
             });
 
             ws.on('message', (message) => {
