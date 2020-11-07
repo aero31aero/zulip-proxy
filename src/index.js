@@ -172,6 +172,17 @@ server.on('upgrade', function (request, socket, head) {
         }
 
         wss.handleUpgrade(request, socket, head, function (ws) {
+            /*
+                Our websocket has 2-way traffic for games.
+
+                    proxy server <-> (ws) <-> proxy client
+
+                For Zulip events, the data flows in one direction
+                between the proxy server and client:
+
+                    Zulip server <-> (long poll) <-> proxy server -> (ws) -> client
+
+            */
             const client = {
                 ws: ws,
                 user_id: user_id,
@@ -181,6 +192,8 @@ server.on('upgrade', function (request, socket, head) {
 
             console.log(`${user_id} connected via sockets`);
 
+            const event_handler = client_events.make_handler(z, client);
+
             ws.on('close', () => {
                 // TODO: remove from list
                 console.log('closed');
@@ -189,7 +202,8 @@ server.on('upgrade', function (request, socket, head) {
             ws.on('message', (message) => {
                 game.handle_message(clients, client, message);
             });
-            client_events(z, client);
+
+            event_handler.start();
         });
     });
 });

@@ -1,7 +1,3 @@
-const make = (client) => {
-    return;
-};
-
 const queue = require('./queue');
 
 const send_model_update = (json, client) => {
@@ -50,12 +46,20 @@ const process_event = (event, client) => {
     }
 };
 
-module.exports = (zulip, client) => {
+exports.make_handler = (zulip, client) => {
     const call_on_each = (event) => {
         process_event(event, client);
     };
     const z = zulip.get_raw_methods(client.session);
-    queue(z)(call_on_each, ['message', 'realm_emoji'], {
-        apply_markdown: true,
-    });
+    const q = queue.make(z);
+
+    function start() {
+        q.start(call_on_each, ['message', 'realm_emoji'], {
+            apply_markdown: true,
+        });
+    }
+
+    return {
+        start,
+    };
 };

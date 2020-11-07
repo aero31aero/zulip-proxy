@@ -3,7 +3,7 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-module.exports = (z) => {
+exports.make = (z) => {
     function logError(error) {
         console.log('zulip-js: Error while communicating with server:', error);
     }
@@ -29,7 +29,7 @@ module.exports = (z) => {
         }
     }
 
-    async function callOnEachEvent(callback, eventTypes = null, query_params) {
+    async function start(callback, eventTypes = null, query_params) {
         let queueId = null;
         let lastEventId = -1;
         const handleEvent = (event) => {
@@ -63,5 +63,7 @@ module.exports = (z) => {
         }
     }
 
-    return callOnEachEvent;
+    return {
+        start,
+    };
 };
