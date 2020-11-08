@@ -58,7 +58,6 @@ exports.make = (z) => {
 
                 queueId = queueData.queueId;
                 lastEventId = queueData.lastEventId;
-                console.log('SENDING QUEUE ID');
                 callback({
                     type: 'queue_id',
                     queue_id: queueId,

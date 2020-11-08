@@ -72,7 +72,6 @@ async function single_page_app(res, session) {
     page_params.games = game.get_user_data(me.user_id, clients);
     page_params.me = me;
     page_params.app_url = app_url;
-    page_params.ws_port = port;
 
     res.render('index.pug', {
         page_params: JSON.stringify(page_params),
@@ -195,16 +194,16 @@ server.on('upgrade', function (request, socket, head) {
                     Zulip server <-> (long poll) <-> proxy server -> (ws) -> client
 
             */
+            const session = request.session;
+
             const client = {
-                ws: ws,
-                user_id: user_id,
-                session: request.session,
+                ws,
+                user_id,
+                session,
             };
             clients.push(client);
 
-            console.log(`${user_id} connected via sockets`);
-
-            const event_handler = client_events.make_handler(z, client);
+            console.log(`handleUpgrade for ${user_id} (session ${session.id})`);
 
             ws.on('close', () => {
                 // TODO: remove from list
@@ -215,6 +214,8 @@ server.on('upgrade', function (request, socket, head) {
             ws.on('message', (message) => {
                 game.handle_message(clients, client, message);
             });
+
+            const event_handler = client_events.make_handler(z, client);
 
             event_handler.start();
         });
