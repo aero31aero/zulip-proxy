@@ -32,7 +32,15 @@ $(document).ready(async () => {
     await init_data();
 
     window.games.initialize(page_params.games);
-    events();
+
+    window.ws.onmessage = (message) => {
+        const event = JSON.parse(message.data);
+        if (event.type === 'zulip') {
+            window.events.handle_event(event);
+        } else if (event.type === 'game') {
+            window.games.handle_event(event);
+        }
+    };
 
     let main_widget;
 
