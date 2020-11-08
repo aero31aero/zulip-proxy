@@ -1,5 +1,5 @@
 window.events = (() => {
-    const handle_model_updates = (event) => {
+    const handle_event = (event) => {
         if (event.model.messages) {
             const message = event.model.messages[0];
             if (message.local_id) {
@@ -14,20 +14,5 @@ window.events = (() => {
         }
     };
 
-    const init = () => {
-        if (!window.ws) {
-            console.warn('No web socket!');
-            return;
-        }
-
-        window.ws.onmessage = (message) => {
-            const event = JSON.parse(message.data);
-            if (event.type === 'update') {
-                handle_model_updates(event);
-            } else if (event.type === 'game') {
-                window.games.handle_event(event);
-            }
-        };
-    };
-    return init;
+    return { handle_event };
 })();

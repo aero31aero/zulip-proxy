@@ -3,7 +3,7 @@ const queue = require('./queue');
 const send_model_update = (json, client) => {
     client.ws.send(
         JSON.stringify({
-            type: 'update',
+            type: 'zulip',
             model: json,
         })
     );
