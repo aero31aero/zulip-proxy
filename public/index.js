@@ -17,31 +17,7 @@ const init_data = async () => {
     $('#main').append('done with init_data').append(br);
 };
 
-$(document).ready(async () => {
-    $('#loading-js').remove();
-
-    const ws_url =
-        'ws://' + window.location.hostname + ':' + page_params.ws_port;
-    console.info(ws_url);
-    window.ws = new WebSocket(ws_url);
-
-    window.ws.onopen = () => {
-        console.log('now connected');
-    };
-
-    await init_data();
-
-    window.games.initialize(page_params.games);
-
-    window.ws.onmessage = (message) => {
-        const event = JSON.parse(message.data);
-        if (event.type === 'zulip') {
-            window.events.handle_event(event);
-        } else if (event.type === 'game') {
-            window.games.handle_event(event);
-        }
-    };
-
+function start_ui() {
     let main_widget;
 
     function update() {
@@ -54,4 +30,44 @@ $(document).ready(async () => {
 
     const main_page = main_widget.render();
     $('#main').html(main_page);
+}
+
+function establish_ws_channel() {
+    // TODO: extract helper for these loading things
+    $('#main').append('establishing socket').append('<br>');
+
+    const ws_url =
+        'ws://' + window.location.hostname + ':' + window.location.port;
+
+    // We have to establish listeners immediately after
+    // creating the socket, or the first messages from the
+    // server will get lost.  I don't know why WebSocket
+    // doesn't take handlers in the constructor; this would
+    // save a lot of confusion.
+    window.ws = new WebSocket(ws_url);
+
+    window.ws.onopen = () => {
+        console.log('ws to server is open');
+        start_ui();
+    };
+
+    window.ws.onmessage = (message) => {
+        const event = JSON.parse(message.data);
+        if (event.type === 'zulip') {
+            window.events.handle_event(event);
+        } else if (event.type === 'game') {
+            window.games.handle_event(event);
+        }
+    };
+}
+
+$(document).ready(async () => {
+    $('#loading-js').remove();
+
+    await init_data();
+
+    window.games.initialize(page_params.games);
+
+    // When we establish the channel, we will start the UI.
+    establish_ws_channel();
 });

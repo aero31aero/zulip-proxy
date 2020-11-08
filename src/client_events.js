@@ -1,10 +1,10 @@
 const queue = require('./queue');
 
-const send_model_update = (json, client) => {
+const send_to_client = (data, client) => {
     client.ws.send(
         JSON.stringify({
             type: 'zulip',
-            model: json,
+            data: data,
         })
     );
 };
@@ -13,7 +13,7 @@ const process_event = (event, client) => {
     if (!event) return;
     if (event.type === 'message') {
         event.message.local_id = event.local_message_id;
-        send_model_update(
+        send_to_client(
             {
                 messages: [event.message],
             },
@@ -24,25 +24,17 @@ const process_event = (event, client) => {
             id: event.message_id,
             content: event.rendered_content,
         };
-        send_model_update(
+        send_to_client(
             {
                 messages: [new_message],
             },
             client
         );
-    } else if (event.type === 'queue_id') {
-        // This event is received almost immediately;
-        // let's let the client get loaded first.
-        setTimeout(function () {
-            send_model_update(
-                {
-                    state: {
-                        queue_id: event.queue_id,
-                    },
-                },
-                client
-            );
-        }, 5000);
+    } else {
+        if (event.type == 'queue_id') {
+            console.info(`registered queue ${event.queue_id}`);
+        }
+        send_to_client(event, client);
     }
 };
 

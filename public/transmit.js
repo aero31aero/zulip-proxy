@@ -37,7 +37,7 @@ window.transmit = (() => {
     function send_pm(user_id, content) {
         local_id_seq += 1;
         const local_id = local_id_seq + 0.01;
-        const queue_id = window.model.main().state.queue_id;
+        const queue_id = events.get_queue_id();
 
         const message = {
             local_id: local_id,
@@ -51,6 +51,7 @@ window.transmit = (() => {
             window._.redraw();
         } else {
             // We will send our message, but we won't locally echo it.
+            // This shouldn't happen unless a user is really quick.
             console.warn('local echo is turned off until we know our queue_id');
         }
 
