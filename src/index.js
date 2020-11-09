@@ -7,7 +7,7 @@ const sessionHandler = require('express-session');
 const websocket = require('./websocket');
 
 const game = require('./game');
-const zulip = require('./zulip');
+const zulip_client = require('./zulip_client');
 
 let config;
 
@@ -45,13 +45,13 @@ function pretty(obj) {
 
 console.info(`config:\n ${pretty(config)}\n`);
 
-const z = zulip.make({
+const zulip = zulip_client.make({
     app_url: app_url,
 });
 
 async function start_session(session, token_resp) {
     session.access_token = token_resp.access_token;
-    const me = await z.get_current_user(session);
+    const me = await zulip.get_current_user(session);
     session.user_id = me.user_id;
     session.save();
 }
@@ -63,7 +63,7 @@ async function single_page_app(res, session) {
 
     // Get full user info, in case things
     // like names have changed.
-    const me = await z.get_current_user(session);
+    const me = await zulip.get_current_user(session);
 
     page_params.games = game.get_user_data(me.user_id);
     page_params.me = me;
@@ -86,7 +86,7 @@ function build_endpoints(app) {
     });
 
     app.get('/login', (req, res) => {
-        const code_url = `${app_url}/${z.oauth_prefix}/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
+        const code_url = `${app_url}/${zulip.oauth_prefix}/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
         res.send(`<a href=${code_url}>Login with your Zulip credentials</a>`);
     });
 
@@ -100,7 +100,7 @@ function build_endpoints(app) {
                 client_id,
                 client_secret,
             };
-            z.revoke_token(params);
+            zulip.revoke_token(params);
         }
         res.redirect('/login');
     });
@@ -116,7 +116,7 @@ function build_endpoints(app) {
             form.append('redirect_uri', redirect_uri);
             form.append('grant_type', 'authorization_code');
             form.append('code', req.query.code);
-            const token_resp = await z.get_access_token(form);
+            const token_resp = await zulip.get_access_token(form);
 
             console.log(token_resp.data);
 
@@ -135,16 +135,16 @@ function build_endpoints(app) {
 
     app.get('/z/*', async (req, res) => {
         const url = req.path.slice(3);
-        z.api_get(req, res, url);
+        zulip.api_get(req, res, url);
     });
 
     app.post('/z/*', async (req, res) => {
         const url = req.path.slice(3);
-        z.api_post(req, res, url);
+        zulip.api_post(req, res, url);
     });
 
     app.get('/user_uploads/*', async (req, res) => {
-        z.handle_user_uploads(req, res);
+        zulip.handle_user_uploads(req, res);
     });
 }
 
@@ -161,7 +161,7 @@ build_endpoints(app);
 
 const server = http.createServer(app);
 
-websocket.init(server, session_parser, z);
+websocket.init(server, session_parser, zulip);
 
 server.listen(port, () => {
     console.log(`TO START: visit ${host}:${port} in your browser`);
