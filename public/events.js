@@ -11,14 +11,32 @@ window.events = (() => {
             return;
         }
 
-        if (event.data.messages) {
-            const message = event.data.messages[0];
-            if (message.local_id) {
-                window.transmit.ack_local(message);
+        let data = event.data;
+
+        if (data.type === 'message') {
+            const message = data.message;
+            const local_id = data.local_message_id;
+
+            if (local_id) {
+                window.transmit.ack_local(local_id);
             }
+
+            data = {
+                messages: [message],
+            };
+        } else if (data.type === 'update_message') {
+            data = {
+                messages: [
+                    {
+                        id: data.message_id,
+                        content: data.rendered_content,
+                    },
+                ],
+            };
         }
+
         try {
-            model.main(event.data);
+            model.main(data);
             _.redraw();
         } catch (e) {
             console.error('Error updating model:', event, e);
