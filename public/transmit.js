@@ -8,9 +8,7 @@ window.transmit = (() => {
         });
     }
 
-    function ack_local(ack_message) {
-        const local_id = ack_message.local_id.toString();
-
+    function ack_local(local_id) {
         in_flight = in_flight.filter((msg) => {
             return msg.local_id.toString() !== local_id;
         });
