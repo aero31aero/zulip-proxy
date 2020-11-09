@@ -1,4 +1,4 @@
-const WebSocket = require('ws');
+const websocket = require('./websocket');
 
 const user_map = new Map();
 const game_map = new Map();
@@ -13,7 +13,7 @@ function make_game(owner_id, seq) {
         return `${owner_id}-${seq}`;
     }
 
-    function handle_events(message, user_id, clients) {
+    function handle_events(message, user_id) {
         const num_players = 2;
 
         if (game.players.length >= num_players) {
@@ -34,7 +34,7 @@ function make_game(owner_id, seq) {
 
         game.events.push(event);
 
-        clients.forEach((client) => {
+        websocket.clients.forEach((client) => {
             client.ws.send(JSON.stringify(event));
         });
     }
@@ -69,12 +69,12 @@ function make_game(owner_id, seq) {
 function make_user(user_id) {
     let game_seq = 0;
 
-    function add_game(clients) {
+    function add_game() {
         game_seq += 1;
         const game = make_game(user_id, game_seq);
         game_map.set(game.game_id(), game);
 
-        clients.forEach((client) => {
+        websocket.clients.forEach((client) => {
             client.ws.send(JSON.stringify(game.start_event()));
         });
     }
@@ -84,12 +84,12 @@ function make_user(user_id) {
     };
 }
 
-exports.get_user_data = (user_id, clients) => {
+exports.get_user_data = (user_id) => {
     if (!user_map.get(user_id)) {
         console.info(`make game user for ${user_id}`);
         const game_user = make_user(user_id);
         user_map.set(user_id, game_user);
-        game_user.add_game(clients);
+        game_user.add_game();
     }
 
     const result = {};
@@ -103,7 +103,7 @@ exports.get_user_data = (user_id, clients) => {
     return result;
 };
 
-exports.handle_message = (clients, client, payload) => {
+exports.handle_message = (client, payload) => {
     const message = JSON.parse(payload);
 
     const game_id = message.game_id;
@@ -117,5 +117,5 @@ exports.handle_message = (clients, client, payload) => {
         return;
     }
 
-    game.handle_events(message, user_id, clients);
+    game.handle_events(message, user_id);
 };
