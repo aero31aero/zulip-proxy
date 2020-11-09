@@ -62,7 +62,7 @@ window.compose_box = (() => {
 
         const box = $('<textarea>').val(draft).attr('rows', 4);
 
-        const send_button = $('<button>').text('Send PM');
+        const send_button = $('<button>').text('Send');
         const bye_button = $('<button>').text('Say goodbye');
 
         send_button.prop('disabled', !draft);
