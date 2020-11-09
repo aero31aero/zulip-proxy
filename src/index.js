@@ -4,8 +4,7 @@ const FormData = require('form-data');
 const http = require('http');
 const process = require('process');
 const sessionHandler = require('express-session');
-const WebSocket = require('ws');
-const client_events = require('./client_events');
+const websocket = require('./websocket');
 
 const game = require('./game');
 const zulip = require('./zulip');
@@ -28,9 +27,6 @@ const client_id = config.client_id;
 const client_secret = config.client_secret;
 const redirect_uri = config.redirect_uri;
 const session_secret = config.session_secret;
-
-// Keep track of our websocket clients.
-const clients = [];
 
 const session_opts = {
     secret: session_secret,
@@ -69,7 +65,7 @@ async function single_page_app(res, session) {
     // like names have changed.
     const me = await z.get_current_user(session);
 
-    page_params.games = game.get_user_data(me.user_id, clients);
+    page_params.games = game.get_user_data(me.user_id);
     page_params.me = me;
     page_params.app_url = app_url;
 
@@ -165,62 +161,7 @@ build_endpoints(app);
 
 const server = http.createServer(app);
 
-const wss = new WebSocket.Server({
-    clientTracking: false,
-    noServer: true,
-});
-
-server.on('upgrade', function (request, socket, head) {
-    console.log('Parsing session from request...');
-
-    session_parser(request, {}, () => {
-        const user_id = request.session.user_id;
-
-        if (!user_id) {
-            socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-            socket.destroy();
-            return;
-        }
-
-        wss.handleUpgrade(request, socket, head, function (ws) {
-            /*
-                Our websocket has 2-way traffic for games.
-
-                    proxy server <-> (ws) <-> proxy client
-
-                For Zulip events, the data flows in one direction
-                between the proxy server and client:
-
-                    Zulip server <-> (long poll) <-> proxy server -> (ws) -> client
-
-            */
-            const session = request.session;
-
-            const client = {
-                ws,
-                user_id,
-                session,
-            };
-            clients.push(client);
-
-            console.log(`handleUpgrade for ${user_id} (session ${session.id})`);
-
-            ws.on('close', () => {
-                // TODO: remove from list
-                console.log('closed');
-                event_handler.stop();
-            });
-
-            ws.on('message', (message) => {
-                game.handle_message(clients, client, message);
-            });
-
-            const event_handler = client_events.make_handler(z, client);
-
-            event_handler.start();
-        });
-    });
-});
+websocket.init(server, session_parser, z);
 
 server.listen(port, () => {
     console.log(`TO START: visit ${host}:${port} in your browser`);
