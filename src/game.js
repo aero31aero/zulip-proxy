@@ -35,6 +35,9 @@ function make_game(owner_id, seq) {
         game.events.push(event);
 
         websocket.clients.forEach((client) => {
+            console.info(
+                `sending game event to user ${client.user_id} (id ${client.id})`
+            );
             client.ws.send(JSON.stringify(event));
         });
     }

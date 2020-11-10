@@ -2,6 +2,8 @@ const WebSocket = require('ws');
 const client_events = require('./client_events');
 const game = require('./game');
 
+let seq = 0;
+
 // Keep track of our websocket clients.
 exports.clients = [];
 
@@ -37,7 +39,16 @@ exports.init = (server, session_parser, zulip) => {
                 */
                 const session = request.session;
 
+                // We associate each websocket connection with an id based on
+                // a simple incrementing sequence.  It's possible that the same
+                // user can open up two different browser tabs that are associated
+                // to the same session id, and we want to be able to tell those
+                // websockets apart when we go to delete them.
+                seq += 1;
+                const id = seq;
+
                 const client = {
+                    id,
                     ws,
                     user_id,
                     session,
@@ -45,12 +56,16 @@ exports.init = (server, session_parser, zulip) => {
                 exports.clients.push(client);
 
                 console.log(
-                    `handleUpgrade for ${user_id} (session ${session.id})`
+                    `handleUpgrade for ${user_id} (session ${session.id}, id ${id})`
                 );
 
                 ws.on('close', () => {
-                    // TODO: remove from list
-                    console.log('closed');
+                    console.log(
+                        `user ${user_id} closed websocket for session ${session.id}`
+                    );
+                    exports.clients = exports.clients.filter((client) => {
+                        return client.id !== id;
+                    });
                     event_handler.stop();
                 });
 
