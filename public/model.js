@@ -7,12 +7,6 @@ window.model = (() => {
     // Some additional constraints are in the code to merge new data into
     // existing data; see the merge function a bit below in the file.
     const base_model = {
-        messages: [
-            {
-                id: 1,
-                content: 'string',
-            },
-        ],
         state: {
             user_id: 1,
             server: 'string',

@@ -20,27 +20,17 @@ window.events = (() => {
             if (local_id) {
                 window.transmit.ack_local(local_id);
             }
-
-            data = {
-                messages: [message],
-            };
+            model.Messages.add(message);
         } else if (data.type === 'update_message') {
-            data = {
-                messages: [
-                    {
-                        id: data.message_id,
-                        content: data.rendered_content,
-                    },
-                ],
-            };
+            try {
+                const m = model.Messages.by_id(data.message_id);
+                m.content = data.rendered_content;
+            } catch (error) {
+                console.error('Unable to process event', event);
+                console.error(error);
+            }
         }
-
-        try {
-            model.main(data);
-            _.redraw();
-        } catch (e) {
-            console.error('Error updating model:', event, e);
-        }
+        _.redraw();
     };
 
     return { handle_event, get_queue_id };
