@@ -22,13 +22,10 @@ window.events = (() => {
             }
             model.Messages.add(message);
         } else if (data.type === 'update_message') {
-            try {
-                const m = model.Messages.by_id(data.message_id);
-                m.content = data.rendered_content;
-            } catch (error) {
-                console.error('Unable to process event', event);
-                console.error(error);
-            }
+            model.Messages.update_message(
+                data.message_id,
+                data.rendered_content
+            );
         }
         _.redraw();
     };

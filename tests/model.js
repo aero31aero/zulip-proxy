@@ -50,4 +50,13 @@ assert(test_stream.id === test_stream.stream_id);
 // nested properties
 assert(test_stream.subs[0] === test_user);
 
+// messages
+model.Messages.add({
+    id: 1,
+    content: 'Test content',
+});
+assert(model.Messages.by_id(1).content === 'Test content');
+model.Messages.update_message(1, 'Updated content');
+assert(model.Messages.by_id(1).content === 'Updated content');
+
 console.log('model: Passed tests');
