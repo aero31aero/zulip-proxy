@@ -25,6 +25,9 @@ window._ = {
         const response = await fetch(url);
         const data = await response.json();
         model.main({ messages: data.messages });
+        data.messages.forEach((message) => {
+            model.Messages.add(message);
+        });
     },
 
     fetch_streams: async () => {

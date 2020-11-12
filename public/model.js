@@ -184,18 +184,44 @@ window.model = (() => {
         }
     };
 
+    classes.message = class Message {
+        constructor(data) {
+            this.id = data.id;
+            this.sender_id = data.sender_id;
+            this.content = data.content;
+            this.recipient_id = data.recipient_id;
+            this.timestamp = data.timestamp;
+            this.client = data.client;
+            this.subject = data.subject;
+            this.topic_links = data.topic_links;
+            this.is_me_message = data.is_me_message;
+            this.reactions = data.reactions;
+            this.submessages = data.submessages;
+            this.sender_full_name = data.sender_full_name;
+            this.sender_email = data.sender_email;
+            this.sender_realm_str = data.sender_realm_str;
+            this.display_recipient = data.display_recipient;
+            this.type = data.type;
+            this.avatar_url = data.avatar_url;
+            this.content_type = data.content_type;
+        }
+    };
+
     const users = {};
     const streams = {}; // id, data pairs
+    const messages = {}; // id, data pairs
 
     const ZulipAccessor = function (type, data_obj) {
         return {
             add: function (data) {
-                // this part might cause issues with messages later.
-                const key = `${type}_id`;
+                let key = `${type}_id`;
+                if (data[key] === undefined) {
+                    key = 'id'; // messages don't have message_id but streams and users do.
+                }
 
                 if (data_obj[data[key]]) {
                     throw new Error(
-                        `${type} with id ${data.id} already added!`
+                        `${type} with id ${data[key]} already added!`
                     );
                 }
                 data_obj[data[key]] = new classes[type](data);
@@ -236,11 +262,13 @@ window.model = (() => {
 
     const Streams = ZulipAccessor('stream', streams);
     const Users = ZulipAccessor('user', users);
+    const Messages = ZulipAccessor('message', messages);
 
     return {
         main,
         Streams,
         Users,
+        Messages,
     };
 })();
 
