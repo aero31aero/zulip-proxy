@@ -257,6 +257,14 @@ window.model = (() => {
     const Streams = ZulipAccessor('stream', streams);
     const Users = ZulipAccessor('user', users);
     const Messages = ZulipAccessor('message', messages);
+    Messages.update_message = (id, content) => {
+        try {
+            Messages.by_id(id).content = content;
+        } catch (error) {
+            // message is likely missing from our local data; ignore.
+            console.error(error);
+        }
+    };
 
     return {
         main,
