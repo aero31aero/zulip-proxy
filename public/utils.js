@@ -24,7 +24,6 @@ window._ = {
         const url = `/z/messages?${params}`;
         const response = await fetch(url);
         const data = await response.json();
-        model.main({ messages: data.messages });
         data.messages.forEach((message) => {
             model.Messages.add(message);
         });
@@ -43,8 +42,7 @@ window._ = {
     },
 
     find_pms_with: (user_id) => {
-        let messages = model.main().messages;
-        return messages.filter((m) => {
+        return model.Messages.filter((m) => {
             if (m.type !== 'private') {
                 return false;
             }
