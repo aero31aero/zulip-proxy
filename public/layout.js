@@ -1,45 +1,41 @@
 window.layout = (() => {
     function make() {
-        const max_panes = 5;
-        let current_panes = 1;
         const root = $('<div>').addClass('layout-root');
         const container = $('<div>').addClass('layout-container');
-        let panes = Array.apply(null, Array(max_panes)).map((e) => {
-            const view = window.main.make();
-            return view;
-        });
-        panes = panes.map((p) => {
-            return {
-                pane: p,
-                html: p.render(),
-            };
-        });
+        let panes = new Set();
+        const make_new_pane = () => {
+            const pane = window.main.make();
+            const close_button = $('<button>')
+                .text('CLOSE')
+                .addClass('close-pane-button')
+                .hide();
+            panes.add(pane);
+            const thin_wrapper = $('<div>');
+            thin_wrapper.append(close_button);
+            thin_wrapper.append(pane.render());
+            container.append(thin_wrapper);
+            close_button.on('click', () => {
+                panes.delete(pane);
+                thin_wrapper.remove();
+                _.redraw();
+            });
+        };
 
-        panes.forEach((p) => {
-            container.append(p.html);
-        });
-
+        make_new_pane();
         let redraw_button;
 
         const update = () => {
             redraw_button.css('background', '');
-            panes.forEach((p) => {
-                p.pane.update();
+            panes.forEach((pane) => {
+                pane.update();
             });
             let i = 0;
-            while (i < current_panes) {
-                panes[i].html.css('display', 'block');
-                panes[i].html.attr('class', 'layout-pane');
-                i++;
-            }
-            while (i < max_panes) {
-                panes[i].html.css('display', 'none');
-                i++;
-            }
-            if (current_panes === 1) {
+            if (panes.size === 1) {
                 container.css('justify-content', 'center');
+                $('.close-pane-button').hide();
             } else {
                 container.css('justify-content', 'flex-start');
+                $('.close-pane-button').show();
             }
         };
 
@@ -72,19 +68,14 @@ window.layout = (() => {
             return div;
         }
 
-        function make_panes_selector() {
-            const panes_input = $('<select>');
-            for (let i = 1; i <= max_panes; i++) {
-                $('<option/>')
-                    .val(i)
-                    .html(`${i} pane(s)`)
-                    .appendTo(panes_input);
-            }
-            panes_input.on('change', function () {
-                current_panes = parseInt(this.value);
+        function make_new_pane_button() {
+            const new_pane_button = $('<button>').addClass('new-pane-button');
+            new_pane_button.text('Add Pane');
+            new_pane_button.on('click', () => {
+                make_new_pane();
                 _.redraw();
             });
-            return panes_input;
+            return new_pane_button;
         }
 
         const render_navbar = () => {
@@ -95,7 +86,7 @@ window.layout = (() => {
             navbar.append(redraw_button);
             navbar.append(logout_link());
             navbar.append(make_top_div());
-            navbar.append(make_panes_selector());
+            navbar.append(make_new_pane_button());
             root.append(navbar);
         };
 
