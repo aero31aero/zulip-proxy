@@ -158,6 +158,21 @@ table.game-board,
     flex-direction: column-reverse;
 }
 
+.message-list-wrapper {
+    list-style-type: none;
+    padding-inline-start: 10px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial,
+        sans-serif;
+}
+
+.message-list-wrapper .message {
+    padding-inline-start: 12px;
+}
+
+.message-list-wrapper .name {
+    padding-top: 3px;
+}
+
 .compose-box {
     width: 100%;
     display: flex;
