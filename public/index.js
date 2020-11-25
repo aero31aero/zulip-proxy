@@ -1,3 +1,5 @@
+import css from './index.css';
+
 const init_data = async () => {
     const br = '<br>';
 
