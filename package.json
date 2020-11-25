@@ -26,8 +26,7 @@
     "express-session": "^1.17.1",
     "pug": "^3.0.0",
     "webpack": "^5.6.0",
-    "ws": "^7.3.1",
-    "zulip-js": "^2.0.8"
+    "ws": "^7.3.1"
   },
   "devDependencies": {
     "deepmerge": "^4.2.2",
