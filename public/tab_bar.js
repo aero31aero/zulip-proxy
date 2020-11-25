@@ -8,7 +8,7 @@ window.tab_bar = (() => {
         function render() {
             pane = $('<div>').addClass('tab-bar');
             top = $('<div>').addClass('top');
-            bottom = $('<div>').addClass('bottom');
+            bottom = $('<div>').addClass('bottom').addClass('flex-main');
 
             pane.append(top);
             pane.append(bottom);

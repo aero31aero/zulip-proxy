@@ -27,7 +27,7 @@ window.split_pane = (() => {
             }
             pane = $('<div>').addClass('split-pane');
             left = $('<div>').addClass('left');
-            right = $('<div>').addClass('right');
+            right = $('<div>').addClass('right').addClass('flex-main');
 
             pane.css('display', 'flex');
 
