@@ -1,7 +1,9 @@
 window.layout = (() => {
     function make() {
         const root = $('<div>').addClass('layout-root');
-        const container = $('<div>').addClass('layout-container');
+        const container = $('<div>')
+            .addClass('layout-container')
+            .addClass('flex-main');
         let panes = new Set();
         const make_new_pane = () => {
             const pane = window.main.make();
@@ -10,9 +12,9 @@ window.layout = (() => {
                 .addClass('close-pane-button')
                 .hide();
             panes.add(pane);
-            const thin_wrapper = $('<div>');
+            const thin_wrapper = $('<div>').addClass('pane-wrapper');
             thin_wrapper.append(close_button);
-            thin_wrapper.append(pane.render());
+            thin_wrapper.append(pane.render().addClass('flex-main'));
             container.append(thin_wrapper);
             close_button.on('click', () => {
                 panes.delete(pane);

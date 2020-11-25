@@ -7,7 +7,9 @@ window.pm_view = (() => {
         function render() {
             div = $('<div>').addClass('pm-view');
 
-            message_div = $('<div>').addClass('message-list');
+            message_div = $('<div>')
+                .addClass('message-list')
+                .addClass('flex-main');
 
             div.empty();
             div.append(message_div);

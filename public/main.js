@@ -4,7 +4,7 @@ window.main = (() => {
 
         const modal_div = $('<div>', {
             class: 'modal',
-        });
+        }).hide();
 
         function enter_modal(div, set_focus) {
             modal_div.html(div);

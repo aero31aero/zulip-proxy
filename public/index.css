@@ -1,3 +1,16 @@
+#zflex {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    & > .flex-main {
+        max-width: 100%;
+        max-height: 100%;
+        flex-grow: 1;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+}
+
 * {
     /* We want to style using paddings to keep calculations simpler */
     box-sizing: border-box;
@@ -10,6 +23,96 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+}
+
+/* panes layout */
+
+.layout-root {
+    @extend #zflex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+
+    & > .flex-main {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        /* overflow-x: scroll; */
+        width: 100%;
+        & > div {
+            flex-grow: 1;
+            flex-basis: 0;
+            min-width: 0;
+            max-width: 1000px;
+            padding: 10px;
+            border-right: 1px green solid;
+            border-left: 1px green solid;
+        }
+    }
+}
+
+/* pane wrapper to show controls etc */
+
+.pane-wrapper {
+    @extend #zflex;
+    flex-direction: column;
+}
+
+/* individual pane */
+
+.tab-bar {
+    @extend #zflex;
+    flex-direction: column;
+
+    & > .top {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid blue;
+
+        & > .items {
+            display: flex;
+            flex-direction: row;
+        }
+    }
+    & > .bottom {
+        padding-top: 5px;
+    }
+}
+
+/* split pane widget */
+
+.split-pane {
+    @extend #zflex;
+    flex-direction: row;
+    /* This is fudged for now, since I am more concerned
+       about the top of the page looking nice, without
+       hard coding a height up there.
+    */
+
+    & > .left {
+        .search {
+            padding-bottom: 5px;
+        }
+        .items {
+            padding-right: 5px;
+            overflow-y: auto;
+            & > div {
+                padding: 1px;
+            }
+        }
+    }
+
+    & > .right {
+        padding-left: 10px;
+        flex-grow: 1;
+    }
+}
+
+/* pm view widget */
+
+.pm-view {
+    @extend #zflex;
+    flex-direction: column;
 }
 
 img {
@@ -88,71 +191,9 @@ table.game-board,
     height: calc(100vh - 30px);
 }
 
-.main > div > .split-pane {
-    flex-grow: 1;
-}
-
-.tab-bar {
-    display: flex;
-    flex-direction: column;
-}
-.tab-bar .top {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid blue;
-}
-
-.tab-bar .bottom {
-    padding-top: 5px;
-}
-
-.tab-bar .top .items {
-    display: flex;
-    flex-direction: row;
-}
-
-.split-pane {
-    /* This is fudged for now, since I am more concerned
-       about the top of the page looking nice, without
-       hard coding a height up there.
-    */
-    height: calc(100vh - 90px);
-    display: flex;
-    flex-direction: row;
-}
-
-.split-pane .search {
-    padding-bottom: 5px;
-}
-
-.split-pane .left {
-    display: flex;
-    flex-direction: column;
-}
-
-.split-pane .items {
-    padding-right: 5px;
-    overflow-y: auto;
-}
-
-.split-pane .items > div {
-    padding: 1px;
-}
-
-.split-pane .right {
-    padding-left: 10px;
-    flex-grow: 1;
-}
-
-.pm-view {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
 .message-list {
-    height: 90%;
-    overflow-y: scroll;
+    /* height: 90%; */
+    overflow-y: scroll !important;
     flex-grow: 1;
     display: flex;
     flex-direction: column-reverse;
@@ -160,6 +201,7 @@ table.game-board,
 
 .message-list-wrapper {
     list-style-type: none;
+    padding-right: 10px;
     padding-inline-start: 10px;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial,
         sans-serif;
@@ -184,18 +226,17 @@ table.game-board,
     flex-grow: 1;
 }
 
-.layout-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    overflow-x: scroll;
-}
+/* message styling */
 
-.layout-pane {
-    flex-grow: 1;
-    flex-basis: 0;
-    max-width: 800px;
-    padding: 10px;
-    border-right: 1px green solid;
-    border-left: 1px green solid;
+.message {
+    .codehilite {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        pre {
+            background: #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: scroll;
+        }
+    }
 }
