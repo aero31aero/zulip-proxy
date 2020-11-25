@@ -4,7 +4,6 @@ html
     head
         title Zulip Oauth Client
         link(rel="icon", href="data:,")
-        link(rel="stylesheet" href="/index.css")
         script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js')
         script(src='https://unpkg.com/deepmerge@4.2.2/dist/umd.js')
         script(src='/tab_bar.js')
@@ -23,7 +22,7 @@ html
         script(src='/tester.js')
         script(src='/main.js')
         script(src='/layout.js')
-        script(src='/index.js')
+        script(src='/index.bundle.js')
         script
             | page_params = !{page_params}
     body

@@ -6,6 +6,10 @@ const process = require('process');
 const sessionHandler = require('express-session');
 const websocket = require('./websocket');
 
+const webpack = require('webpack');
+const webpack_middleware = require('webpack-dev-middleware');
+const webpack_config = require('../webpack.config.js');
+
 const game = require('./game');
 const zulip_client = require('./zulip_client');
 
@@ -216,6 +220,11 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(session_parser);
+app.use(
+    webpack_middleware(webpack(webpack_config), {
+        publicPath: webpack_config.output.publicPath,
+    })
+);
 build_endpoints(app);
 
 const server = http.createServer(app);
