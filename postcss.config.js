@@ -7,5 +7,6 @@ module.exports = {
             },
         ],
         'postcss-extend-rule',
+        'postcss-nested',
     ],
 };
