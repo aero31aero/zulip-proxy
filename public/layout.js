@@ -22,6 +22,22 @@ window.layout = (() => {
             }
         };
 
+        function getRandomColor() {
+            const letters = '89ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * letters.length)];
+            }
+            return color;
+        }
+
+        const color_list = [];
+        for (let i = 0; i < 1000; i++) {
+            color_list.push(getRandomColor());
+        }
+        console.log(color_list);
+        let current_color_index = 0;
+
         const make_new_pane = () => {
             const pane = window.main.make();
             const close_button = $('<button>')
@@ -33,6 +49,12 @@ window.layout = (() => {
             thin_wrapper.append(close_button);
             thin_wrapper.append(pane.render().addClass('flex-main'));
             container.append(thin_wrapper);
+
+            // assign color
+            thin_wrapper.css('background', color_list[current_color_index]);
+            current_color_index++;
+
+            // event handlers
             close_button.on('click', () => {
                 panes.delete(pane);
                 thin_wrapper.remove();
