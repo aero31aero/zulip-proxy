@@ -9,10 +9,15 @@ window.layout = (() => {
             .hide();
         let panes = new Set();
         let is_focus_on = false;
+        let is_maximized = false;
 
         const refresh_layout = () => {
-            container.attr('class', 'pane-wrapper flex-main');
+            container.attr('class', 'flex-main');
             help_message.hide();
+            if (is_maximized) {
+                container.addClass('layout-maximized');
+                return;
+            }
             if ([4, 5, 6, 7, 8, 9].includes(panes.size)) {
                 container.addClass(`layout-panes-${panes.size}`);
             } else {
@@ -36,7 +41,6 @@ window.layout = (() => {
         for (let i = 0; i < 1000; i++) {
             color_list.push(getRandomColor());
         }
-        console.log(color_list);
         let current_color_index = 0;
 
         const make_new_pane = () => {
@@ -44,11 +48,18 @@ window.layout = (() => {
             const close_button = $('<button>')
                 .text('CLOSE')
                 .addClass('close-pane-button')
-                .addClass('focus-mode-hidden')
                 .hide();
+            const maximize_button = $('<button>')
+                .text('MAXIMIZE')
+                .addClass('close-pane-button')
+                .hide();
+            const controls_wrapper = $('<div>').addClass('focus-mode-hidden');
+            controls_wrapper.append(close_button);
+            controls_wrapper.append(maximize_button);
+
             panes.add(pane);
             const thin_wrapper = $('<div>').addClass('pane-wrapper');
-            thin_wrapper.append(close_button);
+            thin_wrapper.append(controls_wrapper);
             thin_wrapper.append(pane.render().addClass('flex-main'));
             container.append(thin_wrapper);
 
@@ -62,6 +73,12 @@ window.layout = (() => {
                 thin_wrapper.remove();
                 _.redraw();
                 refresh_layout();
+            });
+            maximize_button.on('click', () => {
+                // push pane to the end of set.
+                container.prepend(thin_wrapper);
+                is_maximized = true;
+                _.redraw();
             });
             refresh_layout();
         };
@@ -88,6 +105,7 @@ window.layout = (() => {
             } else {
                 $('.focus-mode-hidden').show();
             }
+            refresh_layout();
         };
 
         function make_redraw_button() {
@@ -119,17 +137,14 @@ window.layout = (() => {
             return div;
         }
 
-        function make_new_pane_button() {
+        function make_buttons() {
             const new_pane_button = $('<button>').addClass('new-pane-button');
             new_pane_button.text('Add Pane');
             new_pane_button.on('click', () => {
                 make_new_pane();
                 _.redraw();
             });
-            return new_pane_button;
-        }
 
-        function make_focus_mode_button() {
             const focus_mode_button = $('<button>').addClass(
                 'focus-mode-button'
             );
@@ -138,7 +153,19 @@ window.layout = (() => {
                 is_focus_on = !is_focus_on;
                 _.redraw();
             });
-            return focus_mode_button;
+
+            const restore_button = $('<button>').addClass('restore-button');
+            restore_button.text('Restore Layout');
+            restore_button.on('click', () => {
+                is_maximized = false;
+                _.redraw();
+            });
+
+            const buttons_wrapper = $('<div>');
+            buttons_wrapper.append(restore_button);
+            buttons_wrapper.append(focus_mode_button);
+            buttons_wrapper.append(new_pane_button);
+            return buttons_wrapper;
         }
 
         const render_navbar = () => {
@@ -149,8 +176,7 @@ window.layout = (() => {
             navbar.append(redraw_button);
             navbar.append(logout_link());
             navbar.append(make_top_div());
-            navbar.append(make_focus_mode_button());
-            navbar.append(make_new_pane_button());
+            navbar.append(make_buttons());
             root.append(navbar);
         };
 

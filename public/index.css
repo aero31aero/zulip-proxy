@@ -82,6 +82,16 @@ body {
             grid-template-rows: 1fr 1fr 1fr;
             grid-template-columns: 1fr 1fr 1fr;
         }
+        &.layout-maximized {
+            display: grid;
+            grid-template-rows: auto;
+            grid-template-columns: 1000px 1fr 1fr;
+
+            & > div:nth-child(1) {
+                /* span absurdly large number */
+                grid-row-start: span 1000;
+            }
+        }
         & > div {
             flex-grow: 1;
             flex-basis: 0;
