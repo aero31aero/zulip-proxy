@@ -4,7 +4,24 @@ window.layout = (() => {
         const container = $('<div>')
             .addClass('layout-container')
             .addClass('flex-main');
+        const help_message = $('<h1>You need help!</h1>')
+            .addClass('help-message')
+            .hide();
         let panes = new Set();
+
+        const refresh_layout = () => {
+            container.attr('class', 'pane-wrapper flex-main');
+            help_message.hide();
+            if ([4, 5, 6, 7, 8, 9].includes(panes.size)) {
+                container.addClass(`layout-panes-${panes.size}`);
+            } else {
+                container.addClass('layout-horizontal');
+            }
+            if (panes.size >= 10) {
+                help_message.show();
+            }
+        };
+
         const make_new_pane = () => {
             const pane = window.main.make();
             const close_button = $('<button>')
@@ -20,7 +37,9 @@ window.layout = (() => {
                 panes.delete(pane);
                 thin_wrapper.remove();
                 _.redraw();
+                refresh_layout();
             });
+            refresh_layout();
         };
 
         make_new_pane();
@@ -96,6 +115,7 @@ window.layout = (() => {
             root.empty();
             render_navbar();
             root.append(container);
+            root.append(help_message);
             update();
             return root;
         };
