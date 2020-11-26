@@ -8,6 +8,7 @@ window.layout = (() => {
             .addClass('help-message')
             .hide();
         let panes = new Set();
+        let is_focus_on = false;
 
         const refresh_layout = () => {
             container.attr('class', 'pane-wrapper flex-main');
@@ -43,6 +44,7 @@ window.layout = (() => {
             const close_button = $('<button>')
                 .text('CLOSE')
                 .addClass('close-pane-button')
+                .addClass('focus-mode-hidden')
                 .hide();
             panes.add(pane);
             const thin_wrapper = $('<div>').addClass('pane-wrapper');
@@ -79,6 +81,12 @@ window.layout = (() => {
             } else {
                 container.css('justify-content', 'flex-start');
                 $('.close-pane-button').show();
+            }
+
+            if (is_focus_on) {
+                $('.focus-mode-hidden').hide();
+            } else {
+                $('.focus-mode-hidden').show();
             }
         };
 
@@ -121,6 +129,18 @@ window.layout = (() => {
             return new_pane_button;
         }
 
+        function make_focus_mode_button() {
+            const focus_mode_button = $('<button>').addClass(
+                'focus-mode-button'
+            );
+            focus_mode_button.text('Focus Mode');
+            focus_mode_button.on('click', () => {
+                is_focus_on = !is_focus_on;
+                _.redraw();
+            });
+            return focus_mode_button;
+        }
+
         const render_navbar = () => {
             const navbar = $('<div>').addClass('navbar');
 
@@ -129,6 +149,7 @@ window.layout = (() => {
             navbar.append(redraw_button);
             navbar.append(logout_link());
             navbar.append(make_top_div());
+            navbar.append(make_focus_mode_button());
             navbar.append(make_new_pane_button());
             root.append(navbar);
         };
