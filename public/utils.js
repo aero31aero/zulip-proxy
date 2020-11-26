@@ -64,6 +64,17 @@ window._ = {
         });
     },
 
+    set_pane_title: (title, element) => {
+        // sometimes elements aren't rendered; use a timeout so the element has been
+        // rendered before we try to look up the tree for the pane wrapper.
+        setTimeout(() => {
+            element
+                .closest('.pane-wrapper')
+                .find('.controls-wrapper .title')
+                .text(title);
+        }, 0);
+    },
+
     redraw: () => {
         $(document).trigger('zulipRedrawEverything');
     },

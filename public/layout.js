@@ -47,11 +47,13 @@ window.layout = (() => {
             const pane = window.main.make();
             const close_button = $('<button>').text('✕');
             const maximize_button = $('<button>').text('🗖');
+            const title = $('<p>').addClass('title');
             const controls_wrapper = $('<div>')
                 .hide()
                 .addClass('controls-wrapper');
             controls_wrapper.append(close_button);
             controls_wrapper.append(maximize_button);
+            controls_wrapper.append(title);
 
             panes.add(pane);
             const thin_wrapper = $('<div>').addClass('pane-wrapper');
