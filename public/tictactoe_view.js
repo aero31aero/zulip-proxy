@@ -110,6 +110,7 @@ window.tictactoe_view = (() => {
         div.append(status);
         div.append(board);
         div.append(player);
+        _.set_pane_title('Tic Tac Toe', div);
 
         return div;
     }
