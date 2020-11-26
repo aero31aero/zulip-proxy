@@ -37,6 +37,7 @@ window.users = (() => {
             key_to_label,
             right_handler,
             get_keys: get_user_ids_by_recency,
+            hide_left: true,
         };
 
         const pane_widget = split_pane.make(opts);

@@ -7,7 +7,7 @@ window.tab_bar = (() => {
 
         function render() {
             pane = $('<div>').addClass('tab-bar');
-            top = $('<div>').addClass('top');
+            top = $('<div>').addClass('top').addClass('focus-mode-hidden');
             bottom = $('<div>').addClass('bottom').addClass('flex-main');
 
             pane.append(top);

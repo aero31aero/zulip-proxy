@@ -3,6 +3,7 @@ window.split_pane = (() => {
         let get_keys = opts.get_keys;
         let key_to_label = opts.key_to_label;
         let right_handler = opts.right_handler;
+        let hide_left = opts.hide_left;
 
         if (!get_keys || !key_to_label || !right_handler) {
             throw Error('misconfigured split_pane');
@@ -27,6 +28,9 @@ window.split_pane = (() => {
             }
             pane = $('<div>').addClass('split-pane');
             left = $('<div>').addClass('left');
+            if (hide_left) {
+                left.addClass('focus-mode-hidden');
+            }
             right = $('<div>').addClass('right').addClass('flex-main');
 
             pane.css('display', 'flex');
