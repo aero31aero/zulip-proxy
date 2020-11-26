@@ -84,12 +84,25 @@ body {
         }
         &.layout-maximized {
             display: grid;
-            grid-template-rows: auto;
+            grid-template-rows: repeat(500, 300px);
             grid-template-columns: 1000px 1fr 1fr;
+            column-gap: 20px; /* give some area to scroll */
+            overflow-y: scroll;
+            padding-right: 20px;
 
             & > div:nth-child(1) {
-                /* span absurdly large number */
-                grid-row-start: span 1000;
+                grid-row-start: span 500;
+                position: sticky;
+                top: 0;
+                /* total - navbar height */
+                height: calc(100vh - 40px);
+            }
+            & > div:nth-child(2) {
+                grid-row-start: span 500;
+                position: sticky;
+                top: 0;
+                /* total - navbar height */
+                height: calc(100vh - 40px);
             }
         }
         & > div {
@@ -99,8 +112,18 @@ body {
             min-height: 0;
             max-width: 1000px;
             padding: 10px;
-            border-right: 1px green solid;
-            border-left: 1px green solid;
+            border: 1px green solid;
+
+            .controls-wrapper {
+                button {
+                    height: 25px;
+                    width: 25px;
+                    font-size: 14px;
+                    line-height: 15px;
+                    border: 0;
+                    padding: 5px;
+                }
+            }
         }
     }
 }
@@ -237,6 +260,7 @@ table.game-board,
     justify-content: space-between;
     width: 100vw;
     border-bottom: 1px solid black;
+    height: 40px;
 }
 
 .main > div {

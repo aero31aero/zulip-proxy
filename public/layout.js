@@ -45,15 +45,11 @@ window.layout = (() => {
 
         const make_new_pane = () => {
             const pane = window.main.make();
-            const close_button = $('<button>')
-                .text('CLOSE')
-                .addClass('close-pane-button')
-                .hide();
-            const maximize_button = $('<button>')
-                .text('MAXIMIZE')
-                .addClass('close-pane-button')
-                .hide();
-            const controls_wrapper = $('<div>').addClass('focus-mode-hidden');
+            const close_button = $('<button>').text('✕');
+            const maximize_button = $('<button>').text('🗖');
+            const controls_wrapper = $('<div>')
+                .hide()
+                .addClass('controls-wrapper');
             controls_wrapper.append(close_button);
             controls_wrapper.append(maximize_button);
 
@@ -64,7 +60,7 @@ window.layout = (() => {
             container.append(thin_wrapper);
 
             // assign color
-            thin_wrapper.css('background', color_list[current_color_index]);
+            controls_wrapper.css('background', color_list[current_color_index]);
             current_color_index++;
 
             // event handlers
@@ -94,10 +90,10 @@ window.layout = (() => {
             let i = 0;
             if (panes.size === 1) {
                 container.css('justify-content', 'center');
-                $('.close-pane-button').hide();
+                $('.controls-wrapper').hide();
             } else {
                 container.css('justify-content', 'flex-start');
-                $('.close-pane-button').show();
+                $('.controls-wrapper').show();
             }
 
             if (is_focus_on) {
