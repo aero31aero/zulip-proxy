@@ -27,6 +27,17 @@ const client_id = config.client_id;
 const client_secret = config.client_secret;
 const redirect_uri = config.redirect_uri;
 const session_secret = config.session_secret;
+const use_api_key = config.use_api_key;
+
+if (!use_api_key && !client_id) {
+    throw Error('We need an oauth client id');
+}
+
+if (use_api_key && client_id) {
+    throw Error(
+        'You provided a client_id, but we are using api keys for login.'
+    );
+}
 
 const session_opts = {
     secret: session_secret,
@@ -56,6 +67,15 @@ async function start_session(session, token_resp) {
     session.save();
 }
 
+async function start_api_session(session, email, api_key) {
+    // see start_session for similar oauth code
+    session.email = email;
+    session.api_key = api_key;
+    const me = await zulip.get_current_user(session);
+    session.user_id = me.user_id;
+    session.save();
+}
+
 async function single_page_app(res, session) {
     console.info(`User ${session.user_id} has connected`);
 
@@ -78,29 +98,68 @@ function build_endpoints(app) {
     app.get('/', (req, res) => {
         const session = req.session;
 
-        if (!session || !session.access_token) {
-            return res.redirect('/login');
+        if (session && (session.access_token || session.api_key)) {
+            return single_page_app(res, session);
         }
 
-        single_page_app(res, session);
+        return res.redirect('/login');
     });
 
     app.get('/login', (req, res) => {
+        if (use_api_key) {
+            // TODO: move this to a pug file
+            const html = `
+                <form action="/confirm_api_login">
+
+                <div>
+                    <label for="email">email:</label>
+                    <input type="text" name="email">
+                </div>
+
+                <div>
+                    <label for="api_key">api_key:</label>
+                    <input type="password" name="api_key">
+                </div>
+
+                <input type="submit" value="Sign in">
+
+                </form>
+            `;
+            res.send(html);
+            return;
+        }
+
         const code_url = `${app_url}/${zulip.oauth_prefix}/authorize?approval_prompt=auto&response_type=code&client_id=${client_id}&scope=write&redirect_uri=${redirect_uri}`;
         res.send(`<a href=${code_url}>Login with your Zulip credentials</a>`);
+    });
+
+    app.get('/confirm_api_login', async (req, res) => {
+        const email = req.query.email;
+        const api_key = req.query.api_key;
+
+        if (!email || !api_key) {
+            return res.send('You did not provide enough info');
+        }
+
+        await start_api_session(req.session, email, api_key);
+        res.redirect('/');
     });
 
     app.get('/logout', (req, res) => {
         const session = req.session;
         if (session) {
-            const access_token = session.access_token;
             session.destroy();
-            const params = {
-                access_token,
-                client_id,
-                client_secret,
-            };
-            zulip.revoke_token(params);
+
+            if (!use_api_key) {
+                const access_token = session.access_token;
+
+                const params = {
+                    access_token,
+                    client_id,
+                    client_secret,
+                };
+                zulip.revoke_token(params);
+            }
         }
         res.redirect('/login');
     });

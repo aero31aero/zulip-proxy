@@ -21,15 +21,28 @@ exports.make = function (opts) {
     }
 
     function get_helper(session) {
-        const access_token = session.access_token;
-
-        if (!access_token) {
-            console.log(session);
-            throw Error('Access token is undefined!');
-        }
-
         const helper = {};
-        const headers = { Bearer: access_token };
+
+        let headers;
+
+        if (session.access_token) {
+            headers = { Bearer: session.access_token };
+        } else if (session.api_key) {
+            if (!session.email) {
+                throw Error('No email was provided in session.');
+            }
+
+            const auth = Buffer.from(
+                `${session.email}:${session.api_key}`
+            ).toString('base64');
+            const auth_header = `Basic ${auth}`;
+            console.info('Trying to auth for:', session.email);
+
+            headers = { Authorization: auth_header };
+        } else {
+            console.log(session);
+            throw Error('No access token or api key is available!');
+        }
 
         helper.get = async (short_url, params) => {
             const resp = await axios({
