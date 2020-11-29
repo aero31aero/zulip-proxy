@@ -11,7 +11,7 @@ window.users = (() => {
             });
         }
         return Array.from(user_set).filter(
-            (e) => _.get_user_by_id(e) !== undefined
+            (id) => model.Users.by_id_maybe(id) !== undefined
         );
     }
 
