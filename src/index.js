@@ -12,11 +12,11 @@ const zulip_client = require('./zulip_client');
 let config;
 
 try {
-    config = require('../oauth_config');
+    config = require('../config');
 } catch {
     console.info('\n\nERROR IN CONFIG\n');
-    console.info('cp oauth_config.example.js oauth_config');
-    console.info('vim oauth_config\n');
+    console.info('cp config.example.js config');
+    console.info('vim config\n');
     process.exit();
 }
 

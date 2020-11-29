@@ -10,8 +10,8 @@
 
 ## Usage
 
-1. `cp oauth_config.example.js oauth_config`
-2. `vim oauth_config`
+1. `cp config.example.js config`
+2. `vim config`
 
 At this stage, you need to visit the Zulip server that has the oauth branchh deployed
 and create an app/get a token using: `https://zulip.example.com/o/applications`. Use

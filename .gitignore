@@ -108,5 +108,5 @@ dist
 
 # Zulip specific
 config
-oauth_config
+config.*
 zuliprc
