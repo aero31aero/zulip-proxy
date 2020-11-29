@@ -227,6 +227,9 @@ window.model = (() => {
                 }
                 return item;
             },
+            by_id_maybe: function (id) {
+                return data_obj[id];
+            },
             by_name: function (name) {
                 for (key in data_obj) {
                     if (data_obj[key].name === name) {
