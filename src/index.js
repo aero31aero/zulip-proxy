@@ -10,7 +10,6 @@ const webpack = require('webpack');
 const webpack_middleware = require('webpack-dev-middleware');
 const webpack_config = require('../webpack.config.js');
 
-const game = require('./game');
 const zulip_client = require('./zulip_client');
 
 let config;
@@ -89,7 +88,6 @@ async function single_page_app(res, session) {
     // like names have changed.
     const me = await zulip.get_current_user(session);
 
-    page_params.games = game.get_user_data(me.user_id);
     page_params.me = me;
     page_params.app_url = app_url;
 
