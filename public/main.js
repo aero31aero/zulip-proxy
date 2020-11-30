@@ -28,7 +28,6 @@ window.main = (() => {
             exit_modal,
         };
 
-        const games_widget = window.games.make_view();
         const user_widget = window.users.make_view(helpers);
         const test_widget = window.tester.make_view(helpers);
 
@@ -38,11 +37,6 @@ window.main = (() => {
                 name: 'users',
                 render: user_widget.render,
                 update: user_widget.update,
-            },
-            {
-                label: 'Tic Tac Toe',
-                name: 'tic-tac-toe',
-                render: games_widget.render,
             },
             {
                 label: 'Test Widget',

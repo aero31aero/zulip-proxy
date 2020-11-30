@@ -1,6 +1,5 @@
 const WebSocket = require('ws');
 const client_events = require('./client_events');
-const game = require('./game');
 
 let seq = 0;
 
@@ -27,10 +26,6 @@ exports.init = (server, session_parser, zulip) => {
 
             wss.handleUpgrade(request, socket, head, function (ws) {
                 /*
-                    Our websocket has 2-way traffic for games.
-
-                        proxy server <-> (ws) <-> proxy client
-
                     For Zulip events, the data flows in one direction
                     between the proxy server and client:
 
@@ -69,9 +64,14 @@ exports.init = (server, session_parser, zulip) => {
                     event_handler.stop();
                 });
 
+                /*
+                Note that we only send traffic in one direction, so
+                we don't have any code like below:
+
                 ws.on('message', (message) => {
-                    game.handle_message(client, message);
+                    some_plugin.handle_message(client, message);
                 });
+                */
 
                 const event_handler = client_events.make_handler(zulip, client);
 

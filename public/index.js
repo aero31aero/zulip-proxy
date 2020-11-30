@@ -57,8 +57,6 @@ function establish_ws_channel() {
         const event = JSON.parse(message.data);
         if (event.type === 'zulip') {
             window.events.handle_event(event);
-        } else if (event.type === 'game') {
-            window.games.handle_event(event);
         }
     };
 }
@@ -67,8 +65,6 @@ $(document).ready(async () => {
     $('#loading-js').remove();
 
     await init_data();
-
-    window.games.initialize(page_params.games);
 
     // When we establish the channel, we will start the UI.
     establish_ws_channel();
