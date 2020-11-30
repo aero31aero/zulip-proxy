@@ -216,7 +216,7 @@ const session_parser = sessionHandler(session_opts);
 app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.set('views', './views');
-app.use(express.static('public'));
+app.use(express.static('client'));
 app.use(session_parser);
 app.use(
     webpack_middleware(webpack(webpack_config), {
