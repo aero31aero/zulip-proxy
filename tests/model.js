@@ -4,20 +4,11 @@ global.deepmerge = require('deepmerge');
 const model = require('../client/model');
 
 // Get the model.
-let m = model.main();
+let m = model.main;
 
 assert(typeof m === 'object');
-
-assert.throws(
-    () => {
-        // Give invalid data to the model.
-        model.main('gibberish');
-    },
-    {
-        name: 'Error',
-        message: 'Invalid data: Expected Object',
-    }
-);
+m.user_id = 10;
+assert(model.main.user_id === 10);
 
 // Tests for ZulipAccessor based models.
 
