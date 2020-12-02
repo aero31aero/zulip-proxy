@@ -15,7 +15,7 @@ window.users = (() => {
         );
     }
 
-    function make_view(helpers) {
+    function make_view() {
         const users = model.Users.list();
         const user_map = new Map();
 
@@ -26,7 +26,7 @@ window.users = (() => {
         function right_handler(user_id) {
             const user = user_map.get(user_id);
 
-            return window.pm_view.make(user, helpers);
+            return window.pm_view.make(user);
         }
 
         function key_to_label(user_id) {

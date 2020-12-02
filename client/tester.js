@@ -1,5 +1,5 @@
 window.tester = (() => {
-    function make_view(helpers) {
+    function make_view() {
         const streams = model.Streams.clone();
 
         function right_handler(stream_id) {
@@ -11,7 +11,6 @@ window.tester = (() => {
                             stream_id: stream_id,
                             topic: 'proxy-test-topic',
                         },
-                        helpers
                     );
                     _.set_pane_title('Test Widget', widget);
                     return widget;

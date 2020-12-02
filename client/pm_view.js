@@ -1,5 +1,5 @@
 window.pm_view = (() => {
-    function make(user, helpers) {
+    function make(user) {
         let div;
         let message_div;
         const user_id = user.user_id;
@@ -18,7 +18,6 @@ window.pm_view = (() => {
                     {
                         user_id,
                     },
-                    helpers
                 )
             );
 
