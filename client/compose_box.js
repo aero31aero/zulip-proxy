@@ -16,46 +16,6 @@ window.compose_box = (() => {
             }
         }
 
-        function enter_goodbye_modal() {
-            const display_recipient = get_display_recipient(recipient);
-
-            const div = $('<div>');
-
-            const cancel_button = $('<button>').text('No (cancel)');
-            cancel_button.attr('class', 'cancel-red');
-
-            cancel_button.on('click', () => {
-                helpers.exit_modal();
-            });
-
-            const ok_button = $('<button>').text('Yes (and say goodbye)');
-            ok_button.attr('class', 'ok-green');
-
-            ok_button.on('click', () => {
-                window.transmit.send_message(recipient, 'goodbye!');
-                helpers.exit_modal();
-            });
-
-            const button_div = $('<div>').attr('class', 'button-row');
-
-            button_div.append(cancel_button);
-            button_div.append(ok_button);
-
-            div.append(
-                $('<p>').text(`Are you done talking to ${display_recipient}?`)
-            );
-            div.append(button_div);
-            div.append(
-                $('<p>').text(
-                    'todo: give options to customize goodbye and to mark messages as read'
-                )
-            );
-
-            helpers.enter_modal(div, () => {
-                ok_button.focus();
-            });
-        }
-
         const div = $('<div>').addClass('compose-box');
 
         const draft = drafts.get(JSON.stringify(recipient)) || '';
@@ -63,7 +23,6 @@ window.compose_box = (() => {
         const box = $('<textarea>').val(draft).attr('rows', 4);
 
         const send_button = $('<button>').text('Send');
-        const bye_button = $('<button>').text('Say goodbye');
 
         send_button.prop('disabled', !draft);
 
@@ -71,7 +30,6 @@ window.compose_box = (() => {
             const content = box.val().trim();
             drafts.set(JSON.stringify(recipient), content);
             send_button.prop('disabled', !content);
-            bye_button.prop('disabled', !!content);
         }
 
         function clear_box() {
@@ -79,7 +37,6 @@ window.compose_box = (() => {
             box.off('keyup');
             box.val('');
             send_button.prop('disabled', true);
-            bye_button.prop('disabled', false);
             box.focus();
             box.on('keyup', handle_box_keyup);
         }
@@ -99,17 +56,12 @@ window.compose_box = (() => {
         send_button.on('click', send);
         box.on('keyup', handle_box_keyup);
 
-        bye_button.on('click', () => {
-            enter_goodbye_modal();
-        });
-
         const compose_target = $('<p>');
         compose_target.text(`To: ${get_display_recipient(recipient)}`);
 
         div.append(compose_target);
         div.append(box);
         div.append(send_button);
-        div.append(bye_button);
 
         return div;
     }
