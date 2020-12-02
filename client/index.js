@@ -4,12 +4,8 @@ const init_data = async () => {
     const br = '<br>';
 
     $('#main').html('loading model\n').append(br);
-    model.main({
-        state: {
-            user_id: page_params.me.user_id,
-            server: page_params.app_url,
-        },
-    });
+    model.main.user_id = page_params.me.user_id;
+    model.main.server = page_params.app_url;
     $('#main').append('fetching users').append(br);
     await _.fetch_users();
     $('#main').append('fetching messages').append(br);

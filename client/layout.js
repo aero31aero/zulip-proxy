@@ -126,8 +126,8 @@ window.layout = (() => {
             const div = $('<div>');
             div.text(`${_.me().full_name} - `);
             const link = $('<a>', {
-                text: `Server: ${model.main().state.server}`,
-                href: model.main().state.server,
+                text: `Server: ${model.main.server}`,
+                href: model.main.server,
                 target: '_blank',
             });
             div.append(link);

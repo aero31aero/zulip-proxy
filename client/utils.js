@@ -1,6 +1,6 @@
 window._ = {
     get_user_by_id: (id) => model.Users.by_id(id),
-    me: () => _.get_user_by_id(model.main().state.user_id),
+    me: () => _.get_user_by_id(model.main.user_id),
     is_me: (user_id) => _.me().user_id === user_id,
 
     fetch_users: async () => {
