@@ -62,6 +62,7 @@ window.compose_box = (() => {
         div.append(compose_target);
         div.append(box);
         div.append(send_button);
+        _.set_pane_title(`${get_display_recipient(recipient)}`, div);
 
         return div;
     }
