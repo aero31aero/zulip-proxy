@@ -19,7 +19,7 @@ window.streams = (() => {
         }
 
         function get_keys() {
-            return Object.keys(model.Streams.clone());
+            return model.Streams.get_keys();
         }
 
         const opts = {
