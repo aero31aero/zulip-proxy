@@ -84,6 +84,7 @@ window.split_pane = (() => {
             search.on('keyup', async () => {
                 search_val = search.val().toLowerCase();
                 populate(pane);
+                console.info('focus search box in keyup');
                 search.focus();
             });
 
