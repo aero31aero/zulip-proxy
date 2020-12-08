@@ -1,16 +1,13 @@
-window.tester = (() => {
+window.streams = (() => {
     function make_view() {
-        const streams = model.Streams.clone();
-
         function right_handler(stream_id) {
-            const stream = model.Streams.by_id(stream_id);
             const compose_widget = {
                 render: () => {
                     const widget = compose_box.build({
                         stream_id: stream_id,
                         topic: 'proxy-test-topic',
                     });
-                    _.set_pane_title('Test Widget', widget);
+                    _.set_pane_title('Stream View', widget);
                     return widget;
                 },
             };
@@ -22,7 +19,7 @@ window.tester = (() => {
         }
 
         function get_keys() {
-            return Object.keys(streams);
+            return Object.keys(model.Streams.clone());
         }
 
         const opts = {
