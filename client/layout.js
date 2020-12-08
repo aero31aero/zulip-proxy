@@ -85,6 +85,7 @@ window.layout = (() => {
         let redraw_button;
 
         const update = () => {
+            console.info('update in layout.js');
             redraw_button.css('background', '');
             panes.forEach((pane) => {
                 pane.update();

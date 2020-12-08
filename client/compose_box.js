@@ -37,6 +37,7 @@ window.compose_box = (() => {
             box.off('keyup');
             box.val('');
             send_button.prop('disabled', true);
+            console.info('focus compose box in clear_box');
             box.focus();
             box.on('keyup', handle_box_keyup);
         }
