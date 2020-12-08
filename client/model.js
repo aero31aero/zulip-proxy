@@ -139,8 +139,8 @@ window.model = (() => {
                 }
                 throw new Error(`${type} with name ${name} not found!`);
             },
-            clone: function () {
-                return Object.assign({}, data_obj);
+            get_keys: function () {
+                return Object.keys(data_obj);
             },
             filter: function (fn) {
                 const results = [];
