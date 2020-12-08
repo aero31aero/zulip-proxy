@@ -15,18 +15,28 @@ window._ = {
     },
 
     fetch_messages: async () => {
-        const params = $.param({
-            // narrow: JSON.stringify([{ operator: 'is', operand: 'private' }]),
+        const fetch_and_load = async (params) => {
+            const url = `/z/messages?${$.param(params)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            data.messages.forEach((message) => {
+                model.Messages.add(message);
+            });
+        };
+
+        const params = {
             num_before: 500,
             num_after: 0,
             anchor: 'newest',
-        });
-        const url = `/z/messages?${params}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        data.messages.forEach((message) => {
-            model.Messages.add(message);
-        });
+        };
+        params.narrow = JSON.stringify([
+            { operator: 'is', operand: 'private', negated: true },
+        ]);
+        await fetch_and_load(params);
+        params.narrow = JSON.stringify([
+            { operator: 'is', operand: 'private' },
+        ]);
+        await fetch_and_load(params);
     },
 
     fetch_streams: async () => {
