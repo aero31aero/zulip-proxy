@@ -69,6 +69,7 @@ window.model = (() => {
             this.sender_id = data.sender_id;
             this.content = data.content;
             this.recipient_id = data.recipient_id;
+            this.stream_id = data.stream_id;
             this.timestamp = data.timestamp;
             this.client = data.client;
             this.subject = data.subject;

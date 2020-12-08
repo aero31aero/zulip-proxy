@@ -16,8 +16,8 @@ window._ = {
 
     fetch_messages: async () => {
         const params = $.param({
-            narrow: JSON.stringify([{ operator: 'is', operand: 'private' }]),
-            num_before: 300,
+            // narrow: JSON.stringify([{ operator: 'is', operand: 'private' }]),
+            num_before: 500,
             num_after: 0,
             anchor: 'newest',
         });
@@ -62,6 +62,22 @@ window._ = {
             }
             return false;
         });
+    },
+
+    find_topics_for: (stream_id) => {
+        const topics = new Set();
+
+        for (const m of model.Messages.list()) {
+            if (m.type !== 'stream') {
+                continue;
+            }
+
+            if (m.stream_id.toString() === stream_id.toString()) {
+                topics.add(m.subject);
+            }
+        }
+
+        return Array.from(topics);
     },
 
     set_pane_title: (title, element) => {
