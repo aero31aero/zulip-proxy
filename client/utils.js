@@ -31,7 +31,7 @@ window._ = {
 
     fetch_streams: async () => {
         const params = $.param({
-            include_subscribers: true,
+            include_subscribers: false,
         });
         const url = `z/users/me/subscriptions?${params}`;
         const response = await fetch(url);
