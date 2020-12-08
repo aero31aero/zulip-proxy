@@ -31,15 +31,11 @@ assert(model.Streams.list().length === 0);
 model.Streams.add({
     stream_id: 1,
     name: 'Test Stream',
-    subscribers: ['test@example.com'],
 });
 let test_stream = model.Streams.by_id(1);
 assert(test_stream.id === test_stream.stream_id);
 test_stream.id = 2;
 assert(test_stream.id === test_stream.stream_id);
-
-// nested properties
-assert(test_stream.subs[0] === test_user);
 
 // messages
 model.Messages.add({
