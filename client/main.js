@@ -3,7 +3,7 @@ window.main = (() => {
         let main_pane;
 
         const user_widget = window.users.make_view();
-        const test_widget = window.tester.make_view();
+        const test_widget = window.streams.make_view();
 
         const config = [
             {
@@ -13,8 +13,8 @@ window.main = (() => {
                 update: user_widget.update,
             },
             {
-                label: 'Test Widget',
-                name: 'test-widget',
+                label: 'Streams',
+                name: 'streams',
                 render: test_widget.render,
             },
         ];
