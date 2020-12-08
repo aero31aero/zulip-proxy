@@ -6,12 +6,10 @@ window.tester = (() => {
             const stream = model.Streams.by_id(stream_id);
             const compose_widget = {
                 render: () => {
-                    const widget = compose_box.build(
-                        {
-                            stream_id: stream_id,
-                            topic: 'proxy-test-topic',
-                        },
-                    );
+                    const widget = compose_box.build({
+                        stream_id: stream_id,
+                        topic: 'proxy-test-topic',
+                    });
                     _.set_pane_title('Test Widget', widget);
                     return widget;
                 },
