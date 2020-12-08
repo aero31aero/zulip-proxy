@@ -9,18 +9,14 @@ window.split_pane = (() => {
             throw Error('misconfigured split_pane');
         }
 
-        let keys = get_keys();
+        let keys;
         let pane;
         let left;
         let right;
         let search_val = '';
         let search;
-        let active_key = keys[0];
+        let active_key;
         let active_conf;
-
-        if (active_key) {
-            active_conf = right_handler(active_key);
-        }
 
         function render() {
             if (get_keys) {
@@ -63,6 +59,9 @@ window.split_pane = (() => {
         }
 
         function is_key_visible(key) {
+            if (!key) {
+                return false;
+            }
             const label = key_to_label(key);
             return label.toLowerCase().includes(search_val);
         }
@@ -117,6 +116,8 @@ window.split_pane = (() => {
             if (is_key_visible(active_key)) {
                 const right_contents = active_conf.render();
                 right.html(right_contents);
+            } else {
+                right.text('Please select an item or clear the filter.');
             }
         }
 
