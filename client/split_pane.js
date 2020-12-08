@@ -15,6 +15,7 @@ window.split_pane = (() => {
         let right;
         let search_val = '';
         let search;
+        let items_div;
         let active_key;
         let active_conf;
 
@@ -42,7 +43,8 @@ window.split_pane = (() => {
             search = $('<input>').attr({ type: 'text' });
             search.val(search_val);
 
-            populate();
+            populate_left();
+            populate_right();
 
             return pane;
         }
@@ -54,7 +56,8 @@ window.split_pane = (() => {
 
                 button.css('opacity', '50%');
                 right.html('loading...');
-                populate();
+                update_items();
+                populate_right();
             };
         }
 
@@ -75,17 +78,22 @@ window.split_pane = (() => {
             }
 
             const search_div = $('<div>').addClass('search');
-            const items_div = $('<div>').addClass('items');
+            items_div = $('<div>').addClass('items');
             search_div.append(search);
             left.append(search_div);
             left.append(items_div);
 
             search.on('keyup', async () => {
                 search_val = search.val().toLowerCase();
-                populate(pane);
-                console.info('focus search box in keyup');
+                update_items();
+                populate_right();
                 search.focus();
             });
+            update_items();
+        }
+
+        function update_items() {
+            items_div.empty();
 
             keys.forEach((key, idx) => {
                 if (!is_key_visible(key)) {
@@ -121,14 +129,9 @@ window.split_pane = (() => {
             }
         }
 
-        function populate(pane) {
-            populate_left();
-            populate_right();
-        }
-
         function update() {
             keys = get_keys();
-            populate_left();
+            update_items();
 
             if (!active_conf) {
                 return;
