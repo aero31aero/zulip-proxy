@@ -7,7 +7,6 @@ window.topics = (() => {
                         stream_id: stream_id,
                         topic: topic_name,
                     });
-                    // _.set_pane_title(...);
                     return widget;
                 },
             };
