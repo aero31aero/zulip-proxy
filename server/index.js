@@ -136,7 +136,18 @@ function build_endpoints(app) {
         const session = req.session;
         session.email = email;
         session.api_key = api_key;
-        await set_session_user_id(session);
+        try {
+            await set_session_user_id(session);
+        } catch (e) {
+            if (e.response) {
+                console.log(e.response.status, e.response.statusText, email);
+            } else {
+                console.log('failed to get user info', e);
+            }
+            session.destroy();
+            res.redirect('login');
+            return;
+        }
         res.redirect('/');
     });
 
