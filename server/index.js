@@ -88,7 +88,8 @@ async function single_page_app(res, session) {
 
 function redirect_to_login(res, reason) {
     console.info('sending user to login page for reason:', reason);
-    res.redirect('login');
+    const encoded_reason = encodeURIComponent(reason);
+    res.redirect(`login?reason=${encoded_reason}`);
 }
 
 function build_endpoints(app) {
@@ -106,6 +107,10 @@ function build_endpoints(app) {
         if (use_api_key) {
             // TODO: move this to a pug file
             const html = `
+                <div>
+                    ${req.query.reason}
+                </div>
+
                 <form action="/confirm_api_login">
 
                 <div>
