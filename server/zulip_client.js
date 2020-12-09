@@ -24,9 +24,11 @@ exports.make = function (opts) {
         const helper = {};
 
         let headers;
+        let user_info;
 
         if (session.access_token) {
             headers = { Bearer: session.access_token };
+            user_info = `oauth user ${session.user_id}`;
         } else if (session.api_key) {
             if (!session.email) {
                 throw Error('No email was provided in session.');
@@ -36,7 +38,7 @@ exports.make = function (opts) {
                 `${session.email}:${session.api_key}`
             ).toString('base64');
             const auth_header = `Basic ${auth}`;
-            console.info('Trying to auth for:', session.email);
+            user_info = session.email;
 
             headers = { Authorization: auth_header };
         } else {
@@ -45,6 +47,7 @@ exports.make = function (opts) {
         }
 
         helper.get = async (short_url, params) => {
+            console.log(user_info, 'get', short_url);
             const resp = await axios({
                 method: 'get',
                 url: url(short_url),
@@ -55,6 +58,7 @@ exports.make = function (opts) {
         };
 
         helper.pipe = async (short_url, data, res) => {
+            console.log(user_info, 'pipe', short_url);
             const resp = await axios({
                 method: 'get',
                 url: `${app_url}/${short_url}`,
@@ -66,6 +70,7 @@ exports.make = function (opts) {
         };
 
         helper.post = async (short_url, data, params = {}) => {
+            console.log(user_info, 'post', short_url);
             const resp = await axios({
                 method: 'post',
                 url: url(short_url),
