@@ -63,17 +63,7 @@ const zulip = zulip_client.make({
     app_url: app_url,
 });
 
-async function start_session(session, token_resp) {
-    session.access_token = token_resp.access_token;
-    const me = await zulip.get_current_user(session);
-    session.user_id = me.user_id;
-    session.save();
-}
-
-async function start_api_session(session, email, api_key) {
-    // see start_session for similar oauth code
-    session.email = email;
-    session.api_key = api_key;
+async function set_session_user_id(session) {
     const me = await zulip.get_current_user(session);
     session.user_id = me.user_id;
     session.save();
@@ -143,7 +133,10 @@ function build_endpoints(app) {
             return res.send('You did not provide enough info');
         }
 
-        await start_api_session(req.session, email, api_key);
+        const session = req.session;
+        session.email = email;
+        session.api_key = api_key;
+        await set_session_user_id(session);
         res.redirect('/');
     });
 
@@ -181,7 +174,9 @@ function build_endpoints(app) {
 
             console.log(token_resp.data);
 
-            await start_session(req.session, token_resp.data);
+            const session = req.session;
+            session.access_token = token_resp.data.access_token;
+            await set_session_user_id(session);
 
             // redirect to the home page
             res.redirect('/');
