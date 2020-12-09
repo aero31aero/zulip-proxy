@@ -86,6 +86,11 @@ async function single_page_app(res, session) {
     });
 }
 
+function redirect_to_login(res, reason) {
+    console.info('sending user to login page for reason:', reason);
+    res.redirect('login');
+}
+
 function build_endpoints(app) {
     app.get('/', (req, res) => {
         const session = req.session;
@@ -94,7 +99,7 @@ function build_endpoints(app) {
             return single_page_app(res, session);
         }
 
-        return res.redirect('/login');
+        redirect_to_login(res, 'You must log in to start a session.');
     });
 
     app.get('/login', (req, res) => {
@@ -145,7 +150,10 @@ function build_endpoints(app) {
                 console.log('failed to get user info', e);
             }
             session.destroy();
-            res.redirect('login');
+            redirect_to_login(
+                res,
+                'Your login was not authorized for some reason.'
+            );
             return;
         }
         res.redirect('/');
@@ -167,7 +175,7 @@ function build_endpoints(app) {
                 zulip.revoke_token(params);
             }
         }
-        res.redirect('/login');
+        redirect_to_login(res, 'You have successfully logged out.');
     });
 
     app.get('/o/callback', async (req, res) => {
