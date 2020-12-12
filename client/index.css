@@ -304,4 +304,8 @@ img {
             hsla(0, 0%, 0%, 0) 100%
         );
     }
+    &.user-mention-me {
+        border-radius: 5px;
+        background-color: rgba(108, 50, 55, 0.5);
+    }
 }
