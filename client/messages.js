@@ -13,6 +13,12 @@ window.messages = (() => {
                 message_ul.append(name);
             }
             const li = $('<li>').addClass('message');
+            if (
+                $($(messages[i].content)[0].childNodes[0]).data('user-id') ===
+                page_params.me.user_id
+            ) {
+                li.addClass('user-mention-me');
+            }
             li.append(messages[i].content);
             message_ul.append(li);
         }
