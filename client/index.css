@@ -294,4 +294,14 @@ img {
             overflow-x: scroll;
         }
     }
+    .user-mention {
+        border-radius: 5px;
+        padding: 0 0.2em;
+        box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
+        background: linear-gradient(
+            to bottom,
+            hsla(0, 0%, 0%, 0.1) 0%,
+            hsla(0, 0%, 0%, 0) 100%
+        );
+    }
 }
