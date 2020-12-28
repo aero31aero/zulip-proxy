@@ -43,14 +43,23 @@ window.layout = (() => {
         }
         let current_color_index = 0;
 
-        const make_new_pane = () => {
-            const pane = window.main.make();
+        const make_new_pane = (pane_type, data) => {
+            let pane;
+            if (pane_type === 'launcher') {
+                pane = window.launcher.make();
+            } else if (pane_type === 'recipient') {
+                if (data.stream_id) {
+                    pane = window.topic_view.make(data);
+                } else {
+                    pane = window.pm_view.make(data);
+                }
+            } else {
+                pane = window.main.make();
+            }
             const close_button = $('<button>').text('✕');
             const maximize_button = $('<button>').text('🗖');
             const title = $('<p>').addClass('title');
-            const controls_wrapper = $('<div>')
-                .hide()
-                .addClass('controls-wrapper');
+            const controls_wrapper = $('<div>').addClass('controls-wrapper');
             controls_wrapper.append(close_button);
             controls_wrapper.append(maximize_button);
             controls_wrapper.append(title);
@@ -73,7 +82,7 @@ window.layout = (() => {
                 refresh_layout();
             });
             maximize_button.on('click', () => {
-                // push pane to the end of set.
+                // push pane to the start of set.
                 container.prepend(thin_wrapper);
                 is_maximized = true;
                 _.redraw();
@@ -81,6 +90,7 @@ window.layout = (() => {
             refresh_layout();
         };
 
+        make_new_pane('launcher');
         make_new_pane();
         let redraw_button;
 
@@ -186,6 +196,10 @@ window.layout = (() => {
             root.append(help_message);
             update();
             return root;
+        };
+
+        window.make_new_pane = (recipient) => {
+            make_new_pane('recipient', recipient);
         };
 
         return {
