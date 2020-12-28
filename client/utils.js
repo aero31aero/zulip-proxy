@@ -90,6 +90,21 @@ window._ = {
         return Array.from(topics);
     },
 
+    find_topic_messages: (recipient) => {
+        return model.Messages.filter((m) => {
+            if (m.type !== 'stream') {
+                return false;
+            }
+            if (m.stream_id.toString() !== recipient.stream_id.toString()) {
+                return false;
+            }
+            if (m.subject !== recipient.topic) {
+                return false;
+            }
+            return true;
+        });
+    },
+
     set_pane_title: (title, element) => {
         // sometimes elements aren't rendered; use a timeout so the element has been
         // rendered before we try to look up the tree for the pane wrapper.

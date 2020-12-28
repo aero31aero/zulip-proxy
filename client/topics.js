@@ -1,16 +1,10 @@
 window.topics = (() => {
     function make_view(stream_id) {
         function right_handler(topic_name) {
-            const compose_widget = {
-                render: () => {
-                    const widget = compose_box.build({
-                        stream_id: stream_id,
-                        topic: topic_name,
-                    });
-                    return widget;
-                },
-            };
-            return compose_widget;
+            return window.topic_view.make({
+                stream_id: stream_id,
+                topic: topic_name,
+            });
         }
 
         function key_to_label(topic_name) {
@@ -26,6 +20,7 @@ window.topics = (() => {
             key_to_label,
             right_handler,
             get_keys,
+            hide_left: true,
         };
 
         const pane_widget = split_pane.make(opts);
