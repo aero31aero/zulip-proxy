@@ -19,6 +19,31 @@ window.transmit = (() => {
         });
     }
 
+    function local_echo(user_id, content, data) {
+        const message = {
+            user_id: user_id,
+            sender_full_name: window._.me.full_name,
+            content: `<b>in flight<b><pre>${content}</pre>`,
+        };
+
+        local_id_seq += 1;
+        const local_id = local_id_seq + 0.01;
+        const queue_id = events.get_queue_id();
+
+        message.local_id = local_id;
+        data.queue_id = queue_id;
+        data.local_id = local_id;
+
+        if (queue_id) {
+            in_flight.push(message);
+            window._.redraw();
+        } else {
+            // We will send our message, but we won't locally echo it.
+            // This shouldn't happen unless a user is really quick.
+            console.warn('local echo is turned off until we know our queue_id');
+        }
+    }
+
     function send_stream_message(stream_id, topic, content) {
         // TODO merge with send_pm and use local echo.
         const data = {
@@ -38,33 +63,13 @@ window.transmit = (() => {
     }
 
     function send_pm(user_id, content) {
-        local_id_seq += 1;
-        const local_id = local_id_seq + 0.01;
-        const queue_id = events.get_queue_id();
-
-        const message = {
-            local_id: local_id,
-            user_id: user_id,
-            sender_full_name: window._.me.full_name,
-            content: `<b>in flight<b><pre>${content}</pre>`,
-        };
-
-        if (queue_id) {
-            in_flight.push(message);
-            window._.redraw();
-        } else {
-            // We will send our message, but we won't locally echo it.
-            // This shouldn't happen unless a user is really quick.
-            console.warn('local echo is turned off until we know our queue_id');
-        }
-
         const data = {
             type: 'private',
             to: JSON.stringify([user_id]),
             content: content,
-            queue_id: queue_id,
-            local_id: local_id,
         };
+
+        local_echo(user_id, content, data);
 
         fetch('/z/messages', {
             method: 'POST',
