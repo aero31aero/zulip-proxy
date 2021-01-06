@@ -9,7 +9,7 @@ window.transmit = (() => {
         }
 
         return in_flight.filter((msg) => {
-            return msg.user_id === recipient.user_id;
+            return msg.recipient.user_id === recipient.user_id;
         });
     }
 
@@ -19,9 +19,9 @@ window.transmit = (() => {
         });
     }
 
-    function local_echo(user_id, content, data) {
+    function local_echo(recipient, content, data) {
         const message = {
-            user_id: user_id,
+            recipient: recipient,
             sender_full_name: window._.me.full_name,
             content: `<b>in flight<b><pre>${content}</pre>`,
         };
@@ -62,14 +62,14 @@ window.transmit = (() => {
         });
     }
 
-    function send_pm(user_id, content) {
+    function send_pm(recipient, content) {
         const data = {
             type: 'private',
-            to: JSON.stringify([user_id]),
+            to: JSON.stringify([recipient.user_id]),
             content: content,
         };
 
-        local_echo(user_id, content, data);
+        local_echo(recipient, content, data);
 
         fetch('/z/messages', {
             method: 'POST',
@@ -82,7 +82,7 @@ window.transmit = (() => {
 
     function send_message(recipient, content) {
         if (recipient.type === 'private') {
-            send_pm(recipient.user_id, content);
+            send_pm(recipient, content);
         } else {
             send_stream_message(recipient.stream_id, recipient.topic, content);
         }
