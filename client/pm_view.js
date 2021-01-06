@@ -4,6 +4,12 @@ window.pm_view = (() => {
         let message_div;
         const user_id = user.user_id;
 
+        // TODO: just pass in recipient
+        const recipient = {
+            type: 'private',
+            user_id,
+        };
+
         function render() {
             div = $('<div>').addClass('pm-view');
 
@@ -13,11 +19,7 @@ window.pm_view = (() => {
 
             div.empty();
             div.append(message_div);
-            div.append(
-                compose_box.build({
-                    user_id,
-                })
-            );
+            div.append(compose_box.build(recipient));
 
             update();
 
@@ -28,7 +30,7 @@ window.pm_view = (() => {
             message_div.empty();
 
             const messages = _.find_pms_with(user_id);
-            const new_messages = window.transmit.in_flight_messages(user_id);
+            const new_messages = window.transmit.in_flight_messages(recipient);
             messages.push(...new_messages);
 
             const message_table = window.messages.build_message_table(messages);
