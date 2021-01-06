@@ -2,9 +2,14 @@ window.transmit = (() => {
     let local_id_seq = 100;
     let in_flight = [];
 
-    function in_flight_messages(user_id) {
+    function in_flight_messages(recipient) {
+        if (recipient.type !== 'private') {
+            console.error('unexpected recipient type');
+            return [];
+        }
+
         return in_flight.filter((msg) => {
-            return msg.user_id === user_id;
+            return msg.user_id === recipient.user_id;
         });
     }
 
@@ -71,7 +76,7 @@ window.transmit = (() => {
     }
 
     function send_message(recipient, content) {
-        if (recipient.user_id) {
+        if (recipient.type === 'private') {
             send_pm(recipient.user_id, content);
         } else {
             send_stream_message(recipient.stream_id, recipient.topic, content);
