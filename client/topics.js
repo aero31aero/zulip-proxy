@@ -1,10 +1,12 @@
 window.topics = (() => {
     function make_view(stream_id) {
         function right_handler(topic_name) {
-            return window.topic_view.make({
+            const recipient = {
+                type: 'stream',
                 stream_id: stream_id,
                 topic: topic_name,
-            });
+            };
+            return window.topic_view.make(recipient);
         }
 
         function key_to_label(topic_name) {

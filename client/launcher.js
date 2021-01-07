@@ -15,6 +15,7 @@ window.launcher = (() => {
             // this is hardcoded for now; we want a better system here.
             buttons.push({
                 recipient: {
+                    type: 'stream',
                     stream_id: model.Streams.by_name('oauth provider').id,
                     topic: 'meeting',
                 },
