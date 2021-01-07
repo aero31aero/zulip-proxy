@@ -1,14 +1,12 @@
 window.pm_view = (() => {
-    function make(user) {
+    function make(recipient) {
+        if (recipient.type !== 'private') {
+            console.error('illegal recipient');
+        }
+
         let div;
         let message_div;
-        const user_id = user.user_id;
-
-        // TODO: just pass in recipient
-        const recipient = {
-            type: 'private',
-            user_id,
-        };
+        const user_id = recipient.user_id;
 
         function render() {
             div = $('<div>').addClass('pm-view');

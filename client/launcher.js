@@ -5,7 +5,10 @@ window.launcher = (() => {
         function recipient_for_user(full_name) {
             user = model.Users.by_name(full_name);
 
-            return user;
+            return {
+                type: 'private',
+                user_id: user.user_id,
+            };
         }
 
         function populate() {

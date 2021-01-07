@@ -19,17 +19,13 @@ window.users = (() => {
     }
 
     function make_view() {
-        const users = model.Users.list();
-        const user_map = new Map();
-
-        for (const user of users) {
-            user_map.set(user.user_id, user);
-        }
-
         function right_handler(user_id) {
-            const user = user_map.get(user_id);
+            const recipient = {
+                type: 'private',
+                user_id,
+            };
 
-            return window.pm_view.make(user);
+            return window.pm_view.make(recipient);
         }
 
         const opts = {
