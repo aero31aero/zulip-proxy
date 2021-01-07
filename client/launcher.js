@@ -2,6 +2,12 @@ window.launcher = (() => {
     function make() {
         let buttons = [];
 
+        function recipient_for_user(full_name) {
+            user = model.Users.by_name(full_name);
+
+            return user;
+        }
+
         function populate() {
             // this is hardcoded for now; we want a better system here.
             buttons.push({
@@ -12,15 +18,15 @@ window.launcher = (() => {
                 text: 'Oauth > Meeting',
             });
             buttons.push({
-                recipient: model.Users.by_name('Rohitt Vashishtha'),
+                recipient: recipient_for_user('Rohitt Vashishtha'),
                 text: 'PM with Rohitt',
             });
             buttons.push({
-                recipient: model.Users.by_name('Steve Howell'),
+                recipient: recipient_for_user('Steve Howell'),
                 text: 'PM with Steve',
             });
             buttons.push({
-                recipient: model.Users.by_name('Yash RE'),
+                recipient: recipient_for_user('Yash RE'),
                 text: 'PM with Yash',
             });
         }
