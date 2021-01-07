@@ -3,7 +3,7 @@ window.compose_box = (() => {
     // its parent is pm_list.js.
     const drafts = new Map();
 
-    function build(recipient, helpers) {
+    function build(recipient) {
         const is_pm = !!recipient.user_id; // coerce user_id to boolean
 
         function get_display_recipient(recipient) {
