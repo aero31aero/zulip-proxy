@@ -4,15 +4,15 @@ window.compose_box = (() => {
     const drafts = new Map();
 
     function build(recipient) {
-        const is_pm = !!recipient.user_id; // coerce user_id to boolean
-
         function get_display_recipient(recipient) {
-            if (is_pm) {
+            if (recipient.type === 'private') {
                 return window._.full_name_from_user_id(recipient.user_id);
-            } else {
+            } else if (recipient.type === 'stream') {
                 return `# ${model.Streams.by_id(recipient.stream_id).name} > ${
                     recipient.topic
                 }`;
+            } else {
+                console.error('illegal recipient');
             }
         }
 
