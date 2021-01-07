@@ -35,7 +35,9 @@ window.pm_view = (() => {
 
             const message_table = window.messages.build_message_table(messages);
             message_div.append(message_table);
-            _.set_pane_title(`Chat with ${user.full_name}`, message_div);
+
+            const full_name = window._.full_name_from_user_id(user_id);
+            _.set_pane_title(`Chat with ${full_name}`, message_div);
         }
 
         return {
