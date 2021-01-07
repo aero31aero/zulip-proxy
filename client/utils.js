@@ -3,6 +3,11 @@ window._ = {
     me: () => _.get_user_by_id(model.main.user_id),
     is_me: (user_id) => _.me().user_id === user_id,
 
+    full_name_from_user_id: (id) => {
+        const user = model.Users.by_id(id);
+        return user.full_name;
+    },
+
     fetch_users: async () => {
         const response = await fetch('/z/users');
         const data = await response.json();

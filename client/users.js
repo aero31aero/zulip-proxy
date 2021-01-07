@@ -32,12 +32,8 @@ window.users = (() => {
             return window.pm_view.make(user);
         }
 
-        function key_to_label(user_id) {
-            return user_map.get(user_id).full_name;
-        }
-
         const opts = {
-            key_to_label,
+            key_to_label: window._.full_name_from_user_id,
             right_handler,
             get_keys: get_user_ids_by_recency,
             hide_left: true,

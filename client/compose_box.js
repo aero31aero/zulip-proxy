@@ -8,7 +8,7 @@ window.compose_box = (() => {
 
         function get_display_recipient(recipient) {
             if (is_pm) {
-                return window._.get_user_by_id(recipient.user_id).full_name;
+                return window._.full_name_from_user_id(recipient.user_id);
             } else {
                 return `# ${model.Streams.by_id(recipient.stream_id).name} > ${
                     recipient.topic
