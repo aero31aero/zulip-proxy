@@ -22,6 +22,9 @@ window.topic_view = (() => {
         function update() {
             message_div.empty();
             const messages = _.find_topic_messages(recipient);
+            const new_messages = window.transmit.in_flight_messages(recipient);
+            messages.push(...new_messages);
+
             const message_table = window.messages.build_message_table(messages);
             message_div.append(message_table);
         }

@@ -2,15 +2,31 @@ window.transmit = (() => {
     let local_id_seq = 100;
     let in_flight = [];
 
-    function in_flight_messages(recipient) {
-        if (recipient.type !== 'private') {
-            console.error('unexpected recipient type');
-            return [];
+    function filter_messages(messages, recipient) {
+        // We may want to extract this to filter.js
+        // or even put in the model.
+        function matches_pm(msg) {
+            return msg.recipient.user_id === recipient.user_id;
         }
 
-        return in_flight.filter((msg) => {
-            return msg.recipient.user_id === recipient.user_id;
-        });
+        function matches_topic(msg) {
+            return (
+                msg.recipient.stream_id === recipient.stream_id &&
+                msg.recipient.topic === recipient.topic
+            );
+        }
+
+        if (recipient.type === 'private') {
+            return messages.filter(matches_pm);
+        } else if (recipient.type === 'stream') {
+            return messages.filter(matches_topic);
+        } else {
+            console.error('illegal recipient');
+        }
+    }
+
+    function in_flight_messages(recipient) {
+        return filter_messages(in_flight, recipient);
     }
 
     function ack_local(local_id) {
@@ -52,6 +68,8 @@ window.transmit = (() => {
             topic: recipient.topic,
             content: content,
         };
+
+        local_echo(recipient, content, data);
 
         fetch('/z/messages', {
             method: 'POST',
