@@ -44,12 +44,12 @@ window.transmit = (() => {
         }
     }
 
-    function send_stream_message(stream_id, topic, content) {
+    function send_stream_message(recipient, content) {
         // TODO merge with send_pm and use local echo.
         const data = {
             type: 'stream',
-            to: stream_id,
-            topic: topic,
+            to: recipient.stream_id,
+            topic: recipient.topic,
             content: content,
         };
 
@@ -84,7 +84,7 @@ window.transmit = (() => {
         if (recipient.type === 'private') {
             send_pm(recipient, content);
         } else {
-            send_stream_message(recipient.stream_id, recipient.topic, content);
+            send_stream_message(recipient, content);
         }
     }
 
