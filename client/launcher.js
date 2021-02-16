@@ -12,27 +12,32 @@ window.launcher = (() => {
         }
 
         function populate() {
-            // this is hardcoded for now; we want a better system here.
-            buttons.push({
-                recipient: {
-                    type: 'stream',
-                    stream_id: model.Streams.by_name('oauth provider').id,
-                    topic: 'meeting',
-                },
-                text: 'Oauth > Meeting',
-            });
-            buttons.push({
-                recipient: recipient_for_user('Rohitt Vashishtha'),
-                text: 'PM with Rohitt',
-            });
-            buttons.push({
-                recipient: recipient_for_user('Steve Howell'),
-                text: 'PM with Steve',
-            });
-            buttons.push({
-                recipient: recipient_for_user('Yash RE'),
-                text: 'PM with Yash',
-            });
+            try {
+                // this is hardcoded for now; we want a better system here.
+                buttons.push({
+                    recipient: {
+                        type: 'stream',
+                        stream_id: model.Streams.by_name('oauth provider').id,
+                        topic: 'meeting',
+                    },
+                    text: 'Oauth > Meeting',
+                });
+                buttons.push({
+                    recipient: recipient_for_user('Rohitt Vashishtha'),
+                    text: 'PM with Rohitt',
+                });
+                buttons.push({
+                    recipient: recipient_for_user('Steve Howell'),
+                    text: 'PM with Steve',
+                });
+                buttons.push({
+                    recipient: recipient_for_user('Yash RE'),
+                    text: 'PM with Yash',
+                });
+            } catch (error) {
+                console.error('Error in populating the launcher.');
+                console.error(error);
+            }
         }
 
         function update() {
