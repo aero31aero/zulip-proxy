@@ -13,9 +13,10 @@ window.messages = (() => {
                 message_ul.append(name);
             }
             const li = $('<li>').addClass('message');
+            const mention = $($(messages[i].content)[0].childNodes[0]);
             if (
-                $($(messages[i].content)[0].childNodes[0]).data('user-id') ===
-                page_params.me.user_id
+                mention.data('user-id') === page_params.me.user_id &&
+                !mention[0].classList.contains('silent')
             ) {
                 li.addClass('user-mention-me');
             }
